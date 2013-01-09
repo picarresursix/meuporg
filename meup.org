@@ -1,0 +1,28 @@
+             MEUP.ORG
+
+
+* Project description
+** Files to include
+   The directories matching the following regexp will be the *only
+   ones* included. Hidden and backup files (starting with . or # or
+   ending with #) are always removed, so don't mind these.
+
+   INCLUDE_ONLY:
+
+** Files to exclude
+   The directories whose name contains the following string will not
+   be taken into account when updating the roadmap (both the
+   statistics and the item lists).
+
+   EXCLUDE: 
+
+** Commands
+   !TODO! Find a way for emacs to read commands and then execute them.
+* TODO List
+** python script
+   The part written in python which actually parses the source code.
+** emacs mode
+   The elisp functions used to use MEUPORG efficiently within emacs.
+* Statistics
+  + empty
+
