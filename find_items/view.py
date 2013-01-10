@@ -24,18 +24,6 @@ def extract_name(item_list):
     return result
     
 
-
-def extract_module(item_list):
-    """Turns the item list into a dictionnary with modules (folders)
-    as the keys and containing dictionnaries. These have item names as
-    their keys and lists of items as their content.
-
-    """
-    # !TODO! Implement the extract_module function
-    return 0
-    
-
-
 def org_output(items, depth):
     """Outputs an org representation of the items given.
 
