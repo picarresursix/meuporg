@@ -59,7 +59,7 @@ def org_output(items, depth):
             indent += " "
         index = 1
         for item in items:
-            result += "{}{:2}. {}\n".format(
+            result += "{}{}. {}\n".format(
                 indent,
                 index,
                 item.to_entry()

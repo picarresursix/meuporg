@@ -10,6 +10,10 @@ from parse import *
 from view import *
 
 
+def update_meuporg_file(path):
+    """Parses the file at path and updates all the Item nodes"""
+
+
 def print_help():
     """Displays the help of the script."""
     print("""Usage: meuporg OPTIONS

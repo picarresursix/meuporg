@@ -11,7 +11,9 @@ def parse_file(path):
     The way this function reads data is simple. The lines of the file
     are read one after another. If a line contains an item, i.e. an
     uppercased string of arbitrary length enclosed between '!', we
-    initialise a new item:
+    initialise a new item. Then, we continue appending the next lines
+    to the said description until the lines stop starting with a
+    non-alpha-numeric character followed by a '!'.
 
     """
 
@@ -58,10 +60,11 @@ def parse_directory(path=".",
     result = []
     for dirname, dirnames, filenames in os.walk(path):
         for f in filenames:
+            path = os.path.join(dirname,f)
             if (include != []):
                 to_do = False
                 for pattern in include:
-                    if re.match(pattern,f):
+                    if re.match(pattern,path):
                         to_do = True
             else:
                 to_do = True
@@ -69,7 +72,6 @@ def parse_directory(path=".",
                     if re.match(pattern,path):
                         to_do = False
             if to_do:
-                path = os.path.join(dirname,f)
                 if not (
                         (not include_backup_files and (re.match("^[^#].*[^~]$",f) == None))
                         or

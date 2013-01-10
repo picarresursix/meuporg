@@ -20,6 +20,11 @@ ITEM_LINE_REGEX = "^.*" + ITEM_REGEX + ".*$"
 # using "format". Here the said string:
 ENTRY = "[[file:{location}][{description}]] ({location})"
 
+# If an item is within the middle of the code, i.e. not at the
+# beginning of its own line, it is consider "in-code". In this case,
+# it has the following string as its description.
+NO_DESC = "link"
+
 
 
 class Item:
@@ -36,43 +41,38 @@ class Item:
         A line containing an item must match ITEM_LINE_REGEX. If it
         does, what is before the item is dropped and all that is after
         (minus the first non alphanumerical characters) is used to
-        initialise the description.
+        initialise the description. However, if there is an
+        alpha-numeric character before the item, the item is
+        considered to be in-code so its description is set to NO_DESC.
 
         """
         self.location = location
         self.name = re.findall(ITEM_REGEX,line)[0]
-        self.description = ''.join(re.split(ITEM_REGEX + "\W*",line)[2:])
+        content = re.split(ITEM_REGEX + "\W*",line)
+        if (re.match(("^\W*$"),content[0]) != None):
+            self.description = ''.join(content[2:])
+        else:
+            self.description = NO_DESC
 
 
     def add_to_description(self,partial_desc):
         """Appends a partial description to the description
-        attribute.
+        attribute if the current description is not NO_DESC.
 
-        We add a space to prevent two words to be concatenated.
+        We add a space to prevent two words from being concatenated.
 
         """
-        self.description += " " + partial_desc
+        if (self.description != NO_DESC):
+            self.description += " " + partial_desc
         
 
-    def to_entry(self,no_description=False):
-        """Outputs a string corresponding to the entry.
-
-        no_description: if set to True, the description is not shown
-        and "link" is used instead.
-
-        """
-        if no_description:
-            return ENTRY.format(
-                location    = self.location,
-                name        = self.name,
-                description = "link",
-            )
-        else:
-            return ENTRY.format(
-                location    = self.location,
-                name        = self.name,
-                description = self.description,
-            )
+    def to_entry(self):
+        """Outputs a string corresponding to the entry. """
+        return ENTRY.format(
+            location    = self.location,
+            name        = self.name,
+            description = self.description,
+        )
 
 
 
@@ -82,6 +82,6 @@ class Item:
 
 if (__name__ == "__main__"):
     print Item("    // * !TODO! :! * blabla! And bla too!","./here.txt:1").to_entry()
-    print Item("blabla bla !FIXREF! blabla! blabla","./here/wait/no/actually/there.bla:123456").to_entry(True)
+    print Item("blabla bla !FIXREF! blabla! blabla","./here/wait/no/actually/there.bla:123456").to_entry()
     
     
