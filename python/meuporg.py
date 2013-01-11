@@ -11,6 +11,7 @@ from parse import *
 from view import *
 
 
+
 def read_header(line):
     """Returns the depth and the name of a header.
 
@@ -22,13 +23,16 @@ def read_header(line):
     return [depth, header]
     
 
-def update_meuporg_file(path=".",
+def update_meuporg_file(
                     include=[],
                     exclude=[],
                     include_backup_files=False,
-                    include_hidden_files=False):
-    """Parses the file at path and updates all the "Items" nodes in
-    it.
+                    include_hidden_files=False,
+                    file_format="org"):
+    """Parses the main file in the directory and updates all the
+    "Items" nodes in it.
+
+    If there is no "meup.org" or "meuporg.md" file, exits violently. Otherwise, sets 
 
     The name of the header containing the "Items" sub-header is used
     to modify the "include only" array of pattern: ".*<header name>.*"
@@ -37,6 +41,13 @@ def update_meuporg_file(path=".",
     the correct depth.
 
     """
+    if file_format not in FILE_NAMES.keys():
+        # !TODO! Use proper exception in update_meuporg_file
+        print("Unkown file type")
+        exit(1)
+    else:
+        path, indent_mark = FILE_NAMES[file_format]
+
     f_old = open(path,'r')
     new_content = ""
     heading = "."
@@ -44,7 +55,7 @@ def update_meuporg_file(path=".",
     recording = True
     for line in f_old.readlines():
         line = line.rstrip()
-        if (re.match("^\** Items$",line) != None):
+        if (re.match("^" + indent_mark + "* Items$",line) != None):
             depth, void_header = read_header(line)
             if (depth == 1):
                 # case where the "Items" header is a top-level
@@ -92,9 +103,6 @@ OPTION can be the following.
           -e --exclude=: Decides which file and path pattern(s) to
           exclude from the search.
 
-          -m --module-depth=: Sorts the items depending on the folders
-          they are in up to the given depth.
-
           -l (unordered): lists the locations of all the tags in the
           files in the current folder and its subdirectories in no
           particular order.
@@ -105,6 +113,8 @@ OPTION can be the following.
           -o (org-mode): outputs the list of item in org-mode markup
            format.
 
+          -m (markdown): outputs the list of item in markdown format.
+
           -u (update): updates the meup.org file in the current
            directory.
 
@@ -114,12 +124,11 @@ if (__name__ == "__main__"):
     if (len(sys.argv) == 1):
         print_help()
     else:
-        optlist , args = getopt.gnu_getopt(sys.argv,"i:e:m:unhlo",["help", "include=", "exclude="])
+        optlist , args = getopt.gnu_getopt(sys.argv,"i:e:munhlo",["help", "include=", "exclude="])
         include = []
         exclude = []
         include_backup_files = False
         include_hidden_files = False
-        module_depth = 0
 
         # for option, argument in optlist:
         for option, argument in optlist:
@@ -137,11 +146,6 @@ if (__name__ == "__main__"):
             # deciding which files to exclude
             elif (option == "-e" or option == "--exclude"):
                 exclude = argument.split(" ")
-
-
-            # deciding whether items should be grouped by modules
-            elif (option == "-m"):
-                module_depth = int(argument)
             
     
             # listing the tags in no particular order
@@ -178,10 +182,16 @@ if (__name__ == "__main__"):
                                        exclude=exclude,
                                        include_backup_files=include_backup_files,
                                        include_hidden_files=include_hidden_files)
-                if (module_depth == 0):
-                    print(org_output(extract_name(tags),2))
-                else:
-                    print(org_output(extract_module(tags),2))
+                print(output(extract_name(tags),2,"org"))
+
+            # outputing the items using markdown markup
+            elif (option == "-m"):
+                tags = parse_directory(include=include,
+                                       exclude=exclude,
+                                       include_backup_files=include_backup_files,
+                                       include_hidden_files=include_hidden_files)
+                print(output(extract_name(tags),2,"md"))
+                
 
             # updating the meup.org file
             elif (option == "-u"):

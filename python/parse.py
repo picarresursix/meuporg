@@ -3,6 +3,7 @@
 import os
 import re
 from item import *
+from file_types import *
 
 
 def parse_file(path):
@@ -25,14 +26,14 @@ def parse_file(path):
         line = line.rstrip()
         if not recording:
             if (re.match(ITEM_LINE_REGEX,line) != None):
-                location = path + "::" + str(line_index)
-                it = Item(line,location)
+                location = path
+                it = Item(line,location,line_index)
                 recording = True
         else:
             if (re.match(ITEM_LINE_REGEX,line) != None):
                 result.append(it)
-                location = path + "::" + str(line_index)
-                it = Item(line,location)
+                location = path
+                it = Item(line,location,line_index)
             elif (re.match('\W*! *',line) != None):
                 it.add_to_description(re.split("\W*! *",line)[1])
             else:
@@ -84,4 +85,4 @@ def parse_directory(path=".",
 
 if (__name__ == "__main__"):
     for it in parse_directory():
-        print(it.to_entry())
+        print(it.format_entry("!{name}!  {description} ({location}:{line_index})"))
