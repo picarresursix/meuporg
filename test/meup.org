@@ -1,0 +1,39 @@
+#+TITLE: TEST MEUP.ORG
+#+DESCRIPTION: description
+#+AUTHOR: Leo Perrin
+#+DATE: Time-stamp: <2013-01-12 23:01:00 leo>
+#+STARTUP: hidestars indent
+
+
+
+
+* Project description
+** Files to include
+   The directories matching the following regexp will be the *only
+   ones* included. Hidden and backup files (starting with . or # or
+   ending with #) are always removed, so don't mind these.
+
+   INCLUDE_ONLY:
+
+** Files to exclude
+   The directories whose name contains the following string will not
+   be taken into account when updating the roadmap (both the
+   statistics and the item lists).
+
+   EXCLUDE:
+
+* blo
+** Items
+*** IDEA
+    1. [[file:./blo/bli.md::75][Using this function might be better]] (./blo/bli.md::75)
+*** MEOW
+    1. [[file:./blo/bla::1][blibal! bcnkjsqch]] (./blo/bla::1)
+*** MJAU
+    1. [[file:./blo/bla::2][link]] (./blo/bla::2)
+*** TODO
+    1. [[file:./blo/bli.md::73][Fix this part: it needs to be better]] (./blo/bli.md::73)
+* Items
+** IDEA
+   1. [[file:./bli::1][inckjldvn]] (./bli::1)
+** MJAU
+   1. [[file:./bla::1][nxkjsldhc]] (./bla::1)

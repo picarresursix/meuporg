@@ -3,13 +3,29 @@
 
 from ast import literal_eval
 import sys
+import os
 import getopt
 import re
 
 from item import *
 from parse import *
 from view import *
+from file_types import *
 
+
+def main_file():
+    """Goes up the directory tree until finding a folder containing a
+    "meup.org" or "meuporg.md" file and then returns the full path to
+    the said file.
+
+    """
+    while (len(os.getcwd().split(os.path.sep)) > 2):
+        folder_content = os.listdir(os.path.curdir)
+        for file_format in FILE_NAME.keys():
+            if FILE_NAME[file_format] in folder_content:
+                return os.path.join(os.getcwd(),FILE_NAME[file_format])
+        os.chdir(os.path.pardir)
+    return ""
 
 
 def read_header(line):
@@ -23,16 +39,17 @@ def read_header(line):
     return [depth, header]
     
 
-def update_meuporg_file(
-                    include=[],
-                    exclude=[],
-                    include_backup_files=False,
-                    include_hidden_files=False,
-                    file_format="org"):
-    """Parses the main file in the directory and updates all the
+def update_meuporg_file(include=[],
+                        exclude=[],
+                        include_backup_files=False,
+                        include_hidden_files=False
+                    ):
+    """Parses the main file ruling the directory and updates all the
     "Items" nodes in it.
 
-    If there is no "meup.org" or "meuporg.md" file, exits violently. Otherwise, sets 
+    If there is no "meup.org" or "meuporg.md" file in the parent
+    directories (i.e. if main_file() returns the empty string), exits
+    violently.
 
     The name of the header containing the "Items" sub-header is used
     to modify the "include only" array of pattern: ".*<header name>.*"
@@ -41,14 +58,22 @@ def update_meuporg_file(
     the correct depth.
 
     """
-    if file_format not in FILE_NAMES.keys():
-        # !TODO! Use proper exception in update_meuporg_file
-        print("Unkown file type")
-        exit(1)
-    else:
-        path, indent_mark = FILE_NAMES[file_format]
 
-    f_old = open(path,'r')
+    # opening old main file and cd-ing to its directory
+    path_to_old_file = main_file()
+    dir_old_file = os.path.split(path_to_old_file)[0]
+    file_name = os.path.split(path_to_old_file)[1]
+    os.chdir(dir_old_file)
+    f_old = open(file_name,'r')
+
+    # find the file format from the file name
+    for f in FILE_NAME.keys():
+        if (FILE_NAME[f] == file_name):
+            file_format = f
+    indent_mark = INDENT_MARK[file_format]
+
+
+    # updating the content
     new_content = ""
     heading = "."
     depth = 2
@@ -61,7 +86,6 @@ def update_meuporg_file(
                 # case where the "Items" header is a top-level
                 heading = "."
 
-            print "Item: " + str(depth) + " " + heading
             local_include = include
             local_include.append(".*" + heading + ".*")
             items = parse_directory(path=".",
@@ -69,25 +93,26 @@ def update_meuporg_file(
                     exclude=exclude,
                     include_backup_files=include_backup_files,
                     include_hidden_files=include_hidden_files)
-            new_content += line + "\n" + org_output(extract_name(items),depth+1)
+            new_content += line + "\n" + output(extract_name(items),depth+1,file_format)
 
             # not parsing the same files twice
             exclude.append(".*" + heading + ".*")
 
             # stopping copying the file (to remove the items previously stored)
             recording = False
-        elif (re.match("^\** \w*$",line) != None):
+        elif (re.match("^"+ indent_mark + "* \w*$",line) != None):
                 old_depth = depth
                 depth, heading = read_header(line)
                 if (depth < old_depth):
                     recording = True
-                print "new heading: " + heading + ", depth: " + str(depth)
+
         if recording:
             new_content += line + "\n"
     f_old.close()
-    f_new = open(path,'w')
+    f_new = open(file_name,'w')
     f_new.write(new_content)
     f_new.close()
+
 
 
 def print_help():
@@ -103,6 +128,9 @@ OPTION can be the following.
           -e --exclude=: Decides which file and path pattern(s) to
           exclude from the search.
 
+          -f --main-file=: Returns the path to the main file of the
+           directory (if any).
+
           -l (unordered): lists the locations of all the tags in the
           files in the current folder and its subdirectories in no
           particular order.
@@ -110,13 +138,16 @@ OPTION can be the following.
           -n (number): gives a list of the tag types in alphabetical
           order and their number of occurrences.
 
-          -o (org-mode): outputs the list of item in org-mode markup
-           format.
+          -o --org: outputs the list of item in org-mode markup format.
 
-          -m (markdown): outputs the list of item in markdown format.
+          -m --markdown: outputs the list of item in markdown format.
 
           -u (update): updates the meup.org file in the current
            directory.
+
+          -t (template) <format>: <format> has to be either "md" or
+           "org". Creates a new meuporg main file in the said
+           format.
 
           """)
 
@@ -124,7 +155,11 @@ if (__name__ == "__main__"):
     if (len(sys.argv) == 1):
         print_help()
     else:
-        optlist , args = getopt.gnu_getopt(sys.argv,"i:e:munhlo",["help", "include=", "exclude="])
+        optlist , args = getopt.gnu_getopt(
+            sys.argv,
+            "i:e:fmunhlot:",
+            ["help", "include=", "exclude=","main-file=","org","markdown"]
+        )
         include = []
         exclude = []
         include_backup_files = False
@@ -147,7 +182,12 @@ if (__name__ == "__main__"):
             elif (option == "-e" or option == "--exclude"):
                 exclude = argument.split(" ")
             
-    
+
+            # printing the path to the main file
+            elif (option == "-f" or option == "--main-file"):
+                print main_file()
+
+
             # listing the tags in no particular order
             elif (option == "-l"):
                 tags = parse_directory(include=include,
@@ -195,4 +235,7 @@ if (__name__ == "__main__"):
 
             # updating the meup.org file
             elif (option == "-u"):
-                update_meuporg_file("./meup.org")
+                update_meuporg_file(include=include,
+                                    exclude=exclude,
+                                    include_backup_files=include_backup_files,
+                                    include_hidden_files=include_hidden_files)

@@ -45,7 +45,7 @@ def output(items, depth, output_format):
         if isinstance(items,dict):
             for key in sorted(items.keys()):
                 for i in range(0,depth):
-                    result += INDENT_MARK[output_format]
+                    result += INDENT_MARK[output_format].replace("\\","")
                 result += " {}\n{}".format(
                     str(key),
                     output(items[key],depth+1,output_format)
