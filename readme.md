@@ -212,14 +212,14 @@ If you use emacs's org-mode, a `meuporg.el` file will be copied in your `.emacs.
 
 It will automatically set up everything. In particular, the mode will activate itself when a file is in a directory ruled by a meup.org file. It provides many useful keybindings to insert items, jump to the previous/next item in a file, update the main file, etc. Here is a list:
 
-  * *C-! r*     Updates the main file of the directory and reverts its buffer (`meuporg-reload`).
-  * *C-! h*     Open the main file ruling the current buffer (if any) (`meuporg-open-main`).
-  * *C-! n*     Moves the cursor to the next item in the same buffer (if any) (`meuporg-go-to-next-item`).
-  * *C-! p*     Moves the cursor to the previous item in the same buffer (if any) (`meuporg-go-to-previous-item`).
-  * *C-! i t*   Inserts "!TODO! " (`meuporg-insert-todo`).
-  * *C-! i i*   Inserts "!IDEA! " (`meuporg-insert-idea`).
-  * *C-! i c*   Inserts "!TO_CHECK! " (`meuporg-insert-tocheck`).
-  * *C-! i f*   Inserts "!FIX_REF! " (`meuporg-insert-fixref`).
+  * `C-! r*     Updates the main file of the directory and reverts its buffer (`meuporg-reload`).
+  * `C-! h`     Open the main file ruling the current buffer (if any) (`meuporg-open-main`).
+  * `C-! n`     Moves the cursor to the next item in the same buffer (if any) (`meuporg-go-to-next-item`).
+  * `C-! p`     Moves the cursor to the previous item in the same buffer (if any) (`meuporg-go-to-previous-item`).
+  * `C-! i t`   Inserts "!TODO! " (`meuporg-insert-todo`).
+  * `C-! i i`   Inserts "!IDEA! " (`meuporg-insert-idea`).
+  * `C-! i c`   Inserts "!TO_CHECK! " (`meuporg-insert-tocheck`).
+  * `C-! i f`   Inserts "!FIX_REF! " (`meuporg-insert-fixref`).
 
 
 
