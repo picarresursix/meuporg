@@ -1,7 +1,8 @@
 #!/usr/bin/env python
-# Time-stamp: <2013-01-13 15:52:15 leo>
+# Time-stamp: <2013-01-13 16:31:21 leo>
 
 from ast import literal_eval
+import shutil
 import os
 import sys
 import getopt
@@ -13,8 +14,8 @@ from view import *
 from file_types import *
 from update import *
 
-BASE_DIR="~/.meuporg"
 
+BASE_DIR=os.path.join(os.path.expanduser("~"),".meuporg")
 
 
 def get_template(file_format):
@@ -25,9 +26,9 @@ def get_template(file_format):
     if file_format not in FILE_NAME.keys():
         print("Unkown file format")
         exit(1)
-    os.copy(
-        os.join(BASE_DIR,FILE_NAME[file_format]),
-        os.join(os.path.curdir,FILE_NAME[file_format])
+    shutil.copy(
+        os.path.join(BASE_DIR,FILE_NAME[file_format]),
+        os.path.join(os.path.curdir,FILE_NAME[file_format])
     )
     print("{} file created.".format(FILE_NAME[file_format]))
 
@@ -165,3 +166,7 @@ if (__name__ == "__main__"):
                                  exclude=exclude,
                                  include_backup_files=include_backup_files,
                                  include_hidden_files=include_hidden_files)
+
+            # fetching template
+            elif (option == "-t"):
+                get_template(argument)
