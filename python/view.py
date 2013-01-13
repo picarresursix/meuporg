@@ -9,10 +9,10 @@
 # Then, the functions outputing the result in different format.
 
 from file_types import *
+import re
 
 
-
-def extract_name(item_list):
+def sort_by_name(item_list):
     """Turns a list into a dictionnary where items are sorted by their
     names.
 
@@ -25,6 +25,26 @@ def extract_name(item_list):
             result[item.name] = [item]
     return result
 
+
+def pop_item_by_location(items, patterns):
+    """Goes through the items in the list and builds a new list
+    containing all items whose locations matches all the
+    patterns. These items are removed from the list passed in
+    parameter.
+
+    """
+
+    result = []
+    for i in range(len(items)-1,-1,-1):
+        keep_it = True
+        for pattern in patterns:
+            if (re.match(pattern,items[i].location) == None):
+                keep_it = False
+        if keep_it:
+            result.append(items[i])
+            items.pop(i)
+    return result
+        
     
 
 def output(items, depth, output_format):
@@ -44,24 +64,29 @@ def output(items, depth, output_format):
         result = ""
         if isinstance(items,dict):
             for key in sorted(items.keys()):
-                for i in range(0,depth):
-                    result += INDENT_MARK[output_format].replace("\\","")
-                result += " {}\n{}".format(
-                    str(key),
-                    output(items[key],depth+1,output_format)
-                )
+                partial_output = output(items[key],depth+1,output_format)
+                if (partial_output != ""):
+                    for i in range(0,depth):
+                        result += INDENT_MARK[output_format].replace("\\","")
+                    result += " {}\n{}".format(
+                        str(key),
+                        partial_output
+                    )
         elif isinstance(items,list):
-            indent = ""
-            for i in range(0,depth):
-                indent += " "
-            index = 1
-            for item in items:
-                result += "{}{}. {}\n".format(
-                    indent,
-                    index,
-                    item.format_entry(ENTRY_FORMAT[output_format])
-                )
-                index += 1
+            if (len(items) == 0):
+                result = ""
+            else:
+                indent = ""
+                for i in range(0,depth):
+                    indent += " "
+                index = 1
+                for item in items:
+                    result += "{}{}. {}\n".format(
+                        indent,
+                        index,
+                        item.format_entry(ENTRY_FORMAT[output_format])
+                    )
+                    index += 1
     return result
             
 
