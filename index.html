@@ -1,60 +1,58 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Meuporg by picarresursix</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="javascripts/scale.fix.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+
+    <title>Meuporg by picarresursix</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1 class="header">Meuporg</h1>
-        <p class="header">Python script and emacs minor-mode to get things done (uses org-mode).</p>
+    <header>
+      <div class="inner">
+        <h1>Meuporg</h1>
+        <h2>Python script and emacs minor-mode to get things done (uses org-mode).</h2>
+        <a href="https://github.com/picarresursix/meuporg" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
 
-        <ul>
-          <li class="download"><a class="buttons" href="https://github.com/picarresursix/meuporg/zipball/master">Download ZIP</a></li>
-          <li class="download"><a class="buttons" href="https://github.com/picarresursix/meuporg/tarball/master">Download TAR</a></li>
-          <li><a class="buttons github" href="https://github.com/picarresursix/meuporg">View On GitHub</a></li>
-        </ul>
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>Meuporg is an Efficient and Unified Project ORGanization tool</h1>
 
-        <p class="header">This project is maintained by <a class="header name" href="https://github.com/picarresursix">picarresursix</a></p>
+<p>Meuporg (*!M!*) allows to automatically keep a centralised track of to-do items and notes associated with a project.</p>
 
+<p>It is a set of tools to update automatically a text file depending on the content of the directory it is in. It is in intended to be used to manage one person  projects. Meuporg is free software (BSD licence): basically, you are free to use/redistribute/do anything you want with it as long you give me credit for designing it.</p>
 
-      </header>
-      <section>
-        <h2>Meuporg is an Efficient and Unified Project ORGanization tool</h2>
+<h2>Installation</h2>
 
-<p>Meuporg is a system I developed to automatically keep a centralised track of the things I have to do in each of my pojects.</p>
-
-<p>It is a set of tools to update automatically a text file depending on the content of the directory it is in intended to be used to manage one person  projects. Meuporg is free software (BSD licence): basically, you are free to use/redistribute/do anything you want with it as long you give me credit for designing it.</p>
+<p>Get the archive containing all the information from one of the links on the side of the page and then uncompress it. If you run some UNIX derivative, <code>cd</code> in the newly created directory and run the <code>install.sh</code> script.</p>
 
 <h2>Ideas and principles behind Meuporg</h2>
 
 <h3>Problem addressed</h3>
 
-<p>We all have many projects we work on. In my case, I write a master thesis, I implement an open-source program, I write a math book, I manage a blog, I take care of my computer, etc. Nothing very impressive but all these tasks require me to organize myself ("no shit Sherlock"? Well, some people don't). Furthermore, I don't work on all of them at the same time: it is fairly common for one of these projects to be on stand by for weeks, months even. They can also be big: while they of course remain manageable by a single person, I need a way to keep track of what is left to do, what possible improvements could be, etc. in order to be efficient right away when catching up.</p>
+<p>We all have many projects we work on. Studies, open-source project(s), blogging, taking care of our computer, etc. All these tasks require us to organize ourselves ("no shit Sherlock"? Well, some people don't). Furthermore, we don't work on all of them at the same time: it is fairly common for one of these projects to be on stand by for weeks, months even. They can also be big. Thus, we need a way to keep track of what is left to do, what possible improvements could be, etc. in order to be efficient right away when catching up.</p>
 
-<p>I used org-mode from the start when working but I found that keeping separated TODO-lists with vague indications as for where the modifications had to be done was pretty cumbersome. I thought it would be awesome to be able to leave a small description of what was left to do in a file at the point where it was to be done and then to have a list of these items built automatically with links pointing to the exact place in the code were the modification has to be done. I also wanted it to be very easy to use (remember it is intended to fight cumbersomeness). Meuporg was born.</p>
-
-<p>The first version of this system was called roadmap and relied on bash instead of python. It used to be part of my <a href="https://github.com/picarresursix/regulus/">regulus</a> system.</p>
-
-<p>The name of this program comes from a nice joke by @tishrtman. A French joke I'm afraid; "meuporg" being an attempt at transcripting the awful pronunciation a French journalist used for the "MMORPG" acronym. <em>sigh</em>...</p>
+<p>I used org-mode from the start when working on such projects but I found that keeping separated TODO-lists with vague indications as for where the modifications had to be done was pretty cumbersome. I thought it would be awesome to be able to leave a small description of what was left to do in a file at the point where it was to be done and then to have a list of these items built automatically with links pointing to the exact place in the code were the modifications have to be done. I also wanted it to be very easy to use (remember it is intended to fight cumbersomeness). Meuporg was born.</p>
 
 <h3>Principle</h3>
 
 <p>The idea of meuporg is for you to have a file (refered to in what follows as your <em>main file</em>) where you put all the notes, to-do lists, ideas, links, etc. that are relevant for a given project and to have a script updating the said file using the content of the directory it is in.</p>
 
-<p>Meuporg relies on <em>items</em>. Items are small text snippets you can leave anywhere in any text file in your working directory that will be collected by the script, sorted, prettily formatted and inserted in your main file. We will dive into more details later; let us look an example now.</p>
+<p>Meuporg relies on <em>items</em>. Items are small text snippets you can leave anywhere in any text file in your working directory that will be collected by the script, sorted, prettily formatted and inserted in your main file. Inserting an item is dead simple: put "!ITEM! some multi word description" at the beginning of a line and <em>voilà</em>: you have an item with <em>name</em><code>ITEM</code> and with description <code>some multi word description</code>. Let us look at an example.</p>
 
-<p>First, you need a file called <code>meup.org</code> (if you use org-mode) or <code>meuporg.md</code> (if you use markdown). It contains some configuration so the simplest is to get the correct template and copy it in your directory. Now suppose you have the following files in the same directory: <code>readme.md</code>, <code>awesomeprog.c</code>, <code>lib/awesomelib.c</code>, <code>lib/awesomelib.h</code> and a <code>doc</code> folder containing automatically generated documentation (so you don't want to touch it). Suppose also that these files have some data already.</p>
+<p>First, you need a file called <code>meup.org</code> (if you use org-mode) or <code>meuporg.md</code> (if you use markdown). Run <code>meuporg -t org</code> or <code>meuporg -t md</code> to create it. Now suppose you have the following files in the same directory: <code>readme.md</code>, <code>awesomeprog.c</code>, <code>lib/awesomelib.c</code>, <code>lib/awesomelib.h</code> and a <code>doc</code> folder containing automatically generated documentation (so you don't want to touch it). Here is the content of these files.</p>
 
 <p>awesomeprog.c</p>
 
@@ -94,130 +92,189 @@
 
 <p><code>readme.md</code>:</p>
 
-<pre lang="markdown"><code>AWESOME PROGRAM
-===============
+<div class="highlight"><pre><span class="n">AWESOME</span> <span class="n">PROGRAM</span>
+<span class="p">===============</span>
 
-This program is awesome.
+<span class="n">This</span> <span class="n">program</span> <span class="k">is</span> <span class="n">awesome</span><span class="p">.</span>
 
-&lt;!-- !TODO! Write a description for my program.
---&gt;
-&lt;!-- !IDEA! Perhaps I should give an example of usage?
---&gt;
+<span class="p">&lt;!--</span> <span class="p">!</span><span class="n">TODO</span><span class="p">!</span> <span class="n">Write</span> <span class="n">a</span> <span class="n">description</span> <span class="k">for</span> <span class="n">my</span> <span class="n">program</span><span class="p">.</span>
+<span class="p">--&gt;</span>
+<span class="p">&lt;!--</span> <span class="p">!</span><span class="n">IDEA</span><span class="p">!</span> <span class="n">Perhaps</span> <span class="n">I</span> <span class="n">should</span> <span class="n">give</span> <span class="n">an</span> <span class="n">example</span> <span class="n">of</span> <span class="n">usage</span><span class="p">?</span>
+<span class="p">--&gt;</span>
 
-By the way, see this guy's website !FIXLINK!: he also does awesome things!
-</code></pre>
+<span class="n">By</span> <span class="n">the</span> <span class="n">way</span><span class="p">,</span> <span class="n">see</span> <span class="k">this</span> <span class="n">guy</span><span class="err">'</span><span class="n">s</span> <span class="n">website</span> <span class="p">!</span><span class="n">FIXLINK</span><span class="p">!:</span> <span class="n">he</span> <span class="n">also</span> <span class="n">does</span> <span class="n">awesome</span> <span class="n">things</span><span class="p">!</span>
+</pre></div>
 
-<p>We also have the following <code>meuporg.md</code> file:</p>
+<p>We also have the following <code>meuporg.md</code> file (we added the <code>Notes</code> heading).</p>
 
-<pre lang="markdown"><code>AWESOME
-=======
+<div class="highlight"><pre><span class="n">AWESOME</span>
+<span class="p">=====</span>
 
-## Configuration
+ <span class="p">*</span> <span class="n">DESCRIPTION</span><span class="p">:</span> <span class="n">description</span>
+ <span class="p">*</span> <span class="n">AUTHOR</span><span class="p">:</span> <span class="n">Me</span>
+ <span class="p">*</span> <span class="n">Date</span><span class="p">:</span> <span class="mi">2013</span><span class="p">-</span><span class="mi">01</span><span class="p">-</span><span class="mi">13</span>
 
-include:
-exclude: .*doc.*
+<span class="p">#</span> <span class="n">Project</span> <span class="n">description</span>
+  <span class="n">The</span> <span class="n">following</span> <span class="n">fields</span> <span class="n">are</span> <span class="n">used</span> <span class="n">to</span> <span class="n">configure</span> <span class="n">meuporg</span><span class="p">.</span> <span class="n">Use</span> <span class="n">space</span> <span class="n">separated</span> <span class="n">python</span> <span class="n">regexp</span><span class="p">,</span> <span class="n">see</span> <span class="p">[</span><span class="n">the</span> <span class="n">Python</span> <span class="n">documentation</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="c1">//docs.python.org/2/howto/regex.html#matching-characters) for more info.</span>
+<span class="p">##</span> <span class="n">Files</span> <span class="n">to</span> <span class="n">include</span>
+   <span class="n">INCLUDE</span><span class="p">:</span>
+   <span class="n">EXCLUDE</span><span class="p">:</span> <span class="p">.\*</span><span class="n">doc</span><span class="p">.\*</span>
+   <span class="n">INCLUDE_BACKUP_FILES</span><span class="p">:</span> <span class="n">NO</span>
+   <span class="n">INCLUDE_HIDDEN_FILES</span><span class="p">:</span> <span class="n">NO</span>
 
-## Notes
-When writing `awesome`, I could use the `cool` framework, see [here](http://cool.org).
+<span class="p">#</span> <span class="n">Notes</span>
+<span class="n">When</span> <span class="n">writing</span> <span class="s">`awesome`, I could use the `cool`</span> <span class="n">framework</span><span class="p">,</span> <span class="n">see</span> <span class="p">[</span><span class="n">here</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="c1">//cool.org).</span>
 
-## Items
-</code></pre>
+<span class="p">#</span> <span class="n">Items</span>
+</pre></div>
 
-<p>Now run <code>meuporg -u</code> in the same directory. The <code>meuporg.md</code> will be updated to become:</p>
+<p>Now run <code>meuporg -u</code> (<code>u</code> as in "update") in the same directory. The <code>meuporg.md</code> will be updated to become:</p>
 
-<pre lang="markdown"><code>AWESOME
-=======
+<div class="highlight"><pre><span class="n">AWESOME</span>
+<span class="p">=======</span>
 
-## Configuration
 
-include:
-exclude: .*doc.*
+<span class="p">#</span> <span class="n">Project</span> <span class="n">description</span>
+  <span class="n">The</span> <span class="n">following</span> <span class="n">fields</span> <span class="n">are</span> <span class="n">used</span> <span class="n">to</span> <span class="n">configure</span> <span class="n">meuporg</span><span class="p">.</span> <span class="n">Use</span> <span class="n">space</span> <span class="n">separated</span> <span class="n">python</span> <span class="n">regexp</span><span class="p">,</span> <span class="n">see</span> <span class="p">[</span><span class="n">the</span> <span class="n">Python</span> <span class="n">documentation</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="c1">//docs.python.org/2/howto/regex.html#matching-characters) for more info.</span>
+<span class="p">##</span> <span class="n">Files</span> <span class="n">to</span> <span class="n">include</span>
+   <span class="n">INCLUDE</span><span class="p">:</span>
+   <span class="n">EXCLUDE</span><span class="p">:</span> <span class="p">.\*</span><span class="n">doc</span><span class="p">.\*</span>
+   <span class="n">INCLUDE_BACKUP_FILES</span><span class="p">:</span> <span class="n">NO</span>
+   <span class="n">INCLUDE_HIDDEN_FILES</span><span class="p">:</span> <span class="n">NO</span>
 
-## Notes
-When writing `awesome`, I could use the `cool` framework, see [here](http://cool.org).
+<span class="p">#</span> <span class="n">Notes</span>
+<span class="n">When</span> <span class="n">writing</span> <span class="s">`awesome`, I could use the `cool`</span> <span class="n">framework</span><span class="p">,</span> <span class="n">see</span> <span class="p">[</span><span class="n">here</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="c1">//cool.org).</span>
 
-## Items
-## FIXLINK
-   1. [link](./readme.md:11)
-## IDEA
-   1. [Perhaps we could heuristic H here?](./lib/awesomelib.c:62)
-   2. [Perhaps I should give an example of usage? --&gt;](./readme.md:7)
-## TODO
-   1. [Write main function.](./awesome.c:100)
-   2. [Write a detailed description of awesomeness.](./lib/awesomelib.h:50)
-   3. [Write a description for my program. --&gt;](./readme.md:6)
-</code></pre>
+<span class="p">#</span> <span class="n">Items</span>
+<span class="p">##</span> <span class="n">FIXLINK</span>
+   <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">link</span><span class="p">](./</span><span class="n">readme</span><span class="p">.</span><span class="n">md</span><span class="p">:</span><span class="mi">11</span><span class="p">)</span>
+<span class="p">##</span> <span class="n">IDEA</span>
+   <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">Perhaps</span> <span class="n">we</span> <span class="n">could</span> <span class="n">heuristic</span> <span class="n">H</span> <span class="n">here</span><span class="p">?](./</span><span class="n">lib</span><span class="p">/</span><span class="n">awesomelib</span><span class="p">.</span><span class="n">c</span><span class="p">:</span><span class="mi">62</span><span class="p">)</span>
+   <span class="mi">2</span><span class="p">.</span> <span class="p">[</span><span class="n">Perhaps</span> <span class="n">I</span> <span class="n">should</span> <span class="n">give</span> <span class="n">an</span> <span class="n">example</span> <span class="n">of</span> <span class="n">usage</span><span class="p">?</span> <span class="p">--&gt;](./</span><span class="n">readme</span><span class="p">.</span><span class="n">md</span><span class="p">:</span><span class="mi">7</span><span class="p">)</span>
+<span class="p">##</span> <span class="n">TODO</span>
+   <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">Write</span> <span class="n">main</span> <span class="k">function</span><span class="p">.](./</span><span class="n">awesome</span><span class="p">.</span><span class="n">c</span><span class="p">:</span><span class="mi">100</span><span class="p">)</span>
+   <span class="mi">2</span><span class="p">.</span> <span class="p">[</span><span class="n">Write</span> <span class="n">a</span> <span class="n">detailed</span> <span class="n">description</span> <span class="n">of</span> <span class="n">awesomeness</span><span class="p">.](./</span><span class="n">lib</span><span class="p">/</span><span class="n">awesomelib</span><span class="p">.</span><span class="n">h</span><span class="p">:</span><span class="mi">50</span><span class="p">)</span>
+   <span class="mi">3</span><span class="p">.</span> <span class="p">[</span><span class="n">Write</span> <span class="n">a</span> <span class="n">description</span> <span class="k">for</span> <span class="n">my</span> <span class="n">program</span><span class="p">.</span> <span class="p">--&gt;](./</span><span class="n">readme</span><span class="p">.</span><span class="n">md</span><span class="p">:</span><span class="mi">6</span><span class="p">)</span>
+</pre></div>
+
+<p>Note that the <code>FIXLINK</code> was in the middle of the line and thus considered "in-code": it has no description so "link" is the only thing displayed. For instance, I use many such "FIXREF" items when writing papers using LaTeX.</p>
 
 <p>But wait, there is more! Suppose we want to sort the items, for instance that we want those concerning the awesome library to be separated from the others. It is very simple, just modify <code>meuporg.md</code> like this:</p>
 
-<pre lang="markdown"><code>AWESOME
-=======
+<div class="highlight"><pre><span class="n">AWESOME</span>
+<span class="p">=======</span>
 
-## Configuration
+<span class="p">#</span> <span class="n">Configuration</span>
+   <span class="n">INCLUDE</span><span class="p">:</span>
+   <span class="n">EXCLUDE</span><span class="p">:</span> <span class="p">.\*</span><span class="n">doc</span><span class="p">.\*</span>
+   <span class="n">INCLUDE_BACKUP_FILES</span><span class="p">:</span> <span class="n">NO</span>
+   <span class="n">INCLUDE_HIDDEN_FILES</span><span class="p">:</span> <span class="n">NO</span>
 
-include:
-exclude: .*doc.*
+<span class="p">#</span> <span class="n">Notes</span>
+<span class="n">When</span> <span class="n">writing</span> <span class="s">`awesome`, I could use the `cool`</span> <span class="n">framework</span><span class="p">,</span> <span class="n">see</span> <span class="p">[</span><span class="n">here</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="c1">//cool.org).</span>
 
-## Notes
-When writing `awesome`, I could use the `cool` framework, see [here](http://cool.org).
-
-## awesomelib
-### Items
-## Items
-</code></pre>
+<span class="p">#</span> <span class="n">awesomelib</span>
+<span class="p">##</span> <span class="n">Items</span>
+<span class="p">#</span> <span class="n">Items</span>
+</pre></div>
 
 <p>And run <code>meuporg.py -u</code>. You will obtain this:</p>
 
-<pre lang="markdown"><code>AWESOME
-=======
+<div class="highlight"><pre><span class="n">AWESOME</span>
+<span class="p">=======</span>
 
-## Configuration
+<span class="p">##</span> <span class="n">Configuration</span>
+   <span class="n">INCLUDE</span><span class="p">:</span>
+   <span class="n">EXCLUDE</span><span class="p">:</span> <span class="p">.\*</span><span class="n">doc</span><span class="p">.\*</span>
+   <span class="n">INCLUDE_BACKUP_FILES</span><span class="p">:</span> <span class="n">NO</span>
+   <span class="n">INCLUDE_HIDDEN_FILES</span><span class="p">:</span> <span class="n">NO</span>
 
-include:
-exclude: .*doc.*
+<span class="p">##</span> <span class="n">Notes</span>
+<span class="n">When</span> <span class="n">writing</span> <span class="s">`awesome`, I could use the `cool`</span> <span class="n">framework</span><span class="p">,</span> <span class="n">see</span> <span class="p">[</span><span class="n">here</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="c1">//cool.org).</span>
 
-## Notes
-When writing `awesome`, I could use the `cool` framework, see [here](http://cool.org).
+<span class="p">##</span> <span class="n">awesomelib</span>
+<span class="p">###</span> <span class="n">Items</span>
+<span class="p">####</span> <span class="n">IDEA</span>
+    <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">Perhaps</span> <span class="n">I</span> <span class="n">should</span> <span class="n">give</span> <span class="n">an</span> <span class="n">example</span> <span class="n">of</span> <span class="n">usage</span><span class="p">?</span> <span class="p">--&gt;](./</span><span class="n">readme</span><span class="p">.</span><span class="n">md</span><span class="p">:</span><span class="mi">7</span><span class="p">)</span>
+<span class="p">####</span> <span class="n">TODO</span>
+    <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">Write</span> <span class="n">main</span> <span class="k">function</span><span class="p">.](./</span><span class="n">awesome</span><span class="p">.</span><span class="n">c</span><span class="p">:</span><span class="mi">100</span><span class="p">)</span>
+    <span class="mi">2</span><span class="p">.</span> <span class="p">[</span><span class="n">Write</span> <span class="n">a</span> <span class="n">description</span> <span class="k">for</span> <span class="n">my</span> <span class="n">program</span><span class="p">.</span> <span class="p">--&gt;](./</span><span class="n">readme</span><span class="p">.</span><span class="n">md</span><span class="p">:</span><span class="mi">6</span><span class="p">)</span>
 
-## awesomelib
-### Items
-#### IDEA
-    1. [Perhaps I should give an example of usage? --&gt;](./readme.md:7)
-#### TODO
-    1. [Write main function.](./awesome.c:100)
-    2. [Write a description for my program. --&gt;](./readme.md:6)
-
-## Items
-### FIXLINK
-    1. [link](./readme.md:11)
-### IDEA
-    1. [Perhaps we could heuristic H here?](./lib/awesomelib.c:62)
-### TODO
-    2. [Write a detailed description of awesomeness.](./lib/awesomelib.h:50)
-</code></pre>
+<span class="p">##</span> <span class="n">Items</span>
+<span class="p">###</span> <span class="n">FIXLINK</span>
+    <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">link</span><span class="p">](./</span><span class="n">readme</span><span class="p">.</span><span class="n">md</span><span class="p">:</span><span class="mi">11</span><span class="p">)</span>
+<span class="p">###</span> <span class="n">IDEA</span>
+    <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">Perhaps</span> <span class="n">we</span> <span class="n">could</span> <span class="n">heuristic</span> <span class="n">H</span> <span class="n">here</span><span class="p">?](./</span><span class="n">lib</span><span class="p">/</span><span class="n">awesomelib</span><span class="p">.</span><span class="n">c</span><span class="p">:</span><span class="mi">62</span><span class="p">)</span>
+<span class="p">###</span> <span class="n">TODO</span>
+    <span class="mi">2</span><span class="p">.</span> <span class="p">[</span><span class="n">Write</span> <span class="n">a</span> <span class="n">detailed</span> <span class="n">description</span> <span class="n">of</span> <span class="n">awesomeness</span><span class="p">.](./</span><span class="n">lib</span><span class="p">/</span><span class="n">awesomelib</span><span class="p">.</span><span class="n">h</span><span class="p">:</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
 
 <p>Neat right?</p>
 
-<p>What happened? When <code>meuporg</code> parses the main file, it looks for headings. If it finds an "Items" heading, it updates it. To do so, it runs as usual but includes only the files whose relative path matches the pattern <code>.*last_heading.*</code>. Here, <code>last_heading="awesomelib"</code>. Logical, isn't it? Furthermore, all the items matching this pattern will not be written in any other "Items" node. So if you add a node "Items" in the end, like here, it will "garbage collect" all not printed items.</p>
+<p>What happened? When <code>meuporg</code> parses the main file, it looks for headings. If it finds an "Items" heading, it updates it. To do so, it runs as usual but includes only the files whose relative path contain all the previous headings. Here, the "Items" was in a heading "awesomelib" so only the items in files whose path contains this tring where kept. You can nest these if you prefer!</p>
 
-<h2>Supported format</h2>
+<p>Furthermore, all the items are written at most one time. So if you add a node "Items" in the end, like here, it will "garbage collect" all not printed items.</p>
+
+<h2>Formats</h2>
 
 <p>Right now, only org-mode and markdown are supported. To be completly honest, I don't really see what other relevant formats could be...</p>
 
+<p>Items can contain any letter (upper and lower case, case sensitive), numbers and underscores.</p>
+
 <h2>Emacs</h2>
 
-<p>If you use emacs's org-mode, be sure to check the content of the <code>emacs</code> folder: it contains the <code>meuporg</code> minor-mode. Just copy-paste the <code>meuporg.el</code> file somewhere in your <code>.emacs.d</code> and add the following to your <code>.emacs</code>.</p>
+<p>If you use emacs's org-mode, a <code>meuporg.el</code> file will be copied in your <code>.emacs.d</code> during Installation. It contains the <code>meuporg</code> minor-mode. Just add the following to your <code>.emacs</code> (as suggested during installation).</p>
 
-<pre lang="elisp"><code>(load-file "path/to/meuporg.el")
-</code></pre>
+<div class="highlight"><pre><span class="p">(</span><span class="nb">load</span> <span class="s">"meuporg.el"</span><span class="p">)</span>
+</pre></div>
 
-<p>It will automatically set up everything. In particular, the mode will activate itself when a file is in a directory ruled by a meup.org file. It provides many useful keybindings to insert items, jump to the previous/next item in a file, update the main file, etc.</p>
-      </section>
-      <footer>
-        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
-      </footer>
+<p>It will automatically set up everything. In particular, the mode will activate itself when a file is in a directory ruled by a meup.org file. It provides many useful keybindings to insert items, jump to the previous/next item in a file, update the main file, etc. Here is a list:</p>
+
+<ul>
+<li>
+<code>C-! r</code>     Updates the main file of the directory and reverts its buffer (<code>meuporg-reload</code>).</li>
+<li>
+<code>C-! h</code>     Open the main file ruling the current buffer (if any) (<code>meuporg-open-main</code>).</li>
+<li>
+<code>C-! n</code>     Moves the cursor to the next item in the same buffer (if any) (<code>meuporg-go-to-next-item</code>).</li>
+<li>
+<code>C-! p</code>     Moves the cursor to the previous item in the same buffer (if any) (<code>meuporg-go-to-previous-item</code>).</li>
+<li>
+<code>C-! i t</code>   Inserts "!TODO! " (<code>meuporg-insert-todo</code>).</li>
+<li>
+<code>C-! i i</code>   Inserts "!IDEA! " (<code>meuporg-insert-idea</code>).</li>
+<li>
+<code>C-! i c</code>   Inserts "!TO_CHECK! " (<code>meuporg-insert-tocheck</code>).</li>
+<li>
+<code>C-! i f</code>   Inserts "!FIX_REF! " (<code>meuporg-insert-fixref</code>).</li>
+</ul><h2>Notes</h2>
+
+<p>The first version of this system was called roadmap and relied on bash instead of python. It used to be part of my <a href="https://github.com/picarresursix/regulus/">regulus</a> system.</p>
+
+<p>The name of this program comes from a nice joke by <a href="https://github.com/tshirtman" class="user-mention">@tshirtman</a>. A French joke I'm afraid; "meuporg" being an attempt at transcripting the awful pronunciation a French journalist used for the "MMORPG" acronym. <em>sigh</em>...</p>
+
+<h2>Modifying/Hacking</h2>
+
+<p>As you might guess since I put this project on github, feel free (and further, encouraged) to use it! I would also love to hear your comments: you can contact me via github or at <code>leoperrin [at/arobase] picarresursix.fr</code>.</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/picarresursix/meuporg/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/picarresursix/meuporg/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/picarresursix/meuporg"></a> is maintained by <a href="https://github.com/picarresursix">picarresursix</a>.</p>
+
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-		
+
+  
   </body>
 </html>
