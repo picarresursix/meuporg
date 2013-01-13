@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Time-stamp: <2013-01-13 16:18:36 leo>
+# Time-stamp: <2013-01-13 18:20:42 leo>
 
 import os
 import re
@@ -91,10 +91,6 @@ def update_main_file(include=[],
 
     # reading old file a first time to get configuration
     include, exclude, include_backup_files, include_hidden_files = get_configuration(file_name)
-    print include
-    print exclude
-    print include_backup_files
-    print include_hidden_files
     
     # getting items
     items = parse_directory(path=".",
@@ -114,7 +110,6 @@ def update_main_file(include=[],
     # updating the content
     for line in f_old.readlines():
         line = line.rstrip()
-        print local_include
         if (re.match("^"+ indent_mark + "+ .*$",line) != None):
             old_depth = depth
             depth, heading = read_header(line)

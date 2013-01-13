@@ -1,0 +1,38 @@
+#+TITLE: TITLE
+#+DESCRIPTION: description
+#+AUTHOR: Me
+#+DATE: Time-stamp: <>
+#+STARTUP: hidestars indent align
+
+
+
+
+* Project description
+** Files to include
+The directories matching the following regexp's will be the *only ones*
+included. See the [[http://docs.python.org/2/howto/regex.html#matching-characters][Python re documentation]] to know how regex's are
+read. Use spaces to separate them.
+
+INCLUDE:
+
+** Files to exclude
+The directories whose name contains the following string will not be
+taken into account when updating this main file. See the [[http://docs.python.org/2/howto/regex.html#matching-characters][Python re
+documentation]] to know how regex's are read. Use spaces to separate 
+them.
+
+EXCLUDE: 
+
+** Include backup files
+If set to "YES", backup files will be included when parsing the file.
+
+INCLUDE_BACKUP_FILES: NO
+
+** Include hidden files
+If set to "YES", backup files will be included when parsing the file.
+
+INCLUDE_HIDDEN_FILES: NO
+
+
+* Items
+

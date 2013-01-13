@@ -1,0 +1,210 @@
+#+TITLE: Meuporg-mode
+#+AUTHOR: Léo Perrin <leoperrin@picarresursix.fr>
+#+DATE: Time-stamp: <2013-01-13 18:18:18 leo>
+#+STARTUP: hidestars indent
+
+
+
+* Introduction
+  Meuporg supports two file format for the main file, markdown and
+  org. However, org is the one to prefer to leverage all of its power:
+  it was intended to be used with emacs.
+
+  Therefore, a minor-mode providing hopefully useful shortcuts is
+  provided. It gives functions allowing to:
+    + Easily insert items often used items.
+    + Fontify them
+    + Update a main file.
+    + Go to the main file of which a files depends.
+
+** This file
+This is literate programming using org-babel, so open this file with
+emacs. To edit a snippet of code, use /C-c '/ to open a new frame in
+the correct mode and /C-c '/ again to close it. To create the source
+file (an operation called "tangling"), use /C-c C-v f/.
+
+* Elisp
+** The meuporg command
+Meuporg is not a "real" executable somewhere in the $PATH so we must
+tell emacs the command to run to use it.
+#+begin_src lisp :tangle meuporg.el
+  (setq meuporg-command "python ~/.meuporg ")
+#+end_src
+** meuporg-reload
+    This function is very straightforward: we run the shell command
+    "meuporg -u" and then use the "revert-buffer" elisp function to
+    reload the buffer to take the changes into account.
+    #+begin_src lisp :tangle meuporg.el
+      (defun meuporg-reload()
+        "Reload the current meuporg."
+        (interactive)
+        (shell-command (concat meuporg-command " -u"))
+        (revert-buffer)
+        )
+    #+end_src
+** Opening the main file
+*** meuporg-find-main
+    This function goes up in the directory tree until it finds a
+    meuporg.org file in one of the parent directories. Then, it
+    returns the path to the said file or an empty string if it didn't
+    find any.
+
+    Actually, we just use the output of "meuporg -f" but, to retrieve
+    it, we need to get the content of the "*Shell Command Output*"
+    buffer (and remove the last character, a new line). Then, we move
+    back to the buffer where we were and, to be able to do so, we
+    first store the said buffer in a variable.
+    #+begin_src lisp :tangle meuporg.el
+      (defun meuporg-find-main()
+        "Returns the path to meuporg of which the current file depends or an
+      empty string if there is no such meuporg."
+        (setq old-buffer (current-buffer))
+        (shell-command (concat meuporg-command " -f"))
+        (switch-to-buffer "*Shell Command Output*")
+        (setq path-to-main-meuporg
+              (buffer-substring-no-properties (point-min) (- (point-max) 1))
+              )
+        (switch-to-buffer old-buffer)
+        path-to-main-meuporg
+        )
+    #+end_src
+*** meuporg-open-main
+    Opens the main file of which the current file depends using the
+    output of meuporg-find-main. If there is no such buffer, does
+    nothing.
+    #+begin_src lisp :tangle meuporg.el
+      (defun meuporg-open-main()
+        "Open the meuporg of which the current file depends (if any)."
+        (interactive)
+        (setq path-to-main-meuporg (meuporg-find-main))
+        (if (< 2 (length path-to-main-meuporg))
+            (progn
+              (find-file path-to-main-meuporg)
+              (message (concat "Opening " path-to-main-meuporg))
+              )
+            (message "No meuporg found.")
+            )
+        )
+    #+end_src
+** Interacting with items in a file
+   Items live in "regular" file, i.e. those I actually work with: .c,
+   .cpp, .tex, .py, etc. Thus, I want to interact with items all the
+   time: inserting them and locating them easily.
+*** meuporg-insert-item
+    We want common items to be easy to insert, so we create smalls
+    functions to quickly put any item where the cursor is. Nothing
+    fancy, it just an interactive call to "insert".
+    #+begin_src lisp :tangle meuporg.el
+      (defun meuporg-insert-todo()
+        "Inserts a TODO meuporg item."
+        (interactive)
+        (insert "!TODO! ")
+        )
+
+      (defun meuporg-insert-idea()
+        "Inserts an IDEA meuporg item."
+        (interactive)
+        (insert "!IDEA! ")
+        )
+
+      (defun meuporg-insert-tocheck()
+        "Inserts a TO_CHECK meuporg item."
+        (interactive)
+        (insert "!TO_CHECK! ")
+        )
+
+      (defun meuporg-insert-fixref()
+        "Inserts a FIX_REF meuporg item."
+        (interactive)
+        (insert "!FIX_REF! ")
+        )
+    #+end_src
+*** meuporg-go-to-next-item
+    If there is another item further in the file, moves the cursor to
+    it (see [[http://curiousprogrammer.wordpress.com/2009/06/08/error-handling-in-emacs-lisp/][this blog post]] for info about error handling).
+    #+begin_src lisp :tangle meuporg.el
+      (defun meuporg-go-to-next-item()
+        (interactive)
+        (condition-case ex
+            (search-forward-regexp "\![a-zA-Z0-9_]*\!")
+          ('error
+           (message "No items after cursor.")
+           )
+          )
+        )
+    #+end_src
+*** meuporg-go-to-previous-item
+    The same as before, but for what is before in the file.
+    #+begin_src lisp :tangle meuporg.el
+      (defun meuporg-go-to-previous-item()
+        (interactive)
+        (condition-case ex
+            (search-backaward-regexp "\![a-zA-Z0-9_]*\!")
+          ('error
+           (message "No items before cursor.")
+           )
+          )
+        )
+    #+end_src
+** meuporg-mode
+*** minor-mode declaration
+   We want to define a minor-mode granting access to the keybindings
+   and the fontifying of known items. To do so, we apply what is
+   suggested [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Defining-Minor-Modes.html#Defining-Minor-Modes][here]]. The keymap had to employ a backquote and commas,
+   take a look at [[http://stackoverflow.com/questions/3115104/how-to-create-keybindings-for-a-custom-minor-mode-in-emacs][stackoverflow]] to see why.
+
+   In order to be able to use the key "C-!" as the prefix, we first
+   had to undefine this key.
+   #+begin_src lisp :tangle meuporg.el
+     (global-unset-key (kbd "C-!"))
+     
+     (define-minor-mode meuporg-mode
+         "Toggle meuporg mode.
+     
+       Interactively with no argument, this command toggles the mode.
+       A positive prefix argument enables the mode, any other prefix
+       argument disables it.  From Lisp, argument omitted or nil enables
+       the mode, `toggle' toggles the state. "
+        ;; The initial value.
+        :init-value nil
+        ;; The indicator for the mode line.
+        :lighter " !M!"
+        :keymap
+        `(
+          (,(kbd "C-! r")   . meuporg-reload)
+          (,(kbd "C-! h")   . meuporg-open-main)
+          (,(kbd "C-! n")   . meuporg-go-to-next-item)
+          (,(kbd "C-! p")   . meuporg-go-to-previous-item)
+          (,(kbd "C-! i t") . meuporg-insert-todo)
+          (,(kbd "C-! i i") . meuporg-insert-idea)
+          (,(kbd "C-! i c") . meuporg-insert-tocheck)
+          (,(kbd "C-! i f") . meuporg-insert-fixref)
+          )
+        )
+   #+end_src
+
+*** Fontifying
+   Now that we have a minor-mode, we add fontifying for the
+   items. Items are strings containing non-space character enclosed
+   between exclamation marks, so we look for this pattern.
+   #+begin_src lisp :tangle meuporg.el
+     (add-hook 'meuporg-mode-hook
+              (lambda ()
+                (font-lock-add-keywords nil '(("!\\([a-zA-Z0-9_]*\\)!" 1 font-lock-warning-face t)))
+                )
+              )
+   #+end_src
+
+*** Adding a hook to turn on the mode
+    We want the meuporg minor-mode to be switched on whenever a file
+    is on the directory tree below a meuporg. To do so, we check that
+    the output of meuporg-find-main has a greater than 1 length.
+    #+begin_src lisp :tangle meuporg.el
+      (add-hook 'find-file-hook
+                (lambda()
+                  (if (< 1 (length (meuporg-find-main)))
+                      (meuporg-mode)
+                    )
+                  )
+                )
+    #+end_src
