@@ -6,6 +6,21 @@ from item import *
 from file_types import *
 
 
+def main_file():
+    """Goes up the directory tree until finding a folder containing a
+    "meup.org" or "meuporg.md" file and then returns the full path to
+    the said file.
+
+    """
+    while (len(os.getcwd().split(os.path.sep)) > 2):
+        folder_content = os.listdir(os.path.curdir)
+        for file_format in FILE_NAME.keys():
+            if FILE_NAME[file_format] in folder_content:
+                return os.path.join(os.getcwd(),FILE_NAME[file_format])
+        os.chdir(os.path.pardir)
+    return ""
+
+
 def parse_file(path):
     """Returns a list containing all the items in the file at path.
 
@@ -84,5 +99,6 @@ def parse_directory(path=".",
 
 
 if (__name__ == "__main__"):
+    print main_file()
     for it in parse_directory():
         print(it.format_entry("!{name}!  {description} ({location}:{line_index})"))

@@ -1,130 +1,35 @@
 #!/usr/bin/env python
-
+# Time-stamp: <2013-01-13 15:52:15 leo>
 
 from ast import literal_eval
-import sys
 import os
+import sys
 import getopt
-import re
+
 
 from item import *
 from parse import *
 from view import *
 from file_types import *
+from update import *
+
+BASE_DIR="~/.meuporg"
 
 
-def main_file():
-    """Goes up the directory tree until finding a folder containing a
-    "meup.org" or "meuporg.md" file and then returns the full path to
-    the said file.
 
-    """
-    while (len(os.getcwd().split(os.path.sep)) > 2):
-        folder_content = os.listdir(os.path.curdir)
-        for file_format in FILE_NAME.keys():
-            if FILE_NAME[file_format] in folder_content:
-                return os.path.join(os.getcwd(),FILE_NAME[file_format])
-        os.chdir(os.path.pardir)
-    return ""
-
-
-def read_header(line):
-    """Returns the depth and the name of a header.
-
-    For instance, read_header("** Bla") returns [2, "Bla"].
-    """
-    content = line.split(" ")
-    depth   = len(content[0])
-    header  = content[1]
-    return [depth, header]
-    
-
-def update_meuporg_file(include=[],
-                        exclude=[],
-                        include_backup_files=False,
-                        include_hidden_files=False
-                    ):
-    """Parses the main file ruling the directory and updates all the
-    "Items" nodes in it.
-
-    If there is no "meup.org" or "meuporg.md" file in the parent
-    directories (i.e. if main_file() returns the empty string), exits
-    violently.
-
-    The name of the header containing the "Items" sub-header is used
-    to modify the "include only" array of pattern: ".*<header name>.*"
-    is added to it. Then, the parse_directory is called on "." and its
-    output org-formatted is placed just below the Item sub-header, at
-    the correct depth.
+def get_template(file_format):
+    """Copy the file in BASE_DIR having the correct extension in the
+    current directory.
 
     """
-
-    # opening old main file and cd-ing to its directory
-    path_to_old_file = main_file()
-    if (path_to_old_file == ""):
-        print("Could not find a main file. Aborting.")
+    if file_format not in FILE_NAME.keys():
+        print("Unkown file format")
         exit(1)
-
-    dir_old_file, file_name = os.path.split(path_to_old_file)
-    os.chdir(dir_old_file)
-    f_old = open(file_name,'r')
-
-    # find the file format from the file name
-    for f in FILE_NAME.keys():
-        if (FILE_NAME[f] == file_name):
-            file_format = f
-    indent_mark = INDENT_MARK[file_format]
-
-    # getting items
-    items = parse_directory(path=".",
-                            include=include,
-                            exclude=exclude,
-                            include_backup_files=include_backup_files,
-                            include_hidden_files=include_hidden_files)
-
-    # setting up variables
-    new_content = ""
-    depth = 0
-    recording = True
-    local_include = []
-
-    # updating the content
-    for line in f_old.readlines():
-        line = line.rstrip()
-        if (re.match("^"+ indent_mark + "+ .*$",line) != None):
-            old_depth = depth
-            depth, heading = read_header(line)
-            if (old_depth > depth):
-                recording = True
-                for i in range(0, old_depth-depth+1):
-                    local_include.pop()
-            elif (old_depth == depth):
-                local_include.pop()
-
-            if (heading != "Items"):
-                local_include.append(".*" + heading + ".*")
-            else:
-                # updating "Items" header
-                new_content += line + "\n" + output(
-                    sort_by_name(pop_item_by_location(items,local_include)),
-                    depth+1,
-                    file_format)
-
-                # stopping copying the file (to remove the items previously stored)
-                recording = False
-
-                local_include.append("Items") # will be poped in next iteration
-            print(line)
-            print("local_include = {}\nexclude={}\n----".format(local_include,exclude))    
-        if recording:
-            new_content += line + "\n"
-    
-    # closing old file and writing the new one
-    f_old.close()
-    f_new = open(file_name,'w')
-    f_new.write(new_content)
-    f_new.close()
-
+    os.copy(
+        os.join(BASE_DIR,FILE_NAME[file_format]),
+        os.join(os.path.curdir,FILE_NAME[file_format])
+    )
+    print("{} file created.".format(FILE_NAME[file_format]))
 
 
 def print_help():
@@ -132,10 +37,10 @@ def print_help():
     print("""Usage: meuporg OPTIONS
 
 OPTION can be the following.
-          -h (help):prints this help and exits.
 
-          -i --include=: Decides which file pattern(s) to include in
-          the search.
+          -b (backup file): include backup files (file~ and #file#)
+          
+          -d (dot file): include hidden file (.file)
 
           -e --exclude=: Decides which file and path pattern(s) to
           exclude from the search.
@@ -143,23 +48,28 @@ OPTION can be the following.
           -f --main-file=: Returns the path to the main file of the
            directory (if any).
 
+          -h (help):prints this help and exits.
+
+          -i --include=: Decides which file pattern(s) to include in
+          the search.
+
           -l (unordered): lists the locations of all the tags in the
           files in the current folder and its subdirectories in no
           particular order.
+
+          -m --markdown: outputs the list of item in markdown format.
 
           -n (number): gives a list of the tag types in alphabetical
           order and their number of occurrences.
 
           -o --org: outputs the list of item in org-mode markup format.
 
-          -m --markdown: outputs the list of item in markdown format.
-
-          -u (update): updates the meup.org file in the current
-           directory.
-
           -t (template) <format>: <format> has to be either "md" or
            "org". Creates a new meuporg main file in the said
            format.
+
+          -u (update): updates the meup.org file in the current
+           directory.
 
           """)
 
@@ -169,7 +79,7 @@ if (__name__ == "__main__"):
     else:
         optlist , args = getopt.gnu_getopt(
             sys.argv,
-            "i:e:fmunhlot:",
+            "bde:fhi:lmnot:u",
             ["help", "include=", "exclude=","main-file=","org","markdown"]
         )
         include = []
@@ -179,8 +89,25 @@ if (__name__ == "__main__"):
 
         # for option, argument in optlist:
         for option, argument in optlist:
+
+            # include backup
+            if (option == "-b"):
+                include_backup_files = True
+
+            # include hidden files
+            if (option == "-d"):
+                include_hidden_files = True
+
+            # deciding which files to exclude
+            elif (option == "-e" or option == "--exclude"):
+                exclude = argument.split(" ")
+            
+            # printing the path to the main file
+            elif (option == "-f" or option == "--main-file"):
+                print main_file()
+
             # printing help
-            if (option == "-h" or option == "--help"):
+            elif (option == "-h" or option == "--help"):
                 print_help()
                 exit()
 
@@ -188,17 +115,6 @@ if (__name__ == "__main__"):
             # deciding which files to include
             elif (option == "-i" or option == "--include"):
                 include = argument.split(" ")
-
-
-            # deciding which files to exclude
-            elif (option == "-e" or option == "--exclude"):
-                exclude = argument.split(" ")
-            
-
-            # printing the path to the main file
-            elif (option == "-f" or option == "--main-file"):
-                print main_file()
-
 
             # listing the tags in no particular order
             elif (option == "-l"):
@@ -210,6 +126,13 @@ if (__name__ == "__main__"):
                     print( "!{}! ({})".format(item.name, item.location) )
                 exit()
 
+            # outputing the items using markdown markup
+            elif (option == "-m"):
+                tags = parse_directory(include=include,
+                                       exclude=exclude,
+                                       include_backup_files=include_backup_files,
+                                       include_hidden_files=include_hidden_files)
+                print(output(sort_by_name(tags),2,"md"))
 
             # giving the number of each item type                
             elif (option == "-n"):
@@ -234,20 +157,11 @@ if (__name__ == "__main__"):
                                        exclude=exclude,
                                        include_backup_files=include_backup_files,
                                        include_hidden_files=include_hidden_files)
-                print(output(extract_name(tags),2,"org"))
-
-            # outputing the items using markdown markup
-            elif (option == "-m"):
-                tags = parse_directory(include=include,
-                                       exclude=exclude,
-                                       include_backup_files=include_backup_files,
-                                       include_hidden_files=include_hidden_files)
-                print(output(extract_name(tags),2,"md"))
-                
+                print(output(sort_by_name_name(tags),2,"org"))                
 
             # updating the meup.org file
             elif (option == "-u"):
-                update_meuporg_file(include=include,
-                                    exclude=exclude,
-                                    include_backup_files=include_backup_files,
-                                    include_hidden_files=include_hidden_files)
+                update_main_file(include=include,
+                                 exclude=exclude,
+                                 include_backup_files=include_backup_files,
+                                 include_hidden_files=include_hidden_files)
