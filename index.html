@@ -85,7 +85,8 @@
 <span class="kt">int</span> <span class="nf">awesomeness</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span> <span class="n">input</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="c1">// some code</span>
-    <span class="c1">// !IDEA! Perhaps we could heuristic H here?</span>
+    <span class="c1">// !IDEA! Perhaps we could use heuristic H here? Or perhaps</span>
+    <span class="c1">// ! heuristic H' would work better?</span>
     <span class="k">return</span> <span class="n">AWESOME_NESS</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
@@ -149,7 +150,7 @@
 <span class="p">##</span> <span class="n">FIXLINK</span>
    <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">link</span><span class="p">](./</span><span class="n">readme</span><span class="p">.</span><span class="n">md</span><span class="p">:</span><span class="mi">11</span><span class="p">)</span>
 <span class="p">##</span> <span class="n">IDEA</span>
-   <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">Perhaps</span> <span class="n">we</span> <span class="n">could</span> <span class="n">heuristic</span> <span class="n">H</span> <span class="n">here</span><span class="p">?](./</span><span class="n">lib</span><span class="p">/</span><span class="n">awesomelib</span><span class="p">.</span><span class="n">c</span><span class="p">:</span><span class="mi">62</span><span class="p">)</span>
+   <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">Perhaps</span> <span class="n">we</span> <span class="n">could</span> <span class="n">heuristic</span> <span class="n">H</span> <span class="n">here</span><span class="p">?</span> <span class="n">Or</span> <span class="n">perhaps</span> <span class="n">heuristic</span> <span class="n">H</span><span class="err">'</span> <span class="n">would</span> <span class="n">work</span> <span class="n">better</span><span class="p">?](./</span><span class="n">lib</span><span class="p">/</span><span class="n">awesomelib</span><span class="p">.</span><span class="n">c</span><span class="p">:</span><span class="mi">62</span><span class="p">)</span>
    <span class="mi">2</span><span class="p">.</span> <span class="p">[</span><span class="n">Perhaps</span> <span class="n">I</span> <span class="n">should</span> <span class="n">give</span> <span class="n">an</span> <span class="n">example</span> <span class="n">of</span> <span class="n">usage</span><span class="p">?</span> <span class="p">--&gt;](./</span><span class="n">readme</span><span class="p">.</span><span class="n">md</span><span class="p">:</span><span class="mi">7</span><span class="p">)</span>
 <span class="p">##</span> <span class="n">TODO</span>
    <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">Write</span> <span class="n">main</span> <span class="k">function</span><span class="p">.](./</span><span class="n">awesome</span><span class="p">.</span><span class="n">c</span><span class="p">:</span><span class="mi">100</span><span class="p">)</span>
@@ -158,6 +159,8 @@
 </pre></div>
 
 <p>Note that the <code>FIXLINK</code> was in the middle of the line and thus considered "in-code": it has no description so "link" is the only thing displayed. For instance, I use many such "FIXREF" items when writing papers using LaTeX.</p>
+
+<p>Also, the <code>IDEA</code> item in <code>awesomelib.c</code> was written on several lines. As long as new lines following an item start with <code>!</code>, they are considered like parts of its description.</p>
 
 <p>But wait, there is more! Suppose we want to sort the items, for instance that we want those concerning the awesome library to be separated from the others. It is very simple, just modify <code>meuporg.md</code> like this:</p>
 
@@ -204,7 +207,7 @@
 <span class="p">###</span> <span class="n">FIXLINK</span>
     <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">link</span><span class="p">](./</span><span class="n">readme</span><span class="p">.</span><span class="n">md</span><span class="p">:</span><span class="mi">11</span><span class="p">)</span>
 <span class="p">###</span> <span class="n">IDEA</span>
-    <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">Perhaps</span> <span class="n">we</span> <span class="n">could</span> <span class="n">heuristic</span> <span class="n">H</span> <span class="n">here</span><span class="p">?](./</span><span class="n">lib</span><span class="p">/</span><span class="n">awesomelib</span><span class="p">.</span><span class="n">c</span><span class="p">:</span><span class="mi">62</span><span class="p">)</span>
+    <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">Perhaps</span> <span class="n">we</span> <span class="n">could</span> <span class="n">heuristic</span> <span class="n">H</span> <span class="n">here</span><span class="p">?</span> <span class="n">Or</span> <span class="n">perhaps</span> <span class="n">heuristic</span> <span class="n">H</span><span class="err">'</span> <span class="n">would</span> <span class="n">work</span> <span class="n">better</span><span class="p">?](./</span><span class="n">lib</span><span class="p">/</span><span class="n">awesomelib</span><span class="p">.</span><span class="n">c</span><span class="p">:</span><span class="mi">62</span><span class="p">)</span>
 <span class="p">###</span> <span class="n">TODO</span>
     <span class="mi">2</span><span class="p">.</span> <span class="p">[</span><span class="n">Write</span> <span class="n">a</span> <span class="n">detailed</span> <span class="n">description</span> <span class="n">of</span> <span class="n">awesomeness</span><span class="p">.](./</span><span class="n">lib</span><span class="p">/</span><span class="n">awesomelib</span><span class="p">.</span><span class="n">h</span><span class="p">:</span><span class="mi">50</span><span class="p">)</span>
 </pre></div>
