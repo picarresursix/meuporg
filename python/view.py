@@ -35,7 +35,7 @@ def pop_item_by_location(items, patterns):
     """
 
     result = []
-    for i in range(len(items)-1,-1,-1):
+    for i in reversed(range(0,len(items))):
         keep_it = True
         for pattern in patterns:
             if (re.match(pattern,items[i].location) == None):
@@ -80,7 +80,7 @@ def output(items, depth, output_format):
                 for i in range(0,depth):
                     indent += " "
                 index = 1
-                for item in items:
+                for item in reversed(items):
                     result += "{}{}. {}\n".format(
                         indent,
                         index,

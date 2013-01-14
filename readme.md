@@ -60,7 +60,8 @@ int awesomeness(char * input)
 int awesomeness(char * input)
 {
     // some code
-    // !IDEA! Perhaps we could heuristic H here?
+    // !IDEA! Perhaps we could use heuristic H here? Or perhaps
+    // ! heuristic H' would work better?
     return AWESOME_NESS;
 }
 ```
@@ -126,7 +127,7 @@ When writing `awesome`, I could use the `cool` framework, see [here](http://cool
 ## FIXLINK
    1. [link](./readme.md:11)
 ## IDEA
-   1. [Perhaps we could heuristic H here?](./lib/awesomelib.c:62)
+   1. [Perhaps we could heuristic H here? Or perhaps heuristic H' would work better?](./lib/awesomelib.c:62)
    2. [Perhaps I should give an example of usage? -->](./readme.md:7)
 ## TODO
    1. [Write main function.](./awesome.c:100)
@@ -135,6 +136,8 @@ When writing `awesome`, I could use the `cool` framework, see [here](http://cool
 ```
 
 Note that the `FIXLINK` was in the middle of the line and thus considered "in-code": it has no description so "link" is the only thing displayed. For instance, I use many such "FIXREF" items when writing papers using LaTeX.
+
+Also, the `IDEA` item in `awesomelib.c` was written on several lines. As long as new lines following an item start with `!`, they are considered like parts of its description.
 
 But wait, there is more! Suppose we want to sort the items, for instance that we want those concerning the awesome library to be separated from the others. It is very simple, just modify `meuporg.md` like this:
 
@@ -183,7 +186,7 @@ When writing `awesome`, I could use the `cool` framework, see [here](http://cool
 ### FIXLINK
     1. [link](./readme.md:11)
 ### IDEA
-    1. [Perhaps we could heuristic H here?](./lib/awesomelib.c:62)
+    1. [Perhaps we could heuristic H here? Or perhaps heuristic H' would work better?](./lib/awesomelib.c:62)
 ### TODO
     2. [Write a detailed description of awesomeness.](./lib/awesomelib.h:50)
 ```
@@ -212,7 +215,7 @@ If you use emacs's org-mode, a `meuporg.el` file will be copied in your `.emacs.
 
 It will automatically set up everything. In particular, the mode will activate itself when a file is in a directory ruled by a meup.org file. It provides many useful keybindings to insert items, jump to the previous/next item in a file, update the main file, etc. Here is a list:
 
-  * `C-! r*     Updates the main file of the directory and reverts its buffer (`meuporg-reload`).
+  * `C-! r`     Updates the main file of the directory and reverts its buffer (`meuporg-reload`).
   * `C-! h`     Open the main file ruling the current buffer (if any) (`meuporg-open-main`).
   * `C-! n`     Moves the cursor to the next item in the same buffer (if any) (`meuporg-go-to-next-item`).
   * `C-! p`     Moves the cursor to the previous item in the same buffer (if any) (`meuporg-go-to-previous-item`).
