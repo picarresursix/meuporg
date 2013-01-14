@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Time-stamp: <2013-01-13 18:20:42 leo>
+# Time-stamp: <2013-01-14 20:57:38 leo>
 
 import os
 import re
@@ -23,19 +23,19 @@ def get_configuration(file_name):
     include_hidden_files = False
     for line in f.readlines():
         line = line.rstrip()
-        if (re.match("^ *INCLUDE: .*$",line) != None):
+        if (re.match("^\W*INCLUDE: .*$",line) != None):
             content = "".join(line.split(":")[1:])
             include = re.split(" *",content)[1:]
 
-        elif (re.match("^ *EXCLUDE: .*$",line) != None):
+        elif (re.match("^\W*EXCLUDE: .*$",line) != None):
             content = "".join(line.split(":")[1:])
             exclude = re.split(" *",content)[1:]
 
-        elif (re.match("^ *INCLUDE_BACKUP_FILES: .*$",line) != None):
+        elif (re.match("^\W*INCLUDE_BACKUP_FILES: .*$",line) != None):
             content = "".join(line.split(":")[1:]).strip()
             include_backup_files = (content == "YES")
 
-        elif (re.match("^ *INCLUDE_HIDDEN_FILES: .*$",line) != None):
+        elif (re.match("^\W*INCLUDE_HIDDEN_FILES: .*$",line) != None):
             content = "".join(line.split(":")[1:]).strip()
             include_hidden_files = (content == "YES")
     f.close()

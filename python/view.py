@@ -9,6 +9,7 @@
 # Then, the functions outputing the result in different format.
 
 from file_types import *
+from item import *
 import re
 
 
@@ -66,10 +67,11 @@ def output(items, depth, output_format):
             for key in sorted(items.keys()):
                 partial_output = output(items[key],depth+1,output_format)
                 if (partial_output != ""):
+                    heading = " " + key + " "
                     for i in range(0,depth):
-                        result += INDENT_MARK[output_format].replace("\\","")
-                    result += " {}\n{}".format(
-                        str(key),
+                        heading = HEADING_TEMPLATE[output_format].format(heading)
+                    result += "{}\n{}".format(
+                        heading,
                         partial_output
                     )
         elif isinstance(items,list):
@@ -93,8 +95,24 @@ def output(items, depth, output_format):
 
 if (__name__ == "__main__"):
      # !TODO! Write tests for the views.
-    items = [
-        Item("    // * !TODO! :! * blabla! And bla too!","./here.txt",1),
-        Item("blabla bla !FIXREF! blabla! blabla","./here/wait/no/actually/there.bla",123456)
-        ]
-    print("Bla.")
+    items = {
+        "bla": [
+            Item("    // * !TODO! :! * blabla! And bla too!","./here.txt",1),
+            Item("blabla bla !FIXREF! blabla! blabla","./here/wait/no/actually/there.bla",123456)
+        ],
+        "blo": {
+            "blu" :
+            [
+                Item("    // * !IDEA! :! * blabla! And bla too!","./here.txt",1),
+                Item("blabla bla !IDEA! blabla! blabla","./here/wait/no/actually/there.bla",123456)
+            ],
+            "bly" :
+            [
+                Item("    // * !TODO! :! * blabla! And bla too!","./here.txt",1),
+                Item("blabla bla !FIXREF! blabla! blabla","./here/wait/no/actually/there.bla",123456)
+            ]
+        }
+    }
+    print(output(items, 1, "org"))
+    print(output(items, 1, "md"))
+    print(output(items, 1, "wiki"))

@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-# The different constant which are file_type dependant.
+# The different constant which are file_type dependent.
 
-VALID_TYPE = ["org", "md"]
+
+VALID_TYPE = ["org", "md", "wiki"]
 
 # How entries should be formatted depending on the format. Variables
 # are:
@@ -12,18 +13,30 @@ VALID_TYPE = ["org", "md"]
 # * {name}: the name of the item, e.g. "TODO"
 ENTRY_FORMAT = {
     "org": "[[file:{location}::{line_index}][{description}]] ({location}::{line_index})",
-    "md":"[{description}]({location}:{line_index})"
+    "md":"[{description}]({location}:{line_index})",
+    "wiki": "[file://{location}:{line_index}|{description}] ({location}:{line_index})"
 }
 
 # The correspondance between file type and main file name.
 FILE_NAME = {
     "org": "meup.org",
-    "md" : "meuporg.md"
+    "md" : "meuporg.md",
+    "wiki": "meuporg.wiki"
 }
 
-# the following is used in regexp (from the re package), so escape
+# The following is used in regexp (from the re package), so escape
 # special characters!
 INDENT_MARK = {
     "org": "\*",
-    "md" : "#"
+    "md" : "#",
+    "wiki":"="
+}
+
+
+# To obtain a heading of depth n, iterate the following construction n
+# times.
+HEADING_TEMPLATE = {
+    "org": "*{}",
+    "md": "#{}#",
+    "wiki": "={}="
 }
