@@ -1,6 +1,6 @@
 #+TITLE: Meuporg-mode
 #+AUTHOR: Léo Perrin <leoperrin@picarresursix.fr>
-#+DATE: Time-stamp: <2013-01-13 18:18:18 leo>
+#+DATE: Time-stamp: <2013-01-14 10:30:49 leo>
 #+STARTUP: hidestars indent
 
 
@@ -139,7 +139,7 @@ tell emacs the command to run to use it.
       (defun meuporg-go-to-previous-item()
         (interactive)
         (condition-case ex
-            (search-backaward-regexp "\![a-zA-Z0-9_]*\!")
+            (search-backward-regexp "\![a-zA-Z0-9_]*\!")
           ('error
            (message "No items before cursor.")
            )

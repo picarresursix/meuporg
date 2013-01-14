@@ -71,7 +71,7 @@ empty string if there is no such meuporg."
 (defun meuporg-go-to-previous-item()
   (interactive)
   (condition-case ex
-      (search-backaward-regexp "\![a-zA-Z0-9_]*\!")
+      (search-backward-regexp "\![a-zA-Z0-9_]*\!")
     ('error
      (message "No items before cursor.")
      )
