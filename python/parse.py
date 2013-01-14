@@ -80,18 +80,18 @@ def parse_directory(path=".",
             if (include != []):
                 to_do = False
                 for pattern in include:
-                    if re.match(pattern,path):
+                    if re.search(pattern,path):
                         to_do = True
             else:
                 to_do = True
             for pattern in exclude:
-                    if re.match(pattern,path):
+                    if re.search(pattern,path):
                         to_do = False
             if to_do:
                 if not (
-                        (not include_backup_files and (re.match("^[^#].*[^~]$",f) == None))
+                        (not include_backup_files and (re.search("/.*[~#]",path) != None))
                         or
-                        (not include_hidden_files and (re.match("^[^.].*$"    ,f) == None))
+                        (not include_hidden_files and (re.search("/\.[^/]+",path) != None))
                 ):
                     result += parse_file(path)
     return result
@@ -100,5 +100,9 @@ def parse_directory(path=".",
 
 if (__name__ == "__main__"):
     print main_file()
-    for it in parse_directory():
+    for it in parse_directory(
+            include=["org","el","md"],
+            exclude=["readme"],
+            include_backup_files=False,
+            include_hidden_files=False):
         print(it.format_entry("!{name}!  {description} ({location}:{line_index})"))
