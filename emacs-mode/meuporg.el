@@ -4,8 +4,8 @@
 (defun meuporg-reload()
   "Reload the current meuporg."
   (interactive)
+  (save-buffer)
   (shell-command (concat meuporg-command " -u"))
-  (revert-buffer)
   )
 
 (defun meuporg-find-main()

@@ -1,6 +1,6 @@
 #+TITLE: Meuporg-mode
 #+AUTHOR: Léo Perrin <leoperrin@picarresursix.fr>
-#+DATE: Time-stamp: <2013-01-14 10:30:49 leo>
+#+DATE: Time-stamp: <2013-01-14 10:41:04 leo>
 #+STARTUP: hidestars indent
 
 
@@ -32,14 +32,13 @@ tell emacs the command to run to use it.
 #+end_src
 ** meuporg-reload
     This function is very straightforward: we run the shell command
-    "meuporg -u" and then use the "revert-buffer" elisp function to
-    reload the buffer to take the changes into account.
+    "meuporg -u" after saving the current buffer.
     #+begin_src lisp :tangle meuporg.el
       (defun meuporg-reload()
         "Reload the current meuporg."
         (interactive)
+        (save-buffer)
         (shell-command (concat meuporg-command " -u"))
-        (revert-buffer)
         )
     #+end_src
 ** Opening the main file
