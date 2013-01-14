@@ -1,18 +1,22 @@
-# Meuporg is an Efficient and Unified Project ORGanization tool
+# Meuporg is an Efficient and Unified Project ORGanization tool #
 
-Meuporg (*!M!*) allows to automatically keep a centralised track of to-do items and notes associated with a project.
+Meuporg (`!M!`) allows to automatically keep a centralised track of to-do items and notes associated with a project.
 
-It is a set of tools to update automatically a text file depending on the content of the directory it is in. It is in intended to be used to manage one person  projects. Meuporg is free software (BSD licence): basically, you are free to use/redistribute/do anything you want with it as long you give me credit for designing it.
+It creates a file like the following one in the blink of an eye using data from the files in the same directory. ![The main file of my master thesis](https://raw.github.com/picarresursix/meuporg/master/example.png "The main file of my master thesis")
+
+Meuporg is intended to be used to manage one person projects. Meuporg is free software (BSD licence): basically, you are free to use/redistribute/do anything you want with it as long you give me credit for designing it.
 
 
-## Installation
+
+
+## Installation ##
 
 Get the archive containing all the information from one of the links on the side of the page and then uncompress it. If you run some UNIX derivative, `cd` in the newly created directory and run the `install.sh` script.
 
 
-## Ideas and principles behind Meuporg
+## Ideas and principles behind Meuporg ##
 
-### Problem addressed
+### Problem addressed ###
 
 We all have many projects we work on. Studies, open-source project(s), blogging, taking care of our computer, etc. All these tasks require us to organize ourselves ("no shit Sherlock"? Well, some people don't). Furthermore, we don't work on all of them at the same time: it is fairly common for one of these projects to be on stand by for weeks, months even. They can also be big. Thus, we need a way to keep track of what is left to do, what possible improvements could be, etc. in order to be efficient right away when catching up.
 
@@ -20,7 +24,7 @@ I used org-mode from the start when working on such projects but I found that ke
 
 
 
-### Principle
+### Principle ###
 
 The idea of meuporg is for you to have a file (refered to in what follows as your _main file_) where you put all the notes, to-do lists, ideas, links, etc. that are relevant for a given project and to have a script updating the said file using the content of the directory it is in.
 
@@ -85,24 +89,24 @@ We also have the following `meuporg.md` file (we added the `Notes` heading).
 
 ```md
 AWESOME
-=====
+=======
 
  * DESCRIPTION: description
  * AUTHOR: Me
  * Date: 2013-01-13
 
-# Project description
+# Project description #
   The following fields are used to configure meuporg. Use space separated python regexp, see [the Python documentation](http://docs.python.org/2/howto/regex.html#matching-characters) for more info.
-## Files to include
+## Files to include ##
    INCLUDE:
    EXCLUDE: .\*doc.\*
    INCLUDE_BACKUP_FILES: NO
    INCLUDE_HIDDEN_FILES: NO
 
-# Notes
+# Notes #
 When writing `awesome`, I could use the `cool` framework, see [here](http://cool.org).
 
-# Items
+# Items #
 ```
 
 Now run `meuporg -u` (`u` as in "update") in the same directory. The `meuporg.md` will be updated to become:
@@ -112,25 +116,25 @@ AWESOME
 =======
 
 
-# Project description
+# Project description #
   The following fields are used to configure meuporg. Use space separated python regexp, see [the Python documentation](http://docs.python.org/2/howto/regex.html#matching-characters) for more info.
-## Files to include
+## Files to include ##
    INCLUDE:
    EXCLUDE: .\*doc.\*
    INCLUDE_BACKUP_FILES: NO
    INCLUDE_HIDDEN_FILES: NO
 
-# Notes
+# Notes #
 When writing `awesome`, I could use the `cool` framework, see [here](http://cool.org).
 
-# Items
-## FIXLINK
-   1. [link](./readme.md:11)
-## IDEA
-   1. [Perhaps we could heuristic H here? Or perhaps heuristic H' would work better?](./lib/awesomelib.c:62)
+# Items #
+## FIXLINK ##
+   1. [LINK](./readme.md:11)
+## IDEA ##
+   1. [PErhaps we could heuristic H here? Or perhaps heuristic H' would work better?](./lib/awesomelib.c:62)
    2. [Perhaps I should give an example of usage? -->](./readme.md:7)
-## TODO
-   1. [Write main function.](./awesome.c:100)
+## TODO ##
+   1. [WRite main function.](./awesome.c:100)
    2. [Write a detailed description of awesomeness.](./lib/awesomelib.h:50)
    3. [Write a description for my program. -->](./readme.md:6)
 ```
@@ -145,18 +149,18 @@ But wait, there is more! Suppose we want to sort the items, for instance that we
 AWESOME
 =======
 
-# Configuration
+# Configuration #
    INCLUDE:
    EXCLUDE: .\*doc.\*
    INCLUDE_BACKUP_FILES: NO
    INCLUDE_HIDDEN_FILES: NO
 
-# Notes
+# Notes #
 When writing `awesome`, I could use the `cool` framework, see [here](http://cool.org).
 
-# awesomelib
-## Items
-# Items
+# awesomelib #
+## Items ##
+# Items #
 ```
 
 And run `meuporg.py -u`. You will obtain this:
@@ -165,30 +169,30 @@ And run `meuporg.py -u`. You will obtain this:
 AWESOME
 =======
 
-## Configuration
+## Configuration ##
    INCLUDE:
    EXCLUDE: .\*doc.\*
    INCLUDE_BACKUP_FILES: NO
    INCLUDE_HIDDEN_FILES: NO
 
-## Notes
+## Notes ##
 When writing `awesome`, I could use the `cool` framework, see [here](http://cool.org).
 
-## awesomelib
-### Items
-#### IDEA
+## awesomelib ##
+### Items ###
+#### IDEA ####
     1. [Perhaps I should give an example of usage? -->](./readme.md:7)
-#### TODO
-    1. [Write main function.](./awesome.c:100)
+#### TODO ####
+    1. [WRITe main function.](./awesome.c:100)
     2. [Write a description for my program. -->](./readme.md:6)
 
-## Items
-### FIXLINK
-    1. [link](./readme.md:11)
-### IDEA
-    1. [Perhaps we could heuristic H here? Or perhaps heuristic H' would work better?](./lib/awesomelib.c:62)
-### TODO
-    2. [Write a detailed description of awesomeness.](./lib/awesomelib.h:50)
+## Items ##
+### FIXLINK ###
+    1. [LINk](./readme.md:11)
+### IDEA ###
+    1. [PERhaps we could heuristic H here? Or perhaps heuristic H' would work better?](./lib/awesomelib.c:62)
+### TODO ###
+    2. [WRIte a detailed description of awesomeness.](./lib/awesomelib.h:50)
 ```
 
 Neat right?
@@ -198,14 +202,14 @@ What happened? When `meuporg` parses the main file, it looks for headings. If it
 Furthermore, all the items are written at most one time. So if you add a node "Items" in the end, like here, it will "garbage collect" all not printed items.
 
 
-## Formats
+## Formats ##
 
-Right now, only org-mode and markdown are supported. To be completly honest, I don't really see what other relevant formats could be...
+Right now, only [org-mode](http://orgmode.org), [vimwiki](https://github.com/vim-scripts/vimwiki) and [markdown](http://en.wikipedia.org/wiki/Markdown) are supported. To be completely honest, I don't really see what other relevant formats could be...
 
 Items can contain any letter (upper and lower case, case sensitive), numbers and underscores.
 
 
-## Emacs
+## Emacs ##
 
 If you use emacs's org-mode, a `meuporg.el` file will be copied in your `.emacs.d` during Installation. It contains the `meuporg` minor-mode. Just add the following to your `.emacs` (as suggested during installation).
 
@@ -215,8 +219,8 @@ If you use emacs's org-mode, a `meuporg.el` file will be copied in your `.emacs.
 
 It will automatically set up everything. In particular, the mode will activate itself when a file is in a directory ruled by a meup.org file. It provides many useful keybindings to insert items, jump to the previous/next item in a file, update the main file, etc. Here is a list:
 
-  * `C-! r`     Updates the main file of the directory and reverts its buffer (`meuporg-reload`).
-  * `C-! h`     Open the main file ruling the current buffer (if any) (`meuporg-open-main`).
+  * `C-! u`     Updates the main file of the directory and reverts its buffer (`meuporg-reload`).
+  * `C-! m`     Open the main file ruling the current buffer (if any) (`meuporg-open-main`).
   * `C-! n`     Moves the cursor to the next item in the same buffer (if any) (`meuporg-go-to-next-item`).
   * `C-! p`     Moves the cursor to the previous item in the same buffer (if any) (`meuporg-go-to-previous-item`).
   * `C-! i t`   Inserts "!TODO! " (`meuporg-insert-todo`).
@@ -226,13 +230,13 @@ It will automatically set up everything. In particular, the mode will activate i
 
 
 
-## Notes
+## Notes ##
 
 The first version of this system was called roadmap and relied on bash instead of python. It used to be part of my [regulus](https://github.com/picarresursix/regulus/) system.
 
 The name of this program comes from a nice joke by @tshirtman. A French joke I'm afraid; "meuporg" being an attempt at transcripting the awful pronunciation a French journalist used for the "MMORPG" acronym. _sigh_...
 
 
-## Modifying/Hacking
+## Modifying/Hacking ##
 
 As you might guess since I put this project on github, feel free (and further, encouraged) to use it! I would also love to hear your comments: you can contact me via github or at `leoperrin [at/arobase] picarresursix.fr`.

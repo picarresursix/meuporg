@@ -83,10 +83,9 @@ def output(items, depth, output_format):
                     indent += " "
                 index = 1
                 for item in reversed(items):
-                    result += "{}{}. {}\n".format(
+                    result += "{}{}\n".format(
                         indent,
-                        index,
-                        item.format_entry(ENTRY_FORMAT[output_format])
+                        item.format_entry(ENTRY_FORMAT[output_format],index)
                     )
                     index += 1
     return result

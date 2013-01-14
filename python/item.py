@@ -63,13 +63,14 @@ class Item:
             self.description += " " + partial_desc
         
 
-    def format_entry(self,entry_format):
+    def format_entry(self,entry_format,item_number):
         """Outputs a string corresponding to the entry. """
         return entry_format.format(
             location    = self.location,
             line_index  = self.line_index,
             name        = self.name,
             description = self.description,
+            item_number=item_number
         )
 
 
@@ -79,8 +80,8 @@ class Item:
 
 
 if (__name__ == "__main__"):
-    basic_format = "!{name}!  {description} ({location}:{line_index})"
-    print Item("    // * !TODO! :! * blabla! And bla too!","./here.txt",1).format_entry(basic_format)
-    print Item("blabla bla !FIXREF! blabla! blabla","./here/wait/no/actually/there.bla",123456).format_entry(basic_format)
+    basic_format = "{item_number}. !{name}!  {description} ({location}:{line_index})"
+    print Item("    // * !TODO! :! * blabla! And bla too!","./here.txt",1).format_entry(basic_format,1)
+    print Item("blabla bla !FIXREF! blabla! blabla","./here/wait/no/actually/there.bla",123456).format_entry(basic_format,2)
     
     

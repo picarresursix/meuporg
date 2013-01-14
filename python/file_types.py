@@ -7,14 +7,15 @@ VALID_TYPE = ["org", "md", "wiki"]
 
 # How entries should be formatted depending on the format. Variables
 # are:
+# * {item_number}: the index of the item
 # * {location}: relative path to the file
 # * {line_index}: number of the line where the item is
 # * {description}: the description of the item
 # * {name}: the name of the item, e.g. "TODO"
 ENTRY_FORMAT = {
-    "org": "[[file:{location}::{line_index}][{description}]] ({location}::{line_index})",
-    "md":"[{description}]({location}:{line_index})",
-    "wiki": "[file://{location}:{line_index}|{description}] ({location}:{line_index})"
+    "org":  "{item_number}. [[file:{location}::{line_index}][{description}]] ({location}::{line_index})",
+    "md":   "{item_number}. [{description}]({location}:{line_index})",
+    "wiki": "# [file://{location}:{line_index}|{description}] ({location}:{line_index})"
 }
 
 # The correspondance between file type and main file name.

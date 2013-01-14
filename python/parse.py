@@ -100,9 +100,11 @@ def parse_directory(path=".",
 
 if (__name__ == "__main__"):
     print main_file()
+    index = 1
     for it in parse_directory(
             include=["org","el","md"],
             exclude=["readme"],
             include_backup_files=False,
             include_hidden_files=False):
-        print(it.format_entry("!{name}!  {description} ({location}:{line_index})"))
+        print(it.format_entry("{item_number}. !{name}!  {description} ({location}:{line_index})",index))
+        index += 1
