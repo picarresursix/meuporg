@@ -30,9 +30,11 @@
         <section id="main-content">
           <h1>Meuporg is an Efficient and Unified Project ORGanization tool</h1>
 
-<p>Meuporg (*!M!*) allows to automatically keep a centralised track of to-do items and notes associated with a project.</p>
+<p>Meuporg (<code>!M!</code>) allows to automatically keep a centralised track of to-do items and notes associated with a project.</p>
 
-<p>It is a set of tools to update automatically a text file depending on the content of the directory it is in. It is in intended to be used to manage one person  projects. Meuporg is free software (BSD licence): basically, you are free to use/redistribute/do anything you want with it as long you give me credit for designing it.</p>
+<p>It creates a file like the following one in the blink of an eye using data from the files in the same directory. <img src="https://raw.github.com/picarresursix/meuporg/master/example.png" alt="The main file of my master thesis" title="The main file of my master thesis"></p>
+
+<p>Meuporg is intended to be used to manage one person projects. Meuporg is free software (BSD licence): basically, you are free to use/redistribute/do anything you want with it as long you give me credit for designing it.</p>
 
 <h2>Installation</h2>
 
@@ -109,24 +111,24 @@
 <p>We also have the following <code>meuporg.md</code> file (we added the <code>Notes</code> heading).</p>
 
 <div class="highlight"><pre><span class="n">AWESOME</span>
-<span class="p">=====</span>
+<span class="p">=======</span>
 
  <span class="p">*</span> <span class="n">DESCRIPTION</span><span class="p">:</span> <span class="n">description</span>
  <span class="p">*</span> <span class="n">AUTHOR</span><span class="p">:</span> <span class="n">Me</span>
  <span class="p">*</span> <span class="n">Date</span><span class="p">:</span> <span class="mi">2013</span><span class="p">-</span><span class="mi">01</span><span class="p">-</span><span class="mi">13</span>
 
-<span class="p">#</span> <span class="n">Project</span> <span class="n">description</span>
+<span class="p">#</span> <span class="n">Project</span> <span class="n">description</span> <span class="p">#</span>
   <span class="n">The</span> <span class="n">following</span> <span class="n">fields</span> <span class="n">are</span> <span class="n">used</span> <span class="n">to</span> <span class="n">configure</span> <span class="n">meuporg</span><span class="p">.</span> <span class="n">Use</span> <span class="n">space</span> <span class="n">separated</span> <span class="n">python</span> <span class="n">regexp</span><span class="p">,</span> <span class="n">see</span> <span class="p">[</span><span class="n">the</span> <span class="n">Python</span> <span class="n">documentation</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="c1">//docs.python.org/2/howto/regex.html#matching-characters) for more info.</span>
-<span class="p">##</span> <span class="n">Files</span> <span class="n">to</span> <span class="n">include</span>
+<span class="p">##</span> <span class="n">Files</span> <span class="n">to</span> <span class="n">include</span> <span class="p">##</span>
    <span class="n">INCLUDE</span><span class="p">:</span>
    <span class="n">EXCLUDE</span><span class="p">:</span> <span class="p">.\*</span><span class="n">doc</span><span class="p">.\*</span>
    <span class="n">INCLUDE_BACKUP_FILES</span><span class="p">:</span> <span class="n">NO</span>
    <span class="n">INCLUDE_HIDDEN_FILES</span><span class="p">:</span> <span class="n">NO</span>
 
-<span class="p">#</span> <span class="n">Notes</span>
+<span class="p">#</span> <span class="n">Notes</span> <span class="p">#</span>
 <span class="n">When</span> <span class="n">writing</span> <span class="s">`awesome`, I could use the `cool`</span> <span class="n">framework</span><span class="p">,</span> <span class="n">see</span> <span class="p">[</span><span class="n">here</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="c1">//cool.org).</span>
 
-<span class="p">#</span> <span class="n">Items</span>
+<span class="p">#</span> <span class="n">Items</span> <span class="p">#</span>
 </pre></div>
 
 <p>Now run <code>meuporg -u</code> (<code>u</code> as in "update") in the same directory. The <code>meuporg.md</code> will be updated to become:</p>
@@ -135,25 +137,25 @@
 <span class="p">=======</span>
 
 
-<span class="p">#</span> <span class="n">Project</span> <span class="n">description</span>
+<span class="p">#</span> <span class="n">Project</span> <span class="n">description</span> <span class="p">#</span>
   <span class="n">The</span> <span class="n">following</span> <span class="n">fields</span> <span class="n">are</span> <span class="n">used</span> <span class="n">to</span> <span class="n">configure</span> <span class="n">meuporg</span><span class="p">.</span> <span class="n">Use</span> <span class="n">space</span> <span class="n">separated</span> <span class="n">python</span> <span class="n">regexp</span><span class="p">,</span> <span class="n">see</span> <span class="p">[</span><span class="n">the</span> <span class="n">Python</span> <span class="n">documentation</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="c1">//docs.python.org/2/howto/regex.html#matching-characters) for more info.</span>
-<span class="p">##</span> <span class="n">Files</span> <span class="n">to</span> <span class="n">include</span>
+<span class="p">##</span> <span class="n">Files</span> <span class="n">to</span> <span class="n">include</span> <span class="p">##</span>
    <span class="n">INCLUDE</span><span class="p">:</span>
    <span class="n">EXCLUDE</span><span class="p">:</span> <span class="p">.\*</span><span class="n">doc</span><span class="p">.\*</span>
    <span class="n">INCLUDE_BACKUP_FILES</span><span class="p">:</span> <span class="n">NO</span>
    <span class="n">INCLUDE_HIDDEN_FILES</span><span class="p">:</span> <span class="n">NO</span>
 
-<span class="p">#</span> <span class="n">Notes</span>
+<span class="p">#</span> <span class="n">Notes</span> <span class="p">#</span>
 <span class="n">When</span> <span class="n">writing</span> <span class="s">`awesome`, I could use the `cool`</span> <span class="n">framework</span><span class="p">,</span> <span class="n">see</span> <span class="p">[</span><span class="n">here</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="c1">//cool.org).</span>
 
-<span class="p">#</span> <span class="n">Items</span>
-<span class="p">##</span> <span class="n">FIXLINK</span>
-   <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">link</span><span class="p">](./</span><span class="n">readme</span><span class="p">.</span><span class="n">md</span><span class="p">:</span><span class="mi">11</span><span class="p">)</span>
-<span class="p">##</span> <span class="n">IDEA</span>
-   <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">Perhaps</span> <span class="n">we</span> <span class="n">could</span> <span class="n">heuristic</span> <span class="n">H</span> <span class="n">here</span><span class="p">?</span> <span class="n">Or</span> <span class="n">perhaps</span> <span class="n">heuristic</span> <span class="n">H</span><span class="err">'</span> <span class="n">would</span> <span class="n">work</span> <span class="n">better</span><span class="p">?](./</span><span class="n">lib</span><span class="p">/</span><span class="n">awesomelib</span><span class="p">.</span><span class="n">c</span><span class="p">:</span><span class="mi">62</span><span class="p">)</span>
+<span class="p">#</span> <span class="n">Items</span> <span class="p">#</span>
+<span class="p">##</span> <span class="n">FIXLINK</span> <span class="p">##</span>
+   <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">LINK</span><span class="p">](./</span><span class="n">readme</span><span class="p">.</span><span class="n">md</span><span class="p">:</span><span class="mi">11</span><span class="p">)</span>
+<span class="p">##</span> <span class="n">IDEA</span> <span class="p">##</span>
+   <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">PErhaps</span> <span class="n">we</span> <span class="n">could</span> <span class="n">heuristic</span> <span class="n">H</span> <span class="n">here</span><span class="p">?</span> <span class="n">Or</span> <span class="n">perhaps</span> <span class="n">heuristic</span> <span class="n">H</span><span class="err">'</span> <span class="n">would</span> <span class="n">work</span> <span class="n">better</span><span class="p">?](./</span><span class="n">lib</span><span class="p">/</span><span class="n">awesomelib</span><span class="p">.</span><span class="n">c</span><span class="p">:</span><span class="mi">62</span><span class="p">)</span>
    <span class="mi">2</span><span class="p">.</span> <span class="p">[</span><span class="n">Perhaps</span> <span class="n">I</span> <span class="n">should</span> <span class="n">give</span> <span class="n">an</span> <span class="n">example</span> <span class="n">of</span> <span class="n">usage</span><span class="p">?</span> <span class="p">--&gt;](./</span><span class="n">readme</span><span class="p">.</span><span class="n">md</span><span class="p">:</span><span class="mi">7</span><span class="p">)</span>
-<span class="p">##</span> <span class="n">TODO</span>
-   <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">Write</span> <span class="n">main</span> <span class="k">function</span><span class="p">.](./</span><span class="n">awesome</span><span class="p">.</span><span class="n">c</span><span class="p">:</span><span class="mi">100</span><span class="p">)</span>
+<span class="p">##</span> <span class="n">TODO</span> <span class="p">##</span>
+   <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">WRite</span> <span class="n">main</span> <span class="k">function</span><span class="p">.](./</span><span class="n">awesome</span><span class="p">.</span><span class="n">c</span><span class="p">:</span><span class="mi">100</span><span class="p">)</span>
    <span class="mi">2</span><span class="p">.</span> <span class="p">[</span><span class="n">Write</span> <span class="n">a</span> <span class="n">detailed</span> <span class="n">description</span> <span class="n">of</span> <span class="n">awesomeness</span><span class="p">.](./</span><span class="n">lib</span><span class="p">/</span><span class="n">awesomelib</span><span class="p">.</span><span class="n">h</span><span class="p">:</span><span class="mi">50</span><span class="p">)</span>
    <span class="mi">3</span><span class="p">.</span> <span class="p">[</span><span class="n">Write</span> <span class="n">a</span> <span class="n">description</span> <span class="k">for</span> <span class="n">my</span> <span class="n">program</span><span class="p">.</span> <span class="p">--&gt;](./</span><span class="n">readme</span><span class="p">.</span><span class="n">md</span><span class="p">:</span><span class="mi">6</span><span class="p">)</span>
 </pre></div>
@@ -167,18 +169,18 @@
 <div class="highlight"><pre><span class="n">AWESOME</span>
 <span class="p">=======</span>
 
-<span class="p">#</span> <span class="n">Configuration</span>
+<span class="p">#</span> <span class="n">Configuration</span> <span class="p">#</span>
    <span class="n">INCLUDE</span><span class="p">:</span>
    <span class="n">EXCLUDE</span><span class="p">:</span> <span class="p">.\*</span><span class="n">doc</span><span class="p">.\*</span>
    <span class="n">INCLUDE_BACKUP_FILES</span><span class="p">:</span> <span class="n">NO</span>
    <span class="n">INCLUDE_HIDDEN_FILES</span><span class="p">:</span> <span class="n">NO</span>
 
-<span class="p">#</span> <span class="n">Notes</span>
+<span class="p">#</span> <span class="n">Notes</span> <span class="p">#</span>
 <span class="n">When</span> <span class="n">writing</span> <span class="s">`awesome`, I could use the `cool`</span> <span class="n">framework</span><span class="p">,</span> <span class="n">see</span> <span class="p">[</span><span class="n">here</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="c1">//cool.org).</span>
 
-<span class="p">#</span> <span class="n">awesomelib</span>
-<span class="p">##</span> <span class="n">Items</span>
-<span class="p">#</span> <span class="n">Items</span>
+<span class="p">#</span> <span class="n">awesomelib</span> <span class="p">#</span>
+<span class="p">##</span> <span class="n">Items</span> <span class="p">##</span>
+<span class="p">#</span> <span class="n">Items</span> <span class="p">#</span>
 </pre></div>
 
 <p>And run <code>meuporg.py -u</code>. You will obtain this:</p>
@@ -186,30 +188,30 @@
 <div class="highlight"><pre><span class="n">AWESOME</span>
 <span class="p">=======</span>
 
-<span class="p">##</span> <span class="n">Configuration</span>
+<span class="p">##</span> <span class="n">Configuration</span> <span class="p">##</span>
    <span class="n">INCLUDE</span><span class="p">:</span>
    <span class="n">EXCLUDE</span><span class="p">:</span> <span class="p">.\*</span><span class="n">doc</span><span class="p">.\*</span>
    <span class="n">INCLUDE_BACKUP_FILES</span><span class="p">:</span> <span class="n">NO</span>
    <span class="n">INCLUDE_HIDDEN_FILES</span><span class="p">:</span> <span class="n">NO</span>
 
-<span class="p">##</span> <span class="n">Notes</span>
+<span class="p">##</span> <span class="n">Notes</span> <span class="p">##</span>
 <span class="n">When</span> <span class="n">writing</span> <span class="s">`awesome`, I could use the `cool`</span> <span class="n">framework</span><span class="p">,</span> <span class="n">see</span> <span class="p">[</span><span class="n">here</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="c1">//cool.org).</span>
 
-<span class="p">##</span> <span class="n">awesomelib</span>
-<span class="p">###</span> <span class="n">Items</span>
-<span class="p">####</span> <span class="n">IDEA</span>
+<span class="p">##</span> <span class="n">awesomelib</span> <span class="p">##</span>
+<span class="p">###</span> <span class="n">Items</span> <span class="p">###</span>
+<span class="p">####</span> <span class="n">IDEA</span> <span class="p">####</span>
     <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">Perhaps</span> <span class="n">I</span> <span class="n">should</span> <span class="n">give</span> <span class="n">an</span> <span class="n">example</span> <span class="n">of</span> <span class="n">usage</span><span class="p">?</span> <span class="p">--&gt;](./</span><span class="n">readme</span><span class="p">.</span><span class="n">md</span><span class="p">:</span><span class="mi">7</span><span class="p">)</span>
-<span class="p">####</span> <span class="n">TODO</span>
-    <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">Write</span> <span class="n">main</span> <span class="k">function</span><span class="p">.](./</span><span class="n">awesome</span><span class="p">.</span><span class="n">c</span><span class="p">:</span><span class="mi">100</span><span class="p">)</span>
+<span class="p">####</span> <span class="n">TODO</span> <span class="p">####</span>
+    <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">WRITe</span> <span class="n">main</span> <span class="k">function</span><span class="p">.](./</span><span class="n">awesome</span><span class="p">.</span><span class="n">c</span><span class="p">:</span><span class="mi">100</span><span class="p">)</span>
     <span class="mi">2</span><span class="p">.</span> <span class="p">[</span><span class="n">Write</span> <span class="n">a</span> <span class="n">description</span> <span class="k">for</span> <span class="n">my</span> <span class="n">program</span><span class="p">.</span> <span class="p">--&gt;](./</span><span class="n">readme</span><span class="p">.</span><span class="n">md</span><span class="p">:</span><span class="mi">6</span><span class="p">)</span>
 
-<span class="p">##</span> <span class="n">Items</span>
-<span class="p">###</span> <span class="n">FIXLINK</span>
-    <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">link</span><span class="p">](./</span><span class="n">readme</span><span class="p">.</span><span class="n">md</span><span class="p">:</span><span class="mi">11</span><span class="p">)</span>
-<span class="p">###</span> <span class="n">IDEA</span>
-    <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">Perhaps</span> <span class="n">we</span> <span class="n">could</span> <span class="n">heuristic</span> <span class="n">H</span> <span class="n">here</span><span class="p">?</span> <span class="n">Or</span> <span class="n">perhaps</span> <span class="n">heuristic</span> <span class="n">H</span><span class="err">'</span> <span class="n">would</span> <span class="n">work</span> <span class="n">better</span><span class="p">?](./</span><span class="n">lib</span><span class="p">/</span><span class="n">awesomelib</span><span class="p">.</span><span class="n">c</span><span class="p">:</span><span class="mi">62</span><span class="p">)</span>
-<span class="p">###</span> <span class="n">TODO</span>
-    <span class="mi">2</span><span class="p">.</span> <span class="p">[</span><span class="n">Write</span> <span class="n">a</span> <span class="n">detailed</span> <span class="n">description</span> <span class="n">of</span> <span class="n">awesomeness</span><span class="p">.](./</span><span class="n">lib</span><span class="p">/</span><span class="n">awesomelib</span><span class="p">.</span><span class="n">h</span><span class="p">:</span><span class="mi">50</span><span class="p">)</span>
+<span class="p">##</span> <span class="n">Items</span> <span class="p">##</span>
+<span class="p">###</span> <span class="n">FIXLINK</span> <span class="p">###</span>
+    <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">LINk</span><span class="p">](./</span><span class="n">readme</span><span class="p">.</span><span class="n">md</span><span class="p">:</span><span class="mi">11</span><span class="p">)</span>
+<span class="p">###</span> <span class="n">IDEA</span> <span class="p">###</span>
+    <span class="mi">1</span><span class="p">.</span> <span class="p">[</span><span class="n">PERhaps</span> <span class="n">we</span> <span class="n">could</span> <span class="n">heuristic</span> <span class="n">H</span> <span class="n">here</span><span class="p">?</span> <span class="n">Or</span> <span class="n">perhaps</span> <span class="n">heuristic</span> <span class="n">H</span><span class="err">'</span> <span class="n">would</span> <span class="n">work</span> <span class="n">better</span><span class="p">?](./</span><span class="n">lib</span><span class="p">/</span><span class="n">awesomelib</span><span class="p">.</span><span class="n">c</span><span class="p">:</span><span class="mi">62</span><span class="p">)</span>
+<span class="p">###</span> <span class="n">TODO</span> <span class="p">###</span>
+    <span class="mi">2</span><span class="p">.</span> <span class="p">[</span><span class="n">WRIte</span> <span class="n">a</span> <span class="n">detailed</span> <span class="n">description</span> <span class="n">of</span> <span class="n">awesomeness</span><span class="p">.](./</span><span class="n">lib</span><span class="p">/</span><span class="n">awesomelib</span><span class="p">.</span><span class="n">h</span><span class="p">:</span><span class="mi">50</span><span class="p">)</span>
 </pre></div>
 
 <p>Neat right?</p>
@@ -220,7 +222,7 @@
 
 <h2>Formats</h2>
 
-<p>Right now, only org-mode and markdown are supported. To be completly honest, I don't really see what other relevant formats could be...</p>
+<p>Right now, only <a href="http://orgmode.org">org-mode</a>, <a href="https://github.com/vim-scripts/vimwiki">vimwiki</a> and <a href="http://en.wikipedia.org/wiki/Markdown">markdown</a> are supported. To be completely honest, I don't really see what other relevant formats could be...</p>
 
 <p>Items can contain any letter (upper and lower case, case sensitive), numbers and underscores.</p>
 
@@ -235,9 +237,9 @@
 
 <ul>
 <li>
-<code>C-! r</code>     Updates the main file of the directory and reverts its buffer (<code>meuporg-reload</code>).</li>
+<code>C-! u</code>     Updates the main file of the directory and reverts its buffer (<code>meuporg-reload</code>).</li>
 <li>
-<code>C-! h</code>     Open the main file ruling the current buffer (if any) (<code>meuporg-open-main</code>).</li>
+<code>C-! m</code>     Open the main file ruling the current buffer (if any) (<code>meuporg-open-main</code>).</li>
 <li>
 <code>C-! n</code>     Moves the cursor to the next item in the same buffer (if any) (<code>meuporg-go-to-next-item</code>).</li>
 <li>
