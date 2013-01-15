@@ -47,15 +47,15 @@ empty string if there is no such meuporg."
   )
 
 (defun meuporg-insert-tocheck()
-  "Inserts a TO_CHECK meuporg item."
+  "Inserts a TOCHECK meuporg item."
   (interactive)
-  (insert "!TO_CHECK! ")
+  (insert "!TOCHECK! ")
   )
 
 (defun meuporg-insert-fixref()
-  "Inserts a FIX_REF meuporg item."
+  "Inserts a FIXREF meuporg item."
   (interactive)
-  (insert "!FIX_REF! ")
+  (insert "!FIXREF! ")
   )
 
 (defun meuporg-go-to-next-item()
@@ -93,8 +93,8 @@ empty string if there is no such meuporg."
    :lighter " !M!"
    :keymap
    `(
-     (,(kbd "C-! r")   . meuporg-reload)
-     (,(kbd "C-! h")   . meuporg-open-main)
+     (,(kbd "C-! u")   . meuporg-reload)
+     (,(kbd "C-! m")   . meuporg-open-main)
      (,(kbd "C-! n")   . meuporg-go-to-next-item)
      (,(kbd "C-! p")   . meuporg-go-to-previous-item)
      (,(kbd "C-! i t") . meuporg-insert-todo)
