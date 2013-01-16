@@ -3,22 +3,21 @@
 import re
 
 
-class org_file:
+class md_file:
     """Provides function to read headers and print headers and lists
-    to a file using the org format.
+    to a file using the markdown format.
 
     """
     def get_name(self):
         """Returns the name of the format."""
-        return "org"
-
+        return "md"
 
     def get_main_file_name(self):
         """Returns the name of the main file associated with this
         format.
 
         """
-        return "meup.org"
+        return "meuporg.md"
 
 
     def line_to_header(self,line):
@@ -26,12 +25,15 @@ class org_file:
         and a list containing [depth, title] otherwise.
 
         """
-        if (re.match("^\*+ .+$") == None):
+        if (re.match("^#+ .+") == None):
             return False
         else:
             content = line.split(" ")
             depth = len(content[0])
-            title = line[depth:].strip()
+            if (re.match(".*#+",content[1]) == None):
+                title = line[depth:].strip()
+            else:
+                title = line[depth:len(line)-depth].strip()
             return [depth, title]
             
 
@@ -40,7 +42,7 @@ class org_file:
         and depth.
 
         """
-        return "*"*depth + " " + title
+        return "#"*depth + " " + title + " " + "#"*depth
         
 
     def item_to_string(self,item):
@@ -48,7 +50,7 @@ class org_file:
         corresponding to this format.
 
         """
-        return "[[file:{location}::{line_index}][{description}]] ({location}::{line_index})".format(
+        return "[{description}]({location}:{line_index})".format(
             item.location,
             item.line_index,
             item.description
@@ -59,14 +61,12 @@ class org_file:
         """Returns a string containing the data in each of the item in
         the item list items indented at the correct level.
 
-        For org-mode the indentation is taken care of by the "indent"
-        STARTUP option, so we don't use the parameter here.
-
         """
         result = ""
         index = 1
         for item in items:
-            result += "{}. {}\n".format(
+            result += "{}{}. {}\n".format(
+                indentation,
                 index,
                 item_to_string(item)
                 )

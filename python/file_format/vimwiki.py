@@ -3,14 +3,14 @@
 import re
 
 
-class org_file:
+class vimwiki_file:
     """Provides function to read headers and print headers and lists
-    to a file using the org format.
+    to a file using the vimwiki format.
 
     """
     def get_name(self):
         """Returns the name of the format."""
-        return "org"
+        return "vimwiki"
 
 
     def get_main_file_name(self):
@@ -18,20 +18,19 @@ class org_file:
         format.
 
         """
-        return "meup.org"
-
+        return "meuporg.wiki"
 
     def line_to_header(self,line):
         """Returns False if the line does not correspond to a header
         and a list containing [depth, title] otherwise.
 
         """
-        if (re.match("^\*+ .+$") == None):
+        if (re.match("^=+ .+ =+$") == None):
             return False
         else:
             content = line.split(" ")
             depth = len(content[0])
-            title = line[depth:].strip()
+            title = line[depth,len(line)-depth].strip()
             return [depth, title]
             
 
@@ -40,7 +39,7 @@ class org_file:
         and depth.
 
         """
-        return "*"*depth + " " + title
+        return "="*depth + " " + title + " " + "="*depth
         
 
     def item_to_string(self,item):
@@ -48,7 +47,7 @@ class org_file:
         corresponding to this format.
 
         """
-        return "[[file:{location}::{line_index}][{description}]] ({location}::{line_index})".format(
+        return "[file://{location}:{line_index}|{description}] ({location}:{line_index})".format(
             item.location,
             item.line_index,
             item.description
@@ -59,18 +58,13 @@ class org_file:
         """Returns a string containing the data in each of the item in
         the item list items indented at the correct level.
 
-        For org-mode the indentation is taken care of by the "indent"
-        STARTUP option, so we don't use the parameter here.
-
         """
         result = ""
-        index = 1
         for item in items:
-            result += "{}. {}\n".format(
-                index,
+            result += "{}# {}\n".format(
+                indentation,
                 item_to_string(item)
                 )
-            index += 1
         return result
         
 
