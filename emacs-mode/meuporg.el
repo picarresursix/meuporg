@@ -78,6 +78,67 @@ empty string if there is no such meuporg."
     )
   )
 
+(defun meuporg-list-next-item()
+  "Move to the next item in the meuporg list"
+  (interactive)
+  (if (string= (buffer-name) "!List!")
+      (progn
+        (occur-next)
+        (occur-mode-goto-occurrence)
+        (recenter)
+        (other-window 1)
+      )
+    )
+  )
+
+(defun meuporg-list-previous-item()
+  "Move to the previous item in the meuporg list"
+  (interactive)
+  (if (string= (buffer-name) "!List!")
+      (progn
+        (occur-prev)
+        (occur-mode-goto-occurrence)
+        (recenter)
+        (other-window 1)
+      )
+    )
+  )
+
+(defun meuporg-list-items-in-file()
+  (interactive)
+  (delete-other-windows)
+  (setq old-buffer (current-buffer))
+  (occur "![A-Za-z0-9_]+!")
+  (if (get-buffer "!List!")
+      (kill-buffer "!List!")
+    )
+  (switch-to-buffer "*Occur*")
+  (rename-buffer "!List!")
+  (meuporg-list-mode)
+  (occur-next)
+  (switch-to-buffer old-buffer)
+  (other-window 1)
+  (next-line)
+  )
+
+(define-minor-mode meuporg-list-mode
+    "Toggle meuporg-list mode.
+
+  Interactively with no argument, this command toggles the mode.
+  A positive prefix argument enables the mode, any other prefix
+  argument disables it.  From Lisp, argument omitted or nil enables
+  the mode, `toggle' toggles the state. "
+   ;; The initial value.
+   :init-value nil
+   ;; The indicator for the mode line.
+   :lighter " !L!"
+   :keymap
+   `(
+     (,(kbd "<down>")   . meuporg-list-next-item)
+     (,(kbd "<up>")     . meuporg-list-previous-item)
+     )
+   )
+
 (global-unset-key (kbd "C-!"))
 
 (define-minor-mode meuporg-mode
@@ -97,6 +158,7 @@ empty string if there is no such meuporg."
      (,(kbd "C-! m")   . meuporg-open-main)
      (,(kbd "C-! n")   . meuporg-go-to-next-item)
      (,(kbd "C-! p")   . meuporg-go-to-previous-item)
+     (,(kbd "C-! l")   . meuporg-list-items-in-file)
      (,(kbd "C-! i t") . meuporg-insert-todo)
      (,(kbd "C-! i i") . meuporg-insert-idea)
      (,(kbd "C-! i c") . meuporg-insert-tocheck)
