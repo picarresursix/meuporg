@@ -25,7 +25,7 @@ class md_file:
         and a list containing [depth, title] otherwise.
 
         """
-        if (re.match("^#+ .+") == None):
+        if (re.match("^#+ .+",line) == None):
             return False
         else:
             content = line.split(" ")
@@ -73,9 +73,3 @@ class md_file:
             index += 1
         return result
         
-
-
-if (__name__ == "__main__"):
-     # !TODO! Write it!
-     # !TODO! document it!
-    print( "bla." )

@@ -25,12 +25,12 @@ class vimwiki_file:
         and a list containing [depth, title] otherwise.
 
         """
-        if (re.match("^=+ .+ =+$") == None):
+        if (re.match("^=+ .+ =+$",line) == None):
             return False
         else:
             content = line.split(" ")
             depth = len(content[0])
-            title = line[depth,len(line)-depth].strip()
+            title = line[depth:len(line)-depth].strip()
             return [depth, title]
             
 
@@ -67,9 +67,3 @@ class vimwiki_file:
                 )
         return result
         
-
-
-if (__name__ == "__main__"):
-     # !TODO! Write it!
-     # !TODO! document it!
-    print( "bla." )
