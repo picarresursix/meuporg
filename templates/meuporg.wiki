@@ -1,14 +1,21 @@
 TITLE
 ========================================
-Description:
+Description: short description
 Author: Me
 Date: Now
 
 
 = Project description =
+
+Insert project description here.
+
+== Files to include ==
+
+The following fields are used to configure meuporg. Use space
+separated python regexp, see [http://docs.python.org/2/howto/regex.html#matching-characters|the Python documentation]
+for more info.
+
   * INCLUDE:
   * EXCLUDE: 
-  * INCLUDE_BACKUP_FILES: NO
-  * INCLUDE_HIDDEN_FILES: NO
 
 = Items =

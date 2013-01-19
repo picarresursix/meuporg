@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Time-stamp: <2013-01-19 20:39:14 leo>
+# Time-stamp: <2013-01-20 00:01:34 leo>
 
 import shutil
 import os
@@ -7,6 +7,7 @@ import sys
 import argparse
 
 
+import file_format 
 from parse import parse_file, parse_directory
 from view import *
 from update import update_main_file, main_file
@@ -15,19 +16,19 @@ from update import update_main_file, main_file
 TEMPLATE_DIR=os.path.join(os.path.expanduser("~"),".meuporg/templates")
 
 
-def get_template(file_format):
+def get_template(format_name):
     """Copy the file in BASE_DIR having the correct extension in the
     current directory.
 
     """
-    if file_format not in FILE_NAME.keys():
-        print("Unkown file format")
-        exit(1)
+    if format_name not in file_format.factory.valid_formats:
+        raise Exception("Unkown file format")
+    style = file_format.factory.get_format(format_name)
     shutil.copy(
-        os.path.join(TEMPLATE_DIR,FILE_NAME[file_format]),
-        os.path.join(os.path.curdir,FILE_NAME[file_format])
+        os.path.join(TEMPLATE_DIR,style.get_main_file_name()),
+        os.path.join(os.path.curdir,style.get_main_file_name())
     )
-    print("{} file created.".format(FILE_NAME[file_format]))
+    print("{} file created.".format(style.get_main_file_name()))
 
 
 def parse_and_print(path=".",
