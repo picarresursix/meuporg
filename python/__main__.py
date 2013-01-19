@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Time-stamp: <2013-01-19 20:24:20 leo>
+# Time-stamp: <2013-01-19 20:39:14 leo>
 
 import shutil
 import os
@@ -7,9 +7,9 @@ import sys
 import argparse
 
 
-from parse import parse_file,parse_directory
+from parse import parse_file, parse_directory
 from view import *
-from update import update_main_file
+from update import update_main_file, main_file
 
 
 TEMPLATE_DIR=os.path.join(os.path.expanduser("~"),".meuporg/templates")
