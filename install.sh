@@ -1,5 +1,5 @@
 #!/bin/bash
-#; Time-stamp: <2013-01-13 17:38:48 leo>
+#; Time-stamp: <2013-01-19 20:33:24 leo>
 
 # Run this (simple) script to install meuporg.
 
@@ -12,7 +12,7 @@ else
     echo $BASE_DIR" already exists."
 fi
 cp -R templates $BASE_DIR 
-cp python/* $BASE_DIR/
+cp -R python/* $BASE_DIR/
 chmod +x $BASE_DIR/__main__.py
 echo 'To run meuporg, use the command "python '$BASE_DIR'"'
 echo 'You might want to add the following line to you .bashrc file:'
