@@ -47,11 +47,7 @@ class vimwiki_file:
         corresponding to this format.
 
         """
-        return "[file://{location}:{line_index}|{description}] ({location}:{line_index})".format(
-            item.location,
-            item.line_index,
-            item.description
-        )
+        return "[file://{0.location}:{0.line_index}|{0.description}] ({0.location}:{0.line_index})".format(item)
         
 
     def list_to_string(self,items, indentation):

@@ -1,14 +1,63 @@
 #!/usr/bin/env python
-# Time-stamp: <2013-01-14 20:57:38 leo>
+# Time-stamp: <2013-01-19 19:02:45 leo>
 
 import os
 import re
 
-from item import *
-from parse import *
+from item import meuporg_item
+from parse import parse_file, parse_directory
 from view import *
-from file_types import *
+import file_format
 
+
+
+def main_file():
+    """Goes up the directory tree until finding a folder containing a
+    "meup.org" or "meuporg.md" file and then returns the full path to
+    the said file.
+
+    If a directory whose full path contains less than two "/" is
+    encountered, we stop because we went to deep (used to prevent
+    infinite loop).
+
+    If nothing was found, returns the empty string.
+
+    """
+    while (len(os.getcwd().split(os.path.sep)) > 2):
+        folder_content = os.listdir(os.path.curdir)
+        for style in file_format.factory.get_format_list():
+            if style.get_main_file_name() in folder_content:
+                return os.path.join(
+                    os.getcwd(),
+                    style.get_main_file_name()
+                )
+        os.chdir(os.path.pardir)
+    return ""
+
+
+def heading_to_patterns(heading):
+    """Extract patterns from a heading.
+
+    If the heading is a space separated list of words, returns a
+    list containing these words.
+
+    If the heading contains a bracket enclosed list of comma separated
+    words, outputs only this list.
+
+    Examples:
+    > print(heading_to_patterns("section title"))
+      ["section", "title"]
+    > print(heading_to_patterns("section title (pattern1,re.*gex)"))
+      ["pattern1", "re.*gex"]
+
+    """
+    if re.match(".*\(.*\)\W*$",heading) == None:
+        return heading.split(" ")
+    else:
+        return heading[heading.find('(')+1:heading.find(')')].split(",")
+        
+
+    
 
 def get_configuration(file_name):
     """Parses the file at file_name and returns a list of variables
@@ -41,16 +90,6 @@ def get_configuration(file_name):
     f.close()
     return include, exclude, include_backup_files, include_hidden_files
 
-
-def read_header(line):
-    """Returns the depth and the name of a header.
-
-    For instance, read_header("** Bla") returns [2, "Bla"].
-    """
-    content = line.split(" ")
-    depth   = len(content[0])
-    header  = content[1]
-    return [depth, header]
     
 
 def update_main_file(include=[],
@@ -84,10 +123,9 @@ def update_main_file(include=[],
     os.chdir(dir_old_file)
     
     # find the file format from the file name
-    for f in FILE_NAME.keys():
-        if (FILE_NAME[f] == file_name):
-            file_format = f
-    indent_mark = INDENT_MARK[file_format]
+    for potential_style in file_format.factory.get_format_list():
+        if (potential_style.get_main_file_name() == file_name):
+            style = potential_style
 
     # reading old file a first time to get configuration
     include, exclude, include_backup_files, include_hidden_files = get_configuration(file_name)
@@ -110,9 +148,9 @@ def update_main_file(include=[],
     # updating the content
     for line in f_old.readlines():
         line = line.rstrip()
-        if (re.match("^"+ indent_mark + "+ .*$",line) != None):
+        if (style.line_to_header(line) != False):
             old_depth = depth
-            depth, heading = read_header(line)
+            depth, heading = style.line_to_header(line)
             if (old_depth > depth):
                 recording = True
                 for i in range(0, old_depth-depth+1):
@@ -121,13 +159,31 @@ def update_main_file(include=[],
                 local_include.pop()
 
             if (heading != "Items"):
-                local_include.append(".*" + heading + ".*")
+                local_include += [heading_to_patterns(heading)]
+                print local_include
+                print meuporg_item.item_names
+                print "----------------"
             else:
-                # updating "Items" header
+                # updating "Items" header. If an item name is in
+                # local_include, we do not sort the items by name.
+                use_sort_by_name = True
+                for pattern in flatten_to_list(local_include):
+                    if pattern in meuporg_item.item_names:
+                        use_sort_by_name = False
+                if use_sort_by_name:
+                    items_to_print = sort_by_name(pop_item_by_patterns(
+                        items,
+                        flatten_to_list(local_include)
+                    ))
+                else:
+                    items_to_print = pop_item_by_patterns(
+                        items,
+                        flatten_to_list(local_include)
+                    )
                 new_content += line + "\n" + output(
-                    sort_by_name(pop_item_by_location(items,local_include)),
-                    depth+1,
-                    file_format)
+                        items_to_print,
+                        depth+1,
+                        style.get_name())
 
                 # stopping copying the file (to remove the items previously stored)
                 recording = False
@@ -143,3 +199,11 @@ def update_main_file(include=[],
     f_new.write(new_content)
     f_new.close()
     print "[DONE]"
+
+
+if __name__ == "__main__":
+    print heading_to_patterns("blabla abla")
+    print heading_to_patterns("blabla (bla,bla,bli)")
+    print heading_to_patterns("blabla abla (bcka,.*nckj,vn[/n],nckn+)")
+    print heading_to_patterns("blabla abla ()")
+    

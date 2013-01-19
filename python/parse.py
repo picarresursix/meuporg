@@ -2,23 +2,8 @@
 
 import os
 import re
-from item import *
-from file_types import *
+from item import meuporg_item
 
-
-def main_file():
-    """Goes up the directory tree until finding a folder containing a
-    "meup.org" or "meuporg.md" file and then returns the full path to
-    the said file.
-
-    """
-    while (len(os.getcwd().split(os.path.sep)) > 2):
-        folder_content = os.listdir(os.path.curdir)
-        for file_format in FILE_NAME.keys():
-            if FILE_NAME[file_format] in folder_content:
-                return os.path.join(os.getcwd(),FILE_NAME[file_format])
-        os.chdir(os.path.pardir)
-    return ""
 
 
 def parse_file(path):
@@ -40,15 +25,15 @@ def parse_file(path):
     for line in f.readlines():
         line = line.rstrip()
         if not recording:
-            if (re.match(ITEM_LINE_REGEX,line) != None):
+            if (re.search(meuporg_item.item_regex,line) != None):
                 location = path
-                it = Item(line,location,line_index)
+                it = meuporg_item(line,location,line_index)
                 recording = True
         else:
-            if (re.match(ITEM_LINE_REGEX,line) != None):
+            if (re.search(meuporg_item.item_regex,line) != None):
                 result.append(it)
                 location = path
-                it = Item(line,location,line_index)
+                it = meuporg_item(line,location,line_index)
             elif (re.match('\W*! *',line) != None):
                 it.add_to_description(re.split("\W*! *",line)[1])
             else:
@@ -75,8 +60,8 @@ def parse_directory(path=".",
 
     result = []
     for dirname, dirnames, filenames in os.walk(path):
-        for f in filenames:
-            path = os.path.join(dirname,f)
+        for name in filenames:
+            path = os.path.join(dirname,name)
             if (include != []):
                 to_do = False
                 for pattern in include:
@@ -99,12 +84,11 @@ def parse_directory(path=".",
 
 
 if (__name__ == "__main__"):
-    print main_file()
     index = 1
     for it in parse_directory(
             include=["org","el","md"],
             exclude=["readme"],
             include_backup_files=False,
             include_hidden_files=False):
-        print(it.format_entry("{item_number}. !{name}!  {description} ({location}:{line_index})",index))
+        print("{item_number}. !{0.name}!  {0.description} ({0.location}:{0.line_index})".format(it,item_number=index))
         index += 1

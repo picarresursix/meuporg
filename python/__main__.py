@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Time-stamp: <2013-01-17 10:13:09 leo>
+# Time-stamp: <2013-01-19 18:20:43 leo>
 
 from ast import literal_eval
 import shutil
@@ -7,14 +7,12 @@ import os
 import sys
 import getopt
 
-import file_format
+#import file_format
 
 
-from item import *
-from parse import *
+from parse import parse_file,parse_directory
 from view import *
-from file_types import *
-from update import *
+from update import update_main_file
 
 
 TEMPLATE_DIR=os.path.join(os.path.expanduser("~"),".meuporg/templates")
@@ -57,11 +55,6 @@ OPTION can be the following.
           -i --include=: Decides which file pattern(s) to include in
           the search.
 
-          -l (unordered): lists the locations of all the tags in the
-          files in the current folder and its subdirectories in no
-          particular order. If a file name is specified, parses only
-          the said file.
-
           -m --markdown: outputs the list of items in the given file
            or folder in markdown format.
 
@@ -70,6 +63,12 @@ OPTION can be the following.
 
           -o --org: outputs the list of items in the given path or
            folder in org-mode format.
+
+          -s --sort=: specifies how to sort the items. Default is
+           "name".
+                    * name: sort items by their name
+                    * file: sort items by the files they are in
+                    * none: do not sort items
 
           -t (template) <format>: <format> has to be either "md" or
            "org". Creates a new meuporg main file in the said
@@ -89,114 +88,113 @@ if (__name__ == "__main__"):
     else:
         optlist , args = getopt.gnu_getopt(
             sys.argv,
-            "bde:fhi:lm:no:t:uw:",
+            "bde:fhim:no:s:t:uw:",
             ["help", "include=", "exclude=","main-file","org","markdown","vimwiki"]
         )
         include = []
         exclude = []
         include_backup_files = False
         include_hidden_files = False
+        sort = "name"
 
         # for option, argument in optlist:
         for option, argument in optlist:
 
-            # include backup
-            if (option == "-b"):
-                include_backup_files = True
+            # # include backup
+            # if (option == "-b"):
+            #     include_backup_files = True
 
-            # include hidden files
-            if (option == "-d"):
-                include_hidden_files = True
+            # # include hidden files
+            # if (option == "-d"):
+            #     include_hidden_files = True
 
-            # deciding which files to exclude
-            elif (option == "-e" or option == "--exclude"):
-                exclude = argument.split(" ")
+            # # deciding which files to exclude
+            # elif (option == "-e" or option == "--exclude"):
+            #     exclude = argument.split(" ")
             
-            # printing the path to the main file
-            elif (option == "-f" or option == "--main-file"):
-                print main_file()
+            # # printing the path to the main file
+            # elif (option == "-f" or option == "--main-file"):
+            #     print main_file()
 
-            # printing help
-            elif (option == "-h" or option == "--help"):
-                print_help()
-                exit()
-
-
-            # deciding which files to include
-            elif (option == "-i" or option == "--include"):
-                include = argument.split(" ")
-
-            # listing the tags in no particular order
-            elif (option == "-l"):
-                tags = parse_directory(include=include,
-                                       exclude=exclude,
-                                       include_backup_files=include_backup_files,
-                                       include_hidden_files=include_hidden_files)
-                for item in tags:
-                    print( "!{}! ({})".format(item.name, item.location) )
-                exit()
-
-            # outputing the items using markdown markup
-            elif (option == "-m" or option == "--markdown"):
-                if (os.path.isdir(argument)):
-                    tags = parse_directory(include=include,
-                                           exclude=exclude,
-                                           include_backup_files=include_backup_files,
-                                           include_hidden_files=include_hidden_files,
-                                           path=argument)
-                else:
-                    tags = parse_file(argument)
-                print(output(sort_by_name(tags),2,"md"))
-
-            # giving the number of each item type                
-            elif (option == "-n"):
-                tags = parse_directory(include=include,
-                                       exclude=exclude,
-                                       include_backup_files=include_backup_files,
-                                       include_hidden_files=include_hidden_files)
-                numbers = {}
-                for item in tags:
-                    if item.name not in numbers.keys():
-                        numbers[item.name] = 1
-                    else:
-                        numbers[item.name] += 1
-                for item_name in sorted(numbers.keys()):
-                    print( "{}: {}".format(item_name, numbers[item_name]))
-                exit()
+            # # printing help
+            # elif (option == "-h" or option == "--help"):
+            #     print_help()
+            #     exit()
 
 
-            # outputing the items using org-mode
-            elif (option == "-o" or option == "--org"):
-                if (os.path.isdir(argument)):
-                    tags = parse_directory(include=include,
-                                           exclude=exclude,
-                                           include_backup_files=include_backup_files,
-                                           include_hidden_files=include_hidden_files,
-                                           path=argument)
-                else:
-                    tags = parse_file(argument)
-                print(output(sort_by_name(tags),2,"org"))
+            # # deciding which files to include
+            # elif (option == "-i" or option == "--include"):
+            #     include = argument.split(" ")
+
+
+            # # outputing the items using markdown markup
+            # elif (option == "-m" or option == "--markdown"):
+            #     if (os.path.isdir(argument)):
+            #         tags = parse_directory(include=include,
+            #                                exclude=exclude,
+            #                                include_backup_files=include_backup_files,
+            #                                include_hidden_files=include_hidden_files,
+            #                                path=argument)
+            #     else:
+            #         tags = parse_file(argument)
+            #     print(output(sort_by_name(tags),2,"md"))
+
+            # # giving the number of each item type                
+            # elif (option == "-n"):
+            #     tags = parse_directory(include=include,
+            #                            exclude=exclude,
+            #                            include_backup_files=include_backup_files,
+            #                            include_hidden_files=include_hidden_files)
+            #     numbers = {}
+            #     for item in tags:
+            #         if item.name not in numbers.keys():
+            #             numbers[item.name] = 1
+            #         else:
+            #             numbers[item.name] += 1
+            #     for item_name in sorted(numbers.keys()):
+            #         print( "{}: {}".format(item_name, numbers[item_name]))
+            #     exit()
+
+
+            # # outputing the items using org-mode
+            # elif (option == "-o" or option == "--org"):
+            #     if (os.path.isdir(argument)):
+            #         tags = parse_directory(include=include,
+            #                                exclude=exclude,
+            #                                include_backup_files=include_backup_files,
+            #                                include_hidden_files=include_hidden_files,
+            #                                path=argument)
+            #     else:
+            #         tags = parse_file(argument)
+            #     if (sort == "name"):
+            #         print(output(sort_by_name(tags),2,"org"))
+            #     else:
+            #         print(output(tags,0,"org"))
 
             # updating the meup.org file
-            elif (option == "-u"):
+            if (option == "-u"):
                 update_main_file(include=include,
                                  exclude=exclude,
                                  include_backup_files=include_backup_files,
                                  include_hidden_files=include_hidden_files)
 
-            # fetching template
-            elif (option == "-t"):
-                get_template(argument)
+            # # setting the type of sort
+            # elif (option == "-s" or option == "--sort"):
+            #     sort = argument
+
+            # # fetching template
+            # elif (option == "-t"):
+            #     get_template(argument)
 
 
-            # outputing the items using vimwiki
-            elif (option == "-w" or option == "--vimwiki"):
-                if (os.path.isdir(argument)):
-                    tags = parse_directory(include=include,
-                                           exclude=exclude,
-                                           include_backup_files=include_backup_files,
-                                           include_hidden_files=include_hidden_files,
-                                           path=argument)
-                else:
-                    tags = parse_file(argument)
-                print(output(sort_by_name(tags),2,"wiki"))
+            # # outputing the items using vimwiki
+            # elif (option == "-w" or option == "--vimwiki"):
+            #     if (os.path.isdir(argument)):
+            #         tags = parse_directory(include=include,
+            #                                exclude=exclude,
+            #                                include_backup_files=include_backup_files,
+            #                                include_hidden_files=include_hidden_files,
+            #                                path=argument)
+            #     else:
+            #         tags = parse_file(argument)
+            #     print(output(sort_by_name(tags),2,"wiki"))

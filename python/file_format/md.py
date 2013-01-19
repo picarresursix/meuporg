@@ -50,11 +50,7 @@ class md_file:
         corresponding to this format.
 
         """
-        return "[{description}]({location}:{line_index})".format(
-            item.location,
-            item.line_index,
-            item.description
-        )
+        return "[{0.description}]({0.location}:{0.line_index})".format(item)
         
 
     def list_to_string(self,items, indentation):
