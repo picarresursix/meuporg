@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Time-stamp: <2013-01-19 19:02:45 leo>
+# Time-stamp: <2013-01-20 11:19:08 leo>
 
 import os
 import re
@@ -65,29 +65,28 @@ def get_configuration(file_name):
 
     """
     print("Reading config from {}".format(file_name))
-    f = open(file_name,'r')
-    include = []
-    exclude = []
-    include_backup_files = False
-    include_hidden_files = False
-    for line in f.readlines():
-        line = line.rstrip()
-        if (re.match("^\W*INCLUDE: .*$",line) != None):
-            content = "".join(line.split(":")[1:])
-            include = re.split(" *",content)[1:]
+    with open(file_name,'r') as f:
+        include = []
+        exclude = []
+        include_backup_files = False
+        include_hidden_files = False
+        for line in f.readlines():
+            line = line.rstrip()
+            if (re.match("^\W*INCLUDE: .*$",line) != None):
+                content = "".join(line.split(":")[1:])
+                include = re.split(" *",content)[1:]
 
-        elif (re.match("^\W*EXCLUDE: .*$",line) != None):
-            content = "".join(line.split(":")[1:])
-            exclude = re.split(" *",content)[1:]
+            elif (re.match("^\W*EXCLUDE: .*$",line) != None):
+                content = "".join(line.split(":")[1:])
+                exclude = re.split(" *",content)[1:]
 
-        elif (re.match("^\W*INCLUDE_BACKUP_FILES: .*$",line) != None):
-            content = "".join(line.split(":")[1:]).strip()
-            include_backup_files = (content == "YES")
+            elif (re.match("^\W*INCLUDE_BACKUP_FILES: .*$",line) != None):
+                content = "".join(line.split(":")[1:]).strip()
+                include_backup_files = (content == "YES")
 
-        elif (re.match("^\W*INCLUDE_HIDDEN_FILES: .*$",line) != None):
-            content = "".join(line.split(":")[1:]).strip()
-            include_hidden_files = (content == "YES")
-    f.close()
+            elif (re.match("^\W*INCLUDE_HIDDEN_FILES: .*$",line) != None):
+                content = "".join(line.split(":")[1:]).strip()
+                include_hidden_files = (content == "YES")
     return include, exclude, include_backup_files, include_hidden_files
 
     
@@ -138,66 +137,61 @@ def update_main_file(include=[],
                             include_hidden_files=include_hidden_files)
 
     # setting up variables
-    f_old = open(file_name,'r')
-    new_content = ""
-    depth = 0
-    recording = True
-    local_include = []
+    with open(file_name,'r') as f_old:
+        new_content = ""
+        depth = 0
+        recording = True
+        local_include = []
     
 
-    # updating the content
-    for line in f_old.readlines():
-        line = line.rstrip()
-        if (style.line_to_header(line) != False):
-            old_depth = depth
-            depth, heading = style.line_to_header(line)
-            if (old_depth > depth):
-                recording = True
-                for i in range(0, old_depth-depth+1):
+        # updating the content
+        for line in f_old.readlines():
+            line = line.rstrip()
+            if (style.line_to_header(line) != False):
+                old_depth = depth
+                depth, heading = style.line_to_header(line)
+                if (old_depth > depth):
+                    recording = True
+                    for i in range(0, old_depth-depth+1):
+                        local_include.pop()
+                elif (old_depth == depth):
                     local_include.pop()
-            elif (old_depth == depth):
-                local_include.pop()
 
-            if (heading != "Items"):
-                local_include += [heading_to_patterns(heading)]
-                print local_include
-                print meuporg_item.item_names
-                print "----------------"
-            else:
-                # updating "Items" header. If an item name is in
-                # local_include, we do not sort the items by name.
-                use_sort_by_name = True
-                for pattern in flatten_to_list(local_include):
-                    if pattern in meuporg_item.item_names:
-                        use_sort_by_name = False
-                if use_sort_by_name:
-                    items_to_print = sort_by_name(pop_item_by_patterns(
-                        items,
-                        flatten_to_list(local_include)
-                    ))
+                if (heading != "Items"):
+                    local_include += [heading_to_patterns(heading)]
+                    
                 else:
-                    items_to_print = pop_item_by_patterns(
-                        items,
-                        flatten_to_list(local_include)
-                    )
-                new_content += line + "\n" + output(
+                    # updating "Items" header. If an item name is in
+                    # local_include, we do not sort the items by name.
+                    use_sort_by_name = True
+                    for pattern in flatten_to_list(local_include):
+                        if pattern in meuporg_item.item_names:
+                            use_sort_by_name = False
+                    if use_sort_by_name:
+                        items_to_print = sort_by_name(pop_item_by_patterns(
+                            items,
+                            flatten_to_list(local_include)
+                        ))
+                    else:
+                        items_to_print = pop_item_by_patterns(
+                            items,
+                            flatten_to_list(local_include)
+                        )
+                    new_content += line + "\n" + output(
                         items_to_print,
                         depth+1,
                         style.get_name())
+                    
+                    # stopping copying the file (to remove the items previously stored)
+                    recording = False
 
-                # stopping copying the file (to remove the items previously stored)
-                recording = False
-
-                local_include.append("Items") # will be poped in next iteration
-
-        if recording:
-            new_content += line + "\n"
+                    local_include.append("Items") # will be poped in next iteration
+            if recording:
+                new_content += line + "\n"
     
-    # closing old file and writing the new one
-    f_old.close()
-    f_new = open(file_name,'w')
-    f_new.write(new_content)
-    f_new.close()
+    #  writing the new file
+    with open(file_name,'w') as f_new:
+        f_new.write(new_content)
     print "[DONE]"
 
 

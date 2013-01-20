@@ -96,13 +96,7 @@ def output(items, depth, output_format):
             indent = ""
             for i in range(0,depth):
                 indent += " "
-            index = 1
-            for item in reversed(items):
-                result += "{}{}\n".format(
-                    indent,
-                    style.item_to_string(item)
-                )
-                index += 1
+            result += style.list_to_string(reversed(items),indent)
     return result
             
 

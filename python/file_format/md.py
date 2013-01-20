@@ -53,18 +53,18 @@ class md_file:
         return "[{0.description}]({0.location}:{0.line_index})".format(item)
         
 
-    def list_to_string(self,items, indentation):
+    def list_to_string(self,item_list, indentation):
         """Returns a string containing the data in each of the item in
-        the item list items indented at the correct level.
+        the item list indented at the correct level.
 
         """
         result = ""
         index = 1
-        for item in items:
+        for item in item_list:
             result += "{}{}. {}\n".format(
                 indentation,
                 index,
-                item_to_string(item)
+                self.item_to_string(item)
                 )
             index += 1
         return result

@@ -21,26 +21,25 @@ def parse_file(path):
     recording = False
     line_index = 1
     result = []
-    f = open(path,'r')
-    for line in f.readlines():
-        line = line.rstrip()
-        if not recording:
-            if (re.search(meuporg_item.item_regex,line) != None):
-                location = path
-                it = meuporg_item(line,location,line_index)
-                recording = True
-        else:
-            if (re.search(meuporg_item.item_regex,line) != None):
-                result.append(it)
-                location = path
-                it = meuporg_item(line,location,line_index)
-            elif (re.match('\W*! *',line) != None):
-                it.add_to_description(re.split("\W*! *",line)[1])
+    with open(path,'r') as f:
+        for line in f.readlines():
+            line = line.rstrip()
+            if not recording:
+                if (re.search(meuporg_item.item_regex,line) != None):
+                    location = path
+                    it = meuporg_item(line,location,line_index)
+                    recording = True
             else:
-                result.append(it)
-                recording = False
-        line_index += 1
-        f.close()
+                if (re.search(meuporg_item.item_regex,line) != None):
+                    result.append(it)
+                    location = path
+                    it = meuporg_item(line,location,line_index)
+                elif (re.match('\W*! *',line) != None):
+                    it.add_to_description(re.split("\W*! *",line)[1])
+                else:
+                    result.append(it)
+                    recording = False
+            line_index += 1
     return result
 
 
