@@ -127,7 +127,10 @@ highlighting."
   (switch-to-buffer meuporg-listed-buffer)
   (hi-lock-mode -1)
   (if (get-buffer "!List!")
-      (kill-buffer "!List!")
+      (progn
+        (switch-to-buffer "!List!")
+        (quit-window t)
+        )
     )
   (delete-other-windows)
   )

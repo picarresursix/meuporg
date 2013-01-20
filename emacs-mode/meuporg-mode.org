@@ -1,7 +1,7 @@
 #+TITLE: Meuporg-mode
 #+DESCRIPTION: The litterate code of the meuporg-mode.
 #+AUTHOR: Léo Perrin <leoperrin@picarresursix.fr>
-#+DATE: Time-stamp: <2013-01-20 14:49:46 leo>
+#+DATE: Time-stamp: <2013-01-20 15:07:05 leo>
 #+STARTUP: hidestars indent
 
 
@@ -225,7 +225,10 @@ buffer containing the item list.
     (switch-to-buffer meuporg-listed-buffer)
     (hi-lock-mode -1)
     (if (get-buffer "!List!")
-        (kill-buffer "!List!")
+        (progn
+          (switch-to-buffer "!List!")
+          (quit-window t)
+          )
       )
     (delete-other-windows)
     )
