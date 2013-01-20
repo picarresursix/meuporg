@@ -1,7 +1,7 @@
 #+TITLE: Meuporg-mode
 #+DESCRIPTION: The litterate code of the meuporg-mode.
 #+AUTHOR: Léo Perrin <leoperrin@picarresursix.fr>
-#+DATE: Time-stamp: <2013-01-18 13:50:37 leo>
+#+DATE: Time-stamp: <2013-01-20 14:49:46 leo>
 #+STARTUP: hidestars indent
 
 
@@ -145,6 +145,8 @@ tell emacs the command to run to use it.
           )
         )
     #+end_src
+** meuporg-toggle-item-highlighting
+Use [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Highlight-Interactively.html][hi-lock-mode]].
 * List and jump to items in a file
 The search of items in a file and the navigation among them relies on
 the `occur` elisp function. The idea is to use occur to find all lines
@@ -193,23 +195,39 @@ come back to the occur buffer.
 This functions call occur with the correct pattern to look for items
 in the current file, rename it "!List!" (after killing any other
 buffer having this name), turn on the meuporg-list minor-mode and
-moves the cursor to the list.
+moves the cursor to the list. It also highlights the lines containing
+the items in the file.
 #+begin_src lisp :tangle meuporg.el
   (defun meuporg-list-items-in-file()
+    (setq meuporg-listed-buffer (current-buffer))
     (interactive)
+    (meuporg-kill-item-list)
     (delete-other-windows)
-    (setq old-buffer (current-buffer))
     (occur "![A-Za-z0-9_]+!")
-    (if (get-buffer "!List!")
-        (kill-buffer "!List!")
-      )
     (switch-to-buffer "*Occur*")
     (rename-buffer "!List!")
     (meuporg-list-mode)
     (occur-next)
-    (switch-to-buffer old-buffer)
+    (switch-to-buffer meuporg-listed-buffer)
+    (highlight-lines-matching-regexp "![A-Za-z0-9_]+!")
     (other-window 1)
     (next-line)
+    )
+#+end_src
+** meuporg-kill-item-list
+This functions removes the highlighting of the items and kills the
+buffer containing the item list.
+#+begin_src lisp :tangle meuporg.el
+  (defun meuporg-kill-item-list()
+    "Kills the buffer containing the item list and turns off line
+  highlighting."
+    (interactive)
+    (switch-to-buffer meuporg-listed-buffer)
+    (hi-lock-mode -1)
+    (if (get-buffer "!List!")
+        (kill-buffer "!List!")
+      )
+    (delete-other-windows)
     )
 #+end_src
 
@@ -266,6 +284,7 @@ generated with occur.
           (,(kbd "C-! n")   . meuporg-go-to-next-item)
           (,(kbd "C-! p")   . meuporg-go-to-previous-item)
           (,(kbd "C-! l")   . meuporg-list-items-in-file)
+          (,(kbd "C-! q")   . meuporg-kill-item-list)
           (,(kbd "C-! i t") . meuporg-insert-todo)
           (,(kbd "C-! i i") . meuporg-insert-idea)
           (,(kbd "C-! i c") . meuporg-insert-tocheck)
