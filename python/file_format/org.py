@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
+"""Provides the OrgFile class to interact with org-mode files."""
+
 import re
 
 
-class org_file:
+class OrgFile:
     """Provides function to read headers and print headers and lists
     to a file using the org format.
 
@@ -21,12 +23,12 @@ class org_file:
         return "meup.org"
 
 
-    def line_to_header(self,line):
+    def line_to_header(self, line):
         """Returns False if the line does not correspond to a header
         and a list containing [depth, title] otherwise.
 
         """
-        if (re.match("^\*+ .+$",line) == None):
+        if (re.match("^\*+ .+$", line) == None):
             return False
         else:
             content = line.split(" ")
@@ -35,7 +37,7 @@ class org_file:
             return [depth, title]
             
 
-    def header_to_string(self,depth,title):
+    def header_to_string(self, depth, title):
         """Returns a string containing a header with the given title
         and depth.
 
@@ -43,7 +45,7 @@ class org_file:
         return "*"*depth + " " + title
         
 
-    def item_to_string(self,item):
+    def item_to_string(self, item):
         """Returns the string containing the data in the item
         corresponding to this format.
 
@@ -51,7 +53,7 @@ class org_file:
         return "[[file:{0.location}::{0.line_index}][{0.description}]] ({0.location}::{0.line_index})".format(item)
         
 
-    def list_to_string(self,item_list, indentation):
+    def list_to_string(self, item_list, indentation):
         """Returns a string containing the data in each of the item in
         the item list indented at the correct level.
 

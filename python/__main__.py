@@ -1,19 +1,23 @@
 #!/usr/bin/env python
-# Time-stamp: <2013-01-20 00:01:34 leo>
+# Time-stamp: <2013-01-20 14:18:42 leo>
+
+"""Contains the main program of meuporg, i.e. parses the cli arguments
+and calls the correct functions.
+
+"""
 
 import shutil
 import os
-import sys
 import argparse
 
 
 import file_format 
 from parse import parse_file, parse_directory
-from view import *
+from view import output, sort_by_name
 from update import update_main_file, main_file
 
 
-TEMPLATE_DIR=os.path.join(os.path.expanduser("~"),".meuporg/templates")
+TEMPLATE_DIR = os.path.join(os.path.expanduser("~"), ".meuporg/templates")
 
 
 def get_template(format_name):
@@ -21,12 +25,12 @@ def get_template(format_name):
     current directory.
 
     """
-    if format_name not in file_format.factory.valid_formats:
+    if format_name not in file_format.Factory.valid_formats:
         raise Exception("Unkown file format")
-    style = file_format.factory.get_format(format_name)
+    style = file_format.Factory.get_format(format_name)
     shutil.copy(
-        os.path.join(TEMPLATE_DIR,style.get_main_file_name()),
-        os.path.join(os.path.curdir,style.get_main_file_name())
+        os.path.join(TEMPLATE_DIR, style.get_main_file_name()),
+        os.path.join(os.path.curdir, style.get_main_file_name())
     )
     print("{} file created.".format(style.get_main_file_name()))
 
@@ -50,11 +54,11 @@ def parse_and_print(path=".",
                                path=path)
     else:
         tags = parse_file(path)
-    print(output(sort_by_name(tags),2,style_name))
+    print(output(sort_by_name(tags), 2, style_name))
 
 
 if (__name__ == "__main__"):
-    argument_parser = argparse.ArgumentParser(
+    ARGUMENT_PARSER = argparse.ArgumentParser(
         version = "0.9",
         description = (
         "Parse files/directories to find items and either print them"
@@ -67,7 +71,7 @@ if (__name__ == "__main__"):
         " at picarresurix dot fr. I'll see what I can do."
         )
 
-    argument_parser.add_argument(
+    ARGUMENT_PARSER.add_argument(
         "-b",
         help = (
         "(Backup file): include backup files (file~ and #file#);"
@@ -77,7 +81,7 @@ if (__name__ == "__main__"):
         default = False
     )
 
-    argument_parser.add_argument(
+    ARGUMENT_PARSER.add_argument(
         "-d",
         help = (
         "(Dot file): include hidden files and folders (starting with"
@@ -87,7 +91,7 @@ if (__name__ == "__main__"):
         default = False
     )
 
-    argument_parser.add_argument(
+    ARGUMENT_PARSER.add_argument(
         "-f",
         help = (
         "(main File): Returns the path to the main file of the"
@@ -97,7 +101,7 @@ if (__name__ == "__main__"):
         default = False
     )
 
-    argument_parser.add_argument(
+    ARGUMENT_PARSER.add_argument(
         "-e",
         help = (
         "(Exclude): Decides which file pattern(s) to exclude from the"
@@ -109,7 +113,7 @@ if (__name__ == "__main__"):
         default = []
     )
 
-    argument_parser.add_argument(
+    ARGUMENT_PARSER.add_argument(
         "-i",
         help = (
         "(Include): Decides which file pattern(s) to include in the"
@@ -121,7 +125,7 @@ if (__name__ == "__main__"):
         default = []
     )
 
-    argument_parser.add_argument(
+    ARGUMENT_PARSER.add_argument(
         "-t",
         help = (
         "(Template) <format>: <format> has to be either 'md',"
@@ -132,7 +136,7 @@ if (__name__ == "__main__"):
         default = ""
     )
 
-    argument_parser.add_argument(
+    ARGUMENT_PARSER.add_argument(
         "-o",
         help = (
         "(Org): outputs the list of items in the given path or"
@@ -142,7 +146,7 @@ if (__name__ == "__main__"):
         default = ""
     )
 
-    argument_parser.add_argument(
+    ARGUMENT_PARSER.add_argument(
         "-m",
         help = (
         "(Md): outputs the list of items in the given path or"
@@ -151,7 +155,7 @@ if (__name__ == "__main__"):
         action = 'store', dest='parse_and_show_md',
         default = ""
     )
-    argument_parser.add_argument(
+    ARGUMENT_PARSER.add_argument(
         "-w",
         help = (
         "(vimWiki): outputs the list of items in the given path or"
@@ -160,7 +164,7 @@ if (__name__ == "__main__"):
         action = 'store', dest='parse_and_show_vimwiki',
         default = ""
     )
-    argument_parser.add_argument(
+    ARGUMENT_PARSER.add_argument(
         "-u",
         help = (
         "(Update): Updates the main file ruling this directory (it"
@@ -171,43 +175,43 @@ if (__name__ == "__main__"):
     )
     
     
-    args = argument_parser.parse_args()
-    if args.show_main_file:
+    ARGS = ARGUMENT_PARSER.parse_args()
+    if ARGS.show_main_file:
         print main_file()
-    elif args.template_style != "":
-        get_template(args.template_style)
-    elif args.parse_and_show_org != "":
+    elif ARGS.template_style != "":
+        get_template(ARGS.template_style)
+    elif ARGS.parse_and_show_org != "":
         parse_and_print(
-            path=args.parse_and_show_org,
-            include=args.to_include,
-            exclude=args.to_exclude,
-            include_backup_files=args.include_backup_files,
-            include_hidden_files=args.include_hidden_files,
+            path=ARGS.parse_and_show_org,
+            include=ARGS.to_include,
+            exclude=ARGS.to_exclude,
+            include_backup_files=ARGS.include_backup_files,
+            include_hidden_files=ARGS.include_hidden_files,
             style_name="org")
 
-    elif args.parse_and_show_md != "":
+    elif ARGS.parse_and_show_md != "":
         parse_and_print(
-            path=args.parse_and_show_md,
-            include=args.to_include,
-            exclude=args.to_exclude,
-            include_backup_files=args.include_backup_files,
-            include_hidden_files=args.include_hidden_files,
+            path=ARGS.parse_and_show_md,
+            include=ARGS.to_include,
+            exclude=ARGS.to_exclude,
+            include_backup_files=ARGS.include_backup_files,
+            include_hidden_files=ARGS.include_hidden_files,
             style_name="md")
 
-    elif args.parse_and_show_vimwiki != "":
+    elif ARGS.parse_and_show_vimwiki != "":
         parse_and_print(
-            path=args.parse_and_show_vimwiki,
-            include=args.to_include,
-            exclude=args.to_exclude,
-            include_backup_files=args.include_backup_files,
-            include_hidden_files=args.include_hidden_files,
+            path=ARGS.parse_and_show_vimwiki,
+            include=ARGS.to_include,
+            exclude=ARGS.to_exclude,
+            include_backup_files=ARGS.include_backup_files,
+            include_hidden_files=ARGS.include_hidden_files,
             style_name="vimwiki")
 
-    elif args.update:
-        update_main_file(include=args.to_include,
-                         exclude=args.to_exclude,
-                         include_backup_files=args.include_backup_files,
-                         include_hidden_files=args.include_hidden_files)
+    elif ARGS.update:
+        update_main_file(include=ARGS.to_include,
+                         exclude=ARGS.to_exclude,
+                         include_backup_files=ARGS.include_backup_files,
+                         include_hidden_files=ARGS.include_hidden_files)
 
     else:
-        argument_parser.print_help()
+        ARGUMENT_PARSER.print_help()

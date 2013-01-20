@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
 
-from org import org_file
-from md import md_file
-from vimwiki import vimwiki_file
+from org import OrgFile
+from md import MdFile
+from vimwiki import VimwikiFile
 
-class factory:
-    """A factory to get file_format objects from strings representing
+class Factory:
+    """A Factory to get file_format objects from strings representing
     their names.
 
     """
@@ -27,15 +27,15 @@ class factory:
 
         """
         if name == "org":
-            return org_file()
+            return OrgFile()
         elif name == "md":
-            return md_file()
+            return MdFile()
         elif name == "vimwiki":
-            return vimwiki_file()
+            return VimwikiFile()
         else:
             raise Exception("Unkown file format \"" + name + "\"")
 
     @staticmethod
     def get_format_list():
         """Returns a list of all the file_format objects available."""
-        return [factory.get_format(name) for name in factory.valid_formats]
+        return [Factory.get_format(name) for name in Factory.valid_formats]

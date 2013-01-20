@@ -2,7 +2,7 @@
 
 import os
 import re
-from item import meuporg_item
+from item import MeuporgItem
 
 
 
@@ -21,21 +21,21 @@ def parse_file(path):
     recording = False
     line_index = 1
     result = []
-    with open(path,'r') as f:
+    with open(path, 'r') as f:
         for line in f.readlines():
             line = line.rstrip()
             if not recording:
-                if (re.search(meuporg_item.item_regex,line) != None):
+                if (re.search(MeuporgItem.item_regex, line) != None):
                     location = path
-                    it = meuporg_item(line,location,line_index)
+                    it = MeuporgItem(line, location, line_index)
                     recording = True
             else:
-                if (re.search(meuporg_item.item_regex,line) != None):
+                if (re.search(MeuporgItem.item_regex, line) != None):
                     result.append(it)
                     location = path
-                    it = meuporg_item(line,location,line_index)
-                elif (re.match('\W*! *',line) != None):
-                    it.add_to_description(re.split("\W*! *",line)[1])
+                    it = MeuporgItem(line, location, line_index)
+                elif (re.match('\W*! *', line) != None):
+                    it.add_to_description(re.split("\W*! *", line)[1])
                 else:
                     result.append(it)
                     recording = False
@@ -60,22 +60,22 @@ def parse_directory(path=".",
     result = []
     for dirname, dirnames, filenames in os.walk(path):
         for name in filenames:
-            path = os.path.join(dirname,name)
+            path = os.path.join(dirname, name)
             if (include != []):
                 to_do = False
                 for pattern in include:
-                    if re.search(pattern,path):
+                    if re.search(pattern, path):
                         to_do = True
             else:
                 to_do = True
             for pattern in exclude:
-                    if re.search(pattern,path):
-                        to_do = False
+                if re.search(pattern, path):
+                    to_do = False
             if to_do:
                 if not (
-                        (not include_backup_files and (re.search("/.*[~#]",path) != None))
+                        (not include_backup_files and (re.search("/.*[~#]", path) != None))
                         or
-                        (not include_hidden_files and (re.search("/\.[^/]+",path) != None))
+                        (not include_hidden_files and (re.search("/\.[^/]+", path) != None))
                 ):
                     result += parse_file(path)
     return result
@@ -85,9 +85,9 @@ def parse_directory(path=".",
 if (__name__ == "__main__"):
     index = 1
     for it in parse_directory(
-            include=["org","el","md"],
+            include=["org", "el", "md"],
             exclude=["readme"],
             include_backup_files=False,
             include_hidden_files=False):
-        print("{item_number}. !{0.name}!  {0.description} ({0.location}:{0.line_index})".format(it,item_number=index))
+        print("{item_number}. !{0.name}!  {0.description} ({0.location}:{0.line_index})".format(it, item_number=index))
         index += 1

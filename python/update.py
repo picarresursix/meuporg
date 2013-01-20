@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-# Time-stamp: <2013-01-20 11:19:08 leo>
+# Time-stamp: <2013-01-20 14:17:14 leo>
 
 import os
 import re
 
-from item import meuporg_item
+from item import MeuporgItem
 from parse import parse_file, parse_directory
-from view import *
+from view import output, flatten_to_list, sort_by_name
 import file_format
 
 
@@ -25,7 +25,7 @@ def main_file():
     """
     while (len(os.getcwd().split(os.path.sep)) > 2):
         folder_content = os.listdir(os.path.curdir)
-        for style in file_format.factory.get_format_list():
+        for style in file_format.Factory.get_format_list():
             if style.get_main_file_name() in folder_content:
                 return os.path.join(
                     os.getcwd(),
@@ -51,7 +51,7 @@ def heading_to_patterns(heading):
       ["pattern1", "re.*gex"]
 
     """
-    if re.match(".*\(.*\)\W*$",heading) == None:
+    if re.match(".*\(.*\)\W*$", heading) == None:
         return heading.split(" ")
     else:
         return heading[heading.find('(')+1:heading.find(')')].split(",")
@@ -65,26 +65,26 @@ def get_configuration(file_name):
 
     """
     print("Reading config from {}".format(file_name))
-    with open(file_name,'r') as f:
+    with open(file_name, 'r') as f:
         include = []
         exclude = []
         include_backup_files = False
         include_hidden_files = False
         for line in f.readlines():
             line = line.rstrip()
-            if (re.match("^\W*INCLUDE: .*$",line) != None):
+            if (re.match("^\W*INCLUDE: .*$", line) != None):
                 content = "".join(line.split(":")[1:])
-                include = re.split(" *",content)[1:]
+                include = re.split(" *", content)[1:]
 
-            elif (re.match("^\W*EXCLUDE: .*$",line) != None):
+            elif (re.match("^\W*EXCLUDE: .*$", line) != None):
                 content = "".join(line.split(":")[1:])
-                exclude = re.split(" *",content)[1:]
+                exclude = re.split(" *", content)[1:]
 
-            elif (re.match("^\W*INCLUDE_BACKUP_FILES: .*$",line) != None):
+            elif (re.match("^\W*INCLUDE_BACKUP_FILES: .*$", line) != None):
                 content = "".join(line.split(":")[1:]).strip()
                 include_backup_files = (content == "YES")
 
-            elif (re.match("^\W*INCLUDE_HIDDEN_FILES: .*$",line) != None):
+            elif (re.match("^\W*INCLUDE_HIDDEN_FILES: .*$", line) != None):
                 content = "".join(line.split(":")[1:]).strip()
                 include_hidden_files = (content == "YES")
     return include, exclude, include_backup_files, include_hidden_files
@@ -122,7 +122,7 @@ def update_main_file(include=[],
     os.chdir(dir_old_file)
     
     # find the file format from the file name
-    for potential_style in file_format.factory.get_format_list():
+    for potential_style in file_format.Factory.get_format_list():
         if (potential_style.get_main_file_name() == file_name):
             style = potential_style
 
@@ -137,7 +137,7 @@ def update_main_file(include=[],
                             include_hidden_files=include_hidden_files)
 
     # setting up variables
-    with open(file_name,'r') as f_old:
+    with open(file_name, 'r') as f_old:
         new_content = ""
         depth = 0
         recording = True
@@ -165,7 +165,7 @@ def update_main_file(include=[],
                     # local_include, we do not sort the items by name.
                     use_sort_by_name = True
                     for pattern in flatten_to_list(local_include):
-                        if pattern in meuporg_item.item_names:
+                        if pattern in MeuporgItem.item_names:
                             use_sort_by_name = False
                     if use_sort_by_name:
                         items_to_print = sort_by_name(pop_item_by_patterns(
@@ -190,7 +190,7 @@ def update_main_file(include=[],
                 new_content += line + "\n"
     
     #  writing the new file
-    with open(file_name,'w') as f_new:
+    with open(file_name, 'w') as f_new:
         f_new.write(new_content)
     print "[DONE]"
 

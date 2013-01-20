@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
+"""Provides the MdFile class to interact with markdown files."""
+
 import re
 
 
-class md_file:
+class MdFile:
     """Provides function to read headers and print headers and lists
     to a file using the markdown format.
 
@@ -20,24 +22,24 @@ class md_file:
         return "meuporg.md"
 
 
-    def line_to_header(self,line):
+    def line_to_header(self, line):
         """Returns False if the line does not correspond to a header
         and a list containing [depth, title] otherwise.
 
         """
-        if (re.match("^#+ .+",line) == None):
+        if (re.match("^#+ .+", line) == None):
             return False
         else:
             content = line.split(" ")
             depth = len(content[0])
-            if (re.match(".*#+",content[1]) == None):
+            if (re.match(".*#+", content[1]) == None):
                 title = line[depth:].strip()
             else:
                 title = line[depth:len(line)-depth].strip()
-            return [depth, title]
+            return [depth,  title]
             
 
-    def header_to_string(self,depth,title):
+    def header_to_string(self, depth, title):
         """Returns a string containing a header with the given title
         and depth.
 
@@ -45,7 +47,7 @@ class md_file:
         return "#"*depth + " " + title + " " + "#"*depth
         
 
-    def item_to_string(self,item):
+    def item_to_string(self, item):
         """Returns the string containing the data in the item
         corresponding to this format.
 
@@ -53,7 +55,7 @@ class md_file:
         return "[{0.description}]({0.location}:{0.line_index})".format(item)
         
 
-    def list_to_string(self,item_list, indentation):
+    def list_to_string(self, item_list, indentation):
         """Returns a string containing the data in each of the item in
         the item list indented at the correct level.
 
