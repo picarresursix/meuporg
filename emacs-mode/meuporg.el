@@ -1,5 +1,5 @@
 
-(setq meuporg-command "python ~/.meuporg ")
+(setq meuporg-command "python2.7 ~/.meuporg ")
 
 (defun meuporg-reload()
   "Reload the current meuporg."
