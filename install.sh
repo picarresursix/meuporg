@@ -3,7 +3,7 @@
 
 # Run this (simple) script to install meuporg.
 
-BASE_DIR="/home/"$USER"/.meuporg"
+BASE_DIR="$HOME/.meuporg"
 if [[ ! -e $BASE_DIR ]]
 then
     mkdir $BASE_DIR
@@ -17,7 +17,7 @@ chmod +x $BASE_DIR/__main__.py
 echo 'To run meuporg, use the command "python '$BASE_DIR'"'
 echo 'You might want to add the following line to you .bashrc file:'
 echo ''
-echo 'alias meuporg="python '$BASE_DIR'"'
+echo 'alias meuporg="python2.7 '$BASE_DIR'"'
 echo ''
 if [[ -e ~/.emacs.d ]]
 then
@@ -25,7 +25,7 @@ then
     echo 'EMACS:'
     echo '  meuporg.el put in .emacs.d'
     echo '  To enable meuporg-mode, add the following to your .emacs:'
-    echo '    (load "meuporg.el")'
+    echo '    (load "~/.emacs.d/meuporg.el")'
 else
     echo "No .emacs.d folder: I won't install the minor-mode then."
 fi
