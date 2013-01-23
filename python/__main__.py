@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Time-stamp: <2013-01-20 14:18:42 leo>
+# Time-stamp: <2013-01-22 11:37:19 leo>
 
 """Contains the main program of meuporg, i.e. parses the cli arguments
 and calls the correct functions.
@@ -68,7 +68,7 @@ if (__name__ == "__main__"):
         epilog =
         "Meuporg is intended to help you manage your projects. If you"
         " have any suggestions or find a bug, send a mail at leoperrin"
-        " at picarresurix dot fr. I'll see what I can do."
+        " at picarresursix dot fr. I'll see what I can do."
         )
 
     ARGUMENT_PARSER.add_argument(

@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-# Time-stamp: <2013-01-20 14:17:14 leo>
+# Time-stamp: <2013-01-20 14:54:00 leo>
 
 import os
 import re
 
 from item import MeuporgItem
 from parse import parse_file, parse_directory
-from view import output, flatten_to_list, sort_by_name
+from view import output, flatten_to_list, sort_by_name, pop_item_by_patterns 
 import file_format
 
 

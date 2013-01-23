@@ -1,7 +1,7 @@
 #+TITLE: Meuporg-mode
 #+DESCRIPTION: The litterate code of the meuporg-mode.
 #+AUTHOR: Léo Perrin <leoperrin@picarresursix.fr>
-#+DATE: Time-stamp: <2013-01-20 15:07:05 leo>
+#+DATE: Time-stamp: <2013-01-23 12:03:01 leo>
 #+STARTUP: hidestars indent
 
 
@@ -94,22 +94,28 @@ tell emacs the command to run to use it.
     functions to quickly put any item where the cursor is. Nothing
     fancy, it just an interactive call to "insert".
     #+begin_src lisp :tangle meuporg.el
-      (defun meuporg-insert-todo()
-        "Inserts a TODO meuporg item."
-        (interactive)
-        (insert "!TODO! ")
-        )
-
       (defun meuporg-insert-idea()
         "Inserts an IDEA meuporg item."
         (interactive)
         (insert "!IDEA! ")
         )
 
+      (defun meuporg-insert-todo()
+        "Inserts a TODO meuporg item."
+        (interactive)
+        (insert "!TODO! ")
+        )
+
       (defun meuporg-insert-tocheck()
         "Inserts a TOCHECK meuporg item."
         (interactive)
         (insert "!TOCHECK! ")
+        )
+
+      (defun meuporg-insert-polish()
+        "Inserts a TOCHECK meuporg item."
+        (interactive)
+        (insert "!POLISH! ")
         )
 
       (defun meuporg-insert-fixref()
@@ -288,9 +294,11 @@ generated with occur.
           (,(kbd "C-! p")   . meuporg-go-to-previous-item)
           (,(kbd "C-! l")   . meuporg-list-items-in-file)
           (,(kbd "C-! q")   . meuporg-kill-item-list)
-          (,(kbd "C-! i t") . meuporg-insert-todo)
           (,(kbd "C-! i i") . meuporg-insert-idea)
-          (,(kbd "C-! i c") . meuporg-insert-tocheck)
+          (,(kbd "C-! i t") . meuporg-insert-todo)
+          (,(kbd "C-! i c") . meuporg-insert-continue)
+          (,(kbd "C-! i h") . meuporg-insert-tocheck)
+          (,(kbd "C-! i p") . meuporg-insert-polish)
           (,(kbd "C-! i f") . meuporg-insert-fixref)
           )
         )

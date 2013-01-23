@@ -34,22 +34,28 @@ empty string if there is no such meuporg."
       )
   )
 
-(defun meuporg-insert-todo()
-  "Inserts a TODO meuporg item."
-  (interactive)
-  (insert "!TODO! ")
-  )
-
 (defun meuporg-insert-idea()
   "Inserts an IDEA meuporg item."
   (interactive)
   (insert "!IDEA! ")
   )
 
+(defun meuporg-insert-todo()
+  "Inserts a TODO meuporg item."
+  (interactive)
+  (insert "!TODO! ")
+  )
+
 (defun meuporg-insert-tocheck()
   "Inserts a TOCHECK meuporg item."
   (interactive)
   (insert "!TOCHECK! ")
+  )
+
+(defun meuporg-insert-polish()
+  "Inserts a TOCHECK meuporg item."
+  (interactive)
+  (insert "!POLISH! ")
   )
 
 (defun meuporg-insert-fixref()
@@ -174,9 +180,11 @@ highlighting."
      (,(kbd "C-! p")   . meuporg-go-to-previous-item)
      (,(kbd "C-! l")   . meuporg-list-items-in-file)
      (,(kbd "C-! q")   . meuporg-kill-item-list)
-     (,(kbd "C-! i t") . meuporg-insert-todo)
      (,(kbd "C-! i i") . meuporg-insert-idea)
-     (,(kbd "C-! i c") . meuporg-insert-tocheck)
+     (,(kbd "C-! i t") . meuporg-insert-todo)
+     (,(kbd "C-! i c") . meuporg-insert-continue)
+     (,(kbd "C-! i h") . meuporg-insert-tocheck)
+     (,(kbd "C-! i p") . meuporg-insert-polish)
      (,(kbd "C-! i f") . meuporg-insert-fixref)
      )
    )
