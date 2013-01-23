@@ -1,117 +1,131 @@
 #!/usr/bin/env python
 
-# The functions in this file pretty print a list of items in different
-# ways. They are grouped in two groups.
-#
-# First, the functions sorting the list of items into dictionnaries
-# with different sets of keys.
-#
-# Then, the functions outputing the result in different format.
+from collections import defaultdict
 
-from file_types import *
-from item import *
-import re
+import file_format
+from criteria import Criteria
+from item import MeuporgItem
 
 
 def sort_by_name(item_list):
-    """Turns a list into a dictionnary where items are sorted by their
-    names.
+    """Returns a dictionnary where the keys are the item names and
+    the entries are list of the items having this name.
 
     """
-    result = {}
-    for item in item_list:
-        if item.name in result.keys():
-            result[item.name].append(item)
-        else:
-            result[item.name] = [item]
+    result = defaultdict(list)
+    for item in flatten_to_list(item_list):
+        result[item.name] += [item]
     return result
 
 
-def pop_item_by_location(items, patterns):
+def flatten_to_list(items):
+    """"Destroys" the sorting of some items by taking all the items in
+    a dictionnary and putting them in a "flat" list. If the list
+    contains a list, the content of this list is added to the main
+    one.
+
+    If given a list of items, does not modify it.
+
+    """
+    if isinstance(items, list):
+        result = []
+        for elmt in items:
+            if isinstance(elmt, list) or isinstance(elmt, dict):
+                result += flatten_to_list(elmt)
+            else:
+                result.append(elmt)
+        return result
+    elif isinstance(items, dict):
+        result = []
+        for key in items.keys():
+            result += flatten_to_list(items[key])
+        return result
+        
+    
+
+def pop_item_by_patterns(items,  pattern_list):
     """Goes through the items in the list and builds a new list
-    containing all items whose locations matches all the
-    patterns. These items are removed from the list passed in
+    containing all items matching (in the sense of the Criteria class)
+    all the patterns. These items are removed from the list passed in
     parameter.
 
     """
-
-    result = []
-    for i in reversed(range(0,len(items))):
-        keep_it = True
-        for pattern in patterns:
-            if (re.match(pattern,items[i].location) == None):
-                keep_it = False
-        if keep_it:
-            result.append(items[i])
-            items.pop(i)
+    if isinstance(items, dict):
+        result = {}
+        for key in items.keys():
+            result[key] = pop_item_by_patterns(items[key],  pattern_list)
+    elif isinstance(items, list):
+        result = []
+        for i in reversed(range(0, len(items))):
+            keep_it = True
+            item = items[i]
+            for pattern in pattern_list:
+                if not Criteria(item).match(pattern):
+                    keep_it = False
+            if keep_it:
+                result.append(item)
+                items.pop(i)
     return result
         
     
 
 def output(items, depth, output_format):
     """Outputs a representation of the items given in the format
-    wanted, which must be in VALID_TYPE.
+    wanted, which must be in file_format.Factory.valid_types.
 
-    Uses keys of a dictionnary as org-headings and output lists as
-    numbered org-lists. The indentation of the list and the level of
-    the head node is given by the depth argument.
+    Uses keys of a dictionnary as headings and output lists as
+    lists. The indentation of the list and the level of the head node
+    is given by the depth argument.
 
     """
-    if output_format not in VALID_TYPE:
-        # !TODO! Switch to a proper exception in the output function.
-        print("Unkown file format")
-        exit(1)
-    else:
-        result = ""
-        if isinstance(items,dict):
-            for key in sorted(items.keys()):
-                partial_output = output(items[key],depth+1,output_format)
-                if (partial_output != ""):
-                    heading = " " + key + " "
-                    for i in range(0,depth):
-                        heading = HEADING_TEMPLATE[output_format].format(heading)
-                    result += "{}\n{}".format(
-                        heading,
-                        partial_output
-                    )
-        elif isinstance(items,list):
-            if (len(items) == 0):
-                result = ""
-            else:
-                indent = ""
-                for i in range(0,depth):
-                    indent += " "
-                index = 1
-                for item in reversed(items):
-                    result += "{}{}\n".format(
-                        indent,
-                        item.format_entry(ENTRY_FORMAT[output_format],index)
-                    )
-                    index += 1
+    style = file_format.Factory.get_format(output_format)
+    result = ""
+    if isinstance(items, dict):
+        for key in sorted(items.keys()):
+            partial_output = output(items[key], depth+1, output_format)
+            if (partial_output != ""):
+                heading = style.header_to_string(depth, key)
+                result += "{}\n{}".format(
+                    heading,
+                    partial_output
+                )
+    elif isinstance(items, list):
+        if (len(items) == 0):
+            result = ""
+        else:
+            indent = ""
+            for i in range(0, depth):
+                indent += " "
+            result += style.list_to_string(reversed(items), indent)
     return result
             
 
 
 if (__name__ == "__main__"):
-     # !TODO! Write tests for the views.
-    items = {
+    item_list = {
         "bla": [
-            Item("    // * !TODO! :! * blabla! And bla too!","./here.txt",1),
-            Item("blabla bla !FIXREF! blabla! blabla","./here/wait/no/actually/there.bla",123456)
+            MeuporgItem("    // * !TODO! :! * blabla! And bla too!", "./here.txt", 1),
+            MeuporgItem("blabla bla !FIXREF! blabla! blabla", "./here/wait/no/actually/there.bla", 123456)
         ],
         "blo": {
             "blu" :
             [
-                Item("    // * !IDEA! :! * blabla! And bla too!","./here.txt",1),
-                Item("blabla bla !IDEA! blabla! blabla","./here/wait/no/actually/there.bla",123456)
+                MeuporgItem("    // * !IDEA! :! * blabla! And bla too!", "./here.txt", 1),
+                MeuporgItem("blabla bla !IDEA! blabla! blabla", "./here/wait/no/actually/there.bla", 123456)
             ],
             "bly" :
             [
-                Item("    // * !TODO! :! * blabla! And bla too!","./here.txt",1),
-                Item("blabla bla !FIXREF! blabla! blabla","./here/wait/no/actually/there.bla",123456)
+                MeuporgItem("    // * !TODO! :! * blabla! And bla too!", "./here.txt", 1),
+                MeuporgItem("blabla bla !FIXREF! blabla! blabla", "./here/wait/no/actually/there.bla", 123456)
             ]
         }
     }
-    print(output(items, 1, "org"))
-    print(output(items, 1, "md"))
-    print(output(items, 1, "wiki"))
+    print(output(item_list, 1, "org"))
+    print(output(item_list, 1, "md"))
+    print(output(item_list, 1, "vimwiki"))
+    fixref = pop_item_by_patterns(item_list, ["FIXREF"])
+    print("FIXREF:\n{}".format(output(fixref, 1, "org")))
+    todo = pop_item_by_patterns(item_list, ["TODO"])
+    print("TODO:\n{}".format(output(todo, 1, "org")))
+    remainer = sort_by_name(item_list)
+    print("REMAINER:\n{}".format(output(remainer, 1, "org")))

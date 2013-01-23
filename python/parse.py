@@ -2,23 +2,8 @@
 
 import os
 import re
-from item import *
-from file_types import *
+from item import MeuporgItem
 
-
-def main_file():
-    """Goes up the directory tree until finding a folder containing a
-    "meup.org" or "meuporg.md" file and then returns the full path to
-    the said file.
-
-    """
-    while (len(os.getcwd().split(os.path.sep)) > 2):
-        folder_content = os.listdir(os.path.curdir)
-        for file_format in FILE_NAME.keys():
-            if FILE_NAME[file_format] in folder_content:
-                return os.path.join(os.getcwd(),FILE_NAME[file_format])
-        os.chdir(os.path.pardir)
-    return ""
 
 
 def parse_file(path):
@@ -36,26 +21,25 @@ def parse_file(path):
     recording = False
     line_index = 1
     result = []
-    f = open(path,'r')
-    for line in f.readlines():
-        line = line.rstrip()
-        if not recording:
-            if (re.match(ITEM_LINE_REGEX,line) != None):
-                location = path
-                it = Item(line,location,line_index)
-                recording = True
-        else:
-            if (re.match(ITEM_LINE_REGEX,line) != None):
-                result.append(it)
-                location = path
-                it = Item(line,location,line_index)
-            elif (re.match('\W*! *',line) != None):
-                it.add_to_description(re.split("\W*! *",line)[1])
+    with open(path, 'r') as f:
+        for line in f.readlines():
+            line = line.rstrip()
+            if not recording:
+                if (re.search(MeuporgItem.item_regex, line) != None):
+                    location = path
+                    it = MeuporgItem(line, location, line_index)
+                    recording = True
             else:
-                result.append(it)
-                recording = False
-        line_index += 1
-        f.close()
+                if (re.search(MeuporgItem.item_regex, line) != None):
+                    result.append(it)
+                    location = path
+                    it = MeuporgItem(line, location, line_index)
+                elif (re.match('\W*! *', line) != None):
+                    it.add_to_description(re.split("\W*! *", line)[1])
+                else:
+                    result.append(it)
+                    recording = False
+            line_index += 1
     return result
 
 
@@ -75,23 +59,23 @@ def parse_directory(path=".",
 
     result = []
     for dirname, dirnames, filenames in os.walk(path):
-        for f in filenames:
-            path = os.path.join(dirname,f)
+        for name in filenames:
+            path = os.path.join(dirname, name)
             if (include != []):
                 to_do = False
                 for pattern in include:
-                    if re.search(pattern,path):
+                    if re.search(pattern, path):
                         to_do = True
             else:
                 to_do = True
             for pattern in exclude:
-                    if re.search(pattern,path):
-                        to_do = False
+                if re.search(pattern, path):
+                    to_do = False
             if to_do:
                 if not (
-                        (not include_backup_files and (re.search("/.*[~#]",path) != None))
+                        (not include_backup_files and (re.search("/.*[~#]", path) != None))
                         or
-                        (not include_hidden_files and (re.search("/\.[^/]+",path) != None))
+                        (not include_hidden_files and (re.search("/\.[^/]+", path) != None))
                 ):
                     result += parse_file(path)
     return result
@@ -99,12 +83,11 @@ def parse_directory(path=".",
 
 
 if (__name__ == "__main__"):
-    print main_file()
     index = 1
     for it in parse_directory(
-            include=["org","el","md"],
+            include=["org", "el", "md"],
             exclude=["readme"],
             include_backup_files=False,
             include_hidden_files=False):
-        print(it.format_entry("{item_number}. !{name}!  {description} ({location}:{line_index})",index))
+        print("{item_number}. !{0.name}!  {0.description} ({0.location}:{0.line_index})".format(it, item_number=index))
         index += 1

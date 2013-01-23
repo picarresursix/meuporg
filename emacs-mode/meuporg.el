@@ -34,22 +34,28 @@ empty string if there is no such meuporg."
       )
   )
 
-(defun meuporg-insert-todo()
-  "Inserts a TODO meuporg item."
-  (interactive)
-  (insert "!TODO! ")
-  )
-
 (defun meuporg-insert-idea()
   "Inserts an IDEA meuporg item."
   (interactive)
   (insert "!IDEA! ")
   )
 
+(defun meuporg-insert-todo()
+  "Inserts a TODO meuporg item."
+  (interactive)
+  (insert "!TODO! ")
+  )
+
 (defun meuporg-insert-tocheck()
   "Inserts a TOCHECK meuporg item."
   (interactive)
   (insert "!TOCHECK! ")
+  )
+
+(defun meuporg-insert-polish()
+  "Inserts a TOCHECK meuporg item."
+  (interactive)
+  (insert "!POLISH! ")
   )
 
 (defun meuporg-insert-fixref()
@@ -78,6 +84,81 @@ empty string if there is no such meuporg."
     )
   )
 
+(defun meuporg-list-next-item()
+  "Move to the next item in the meuporg list"
+  (interactive)
+  (if (string= (buffer-name) "!List!")
+      (progn
+        (occur-next)
+        (occur-mode-goto-occurrence)
+        (recenter)
+        (other-window 1)
+      )
+    )
+  )
+
+(defun meuporg-list-previous-item()
+  "Move to the previous item in the meuporg list"
+  (interactive)
+  (if (string= (buffer-name) "!List!")
+      (progn
+        (occur-prev)
+        (occur-mode-goto-occurrence)
+        (recenter)
+        (other-window 1)
+      )
+    )
+  )
+
+(defun meuporg-list-items-in-file()
+  (setq meuporg-listed-buffer (current-buffer))
+  (interactive)
+  (meuporg-kill-item-list)
+  (delete-other-windows)
+  (occur "![A-Za-z0-9_]+!")
+  (switch-to-buffer "*Occur*")
+  (rename-buffer "!List!")
+  (meuporg-list-mode)
+  (occur-next)
+  (switch-to-buffer meuporg-listed-buffer)
+  (highlight-lines-matching-regexp "![A-Za-z0-9_]+!")
+  (other-window 1)
+  (next-line)
+  )
+
+(defun meuporg-kill-item-list()
+  "Kills the buffer containing the item list and turns off line
+highlighting."
+  (interactive)
+  (switch-to-buffer meuporg-listed-buffer)
+  (hi-lock-mode -1)
+  (if (get-buffer "!List!")
+      (progn
+        (switch-to-buffer "!List!")
+        (quit-window t)
+        )
+    )
+  (delete-other-windows)
+  )
+
+(define-minor-mode meuporg-list-mode
+    "Toggle meuporg-list mode.
+
+  Interactively with no argument, this command toggles the mode.
+  A positive prefix argument enables the mode, any other prefix
+  argument disables it.  From Lisp, argument omitted or nil enables
+  the mode, `toggle' toggles the state. "
+   ;; The initial value.
+   :init-value nil
+   ;; The indicator for the mode line.
+   :lighter " !L!"
+   :keymap
+   `(
+     (,(kbd "<down>")   . meuporg-list-next-item)
+     (,(kbd "<up>")     . meuporg-list-previous-item)
+     )
+   )
+
 (global-unset-key (kbd "C-!"))
 
 (define-minor-mode meuporg-mode
@@ -97,9 +178,13 @@ empty string if there is no such meuporg."
      (,(kbd "C-! m")   . meuporg-open-main)
      (,(kbd "C-! n")   . meuporg-go-to-next-item)
      (,(kbd "C-! p")   . meuporg-go-to-previous-item)
-     (,(kbd "C-! i t") . meuporg-insert-todo)
+     (,(kbd "C-! l")   . meuporg-list-items-in-file)
+     (,(kbd "C-! q")   . meuporg-kill-item-list)
      (,(kbd "C-! i i") . meuporg-insert-idea)
-     (,(kbd "C-! i c") . meuporg-insert-tocheck)
+     (,(kbd "C-! i t") . meuporg-insert-todo)
+     (,(kbd "C-! i c") . meuporg-insert-continue)
+     (,(kbd "C-! i h") . meuporg-insert-tocheck)
+     (,(kbd "C-! i p") . meuporg-insert-polish)
      (,(kbd "C-! i f") . meuporg-insert-fixref)
      )
    )
