@@ -1,28 +1,89 @@
-             MEUP.ORG
+#+TITLE: !Meuporg!
+#+DESCRIPTION: Python script to get things done
+#+AUTHOR: Léo "pi^2/6" Perrin <leoperrin@picarresursix.fr>
+#+DATE: Time-stamp: <2013-01-21 21:50:34 leo>
+#+STARTUP: hidestars indent align
+
+
 
 
 * Project description
 ** Files to include
-   The directories matching the following regexp will be the *only
-   ones* included. Hidden and backup files (starting with . or # or
-   ending with #) are always removed, so don't mind these.
+The directories containing the following regexp's will be the *only
+ones* included. See the [[http://docs.python.org/2/howto/regex.html#matching-characters][Python re documentation]] to know how regex's
+are read. Use spaces to separate them.
 
-   INCLUDE_ONLY:
+INCLUDE:
 
 ** Files to exclude
-   The directories whose name contains the following string will not
-   be taken into account when updating the roadmap (both the
-   statistics and the item lists).
+The directories whose name contains the following regex's will not be
+taken into account when updating this main file. See the Python re
+[[http://docs.python.org/2/howto/regex.html#matching-characters][documentation]] to know how regex's are read. Use spaces to separate
+them.
 
-   EXCLUDE: 
+EXCLUDE: pdf pyc test el png
 
-** Commands
-   !TODO! Find a way for emacs to read commands and then execute them.
-* TODO List
-** python script
-   The part written in python which actually parses the source code.
-** emacs mode
-   The elisp functions used to use MEUPORG efficiently within emacs.
-* Statistics
-  + empty
+** Include backup files
+If set to "YES", backup files will be included when parsing the file.
 
+INCLUDE_BACKUP_FILES: NO
+
+** Include hidden files
+If set to "YES", backup files will be included when parsing the file.
+
+INCLUDE_HIDDEN_FILES: NO
+
+* Actual items (REAL)
+Due to the fact that items are everywhere in this program, I use a
+specific one (REAL) to know where the modifications I have to make
+are.
+** Items
+* [3/3] python (python)
+The aim of this script is to list the items in a directory, to sort
+them, to present them in a nice way and to update a file using them.
+** Useful links
+*** [[http://docs.python.org/2/howto/regex.html][Documentation]] of the re module for regexps in python
+*** [[http://docs.python.org/2/library/os.path.html][Documentation]] of the os.path module for python
+*** [[** TODO Implement statistics][Documentation]] of the argparse module
+** DONE [2/2] Refactoring
+CLOSED: [2013-01-19 sam. 20:37]
+*** DONE [3/3] Create classes for each format
+CLOSED: [2013-01-17 jeu. 09:58]
++ [X] org
++ [X] md
++ [X] vimwiki
+*** DONE Re-write parser consequently
+CLOSED: [2013-01-19 sam. 12:31]
+** DONE Headings in main file
+CLOSED: [2013-01-20 dim. 14:20]
+New template for the headings: if they are simple, we use their
+content as patterns; but we should be able to manually decide it:
+"*** human readable heading [regex's]"
+** DONE Take name of the items into account when sorting.
+CLOSED: [2013-01-19 sam. 20:37]
+
+* [/] Documentation (doc)
+
+* emacs
+A minor-mode providing an interface to easily use items in text files
+and to call the python script directly from emacs. It is written using
+literate programming with org-babel.
+** [[file:emacs-mode/meuporg-mode.org][meuporg-mode.org]] (code file)
+** DONE Write function to list the items in a file
+CLOSED: [2013-01-18 ven. 20:41]
+The idea is to press "C-! l" to have a mini-buffer displaying all the
+items in a file with their descriptions and jumping to an item if we
+hit enter.
+
+To do this, write a new minor-mode "meuporg-item-list-mode" (!mL!).
+No need to get the whole item description, first line is enough.
+*** Have buttons? [[http://stackoverflow.com/questions/7696208/emacs-lisp-how-to-add-to-link-hyperlink-to-another-file-just-like-that-in-h-e][example]]
+*** Open buffer in new frame: [[http://ftp.gnu.org/old-gnu/Manuals/elisp-manual-21-2.8/html_node/elisp_433.html][pop-to-buffer]]
+*** Obtain the full path to the current file
+The lisp code is
+#+begin_src el
+ (expand-file-name (buffer-file-name))
+#+end_src
+I built it from the [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Buffer-File-Name.html][buffer file name documentation]] and the
+[[http://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Expansion.html#File-Name-Expansion][file name documentation]].
+*** Concept of [[http://www.chemie.fu-berlin.de/chemnet/use/info/elisp/elisp_28.html][excursion]].

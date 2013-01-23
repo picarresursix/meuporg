@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>!Meup.org!</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="!Meup.org!"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2013-01-21"/>
+<meta name="author" content="Léo Perrin &lt;leoperrin@picarresursix.fr&gt;"/>
+<meta name="description" content="description"/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">!Meup.org!</h1>
+
+
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Purpose</a></li>
+<li><a href="#sec-2">2 Solution!</a></li>
+<li><a href="#sec-3">3 Features</a></li>
+<li><a href="#sec-4">4 Should I use Meup.org?</a></li>
+<li><a href="#sec-5">5 Components</a>
+<ul>
+<li><a href="#sec-5-1">5.1 Template</a></li>
+<li><a href="#sec-5-2">5.2 Script</a></li>
+<li><a href="#sec-5-3">5.3 Emacs minor-mode</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Purpose</h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p>
+  If you never encountered these, you may throw the first stone.
+</p>
+<ul>
+<li>Ever started a project, <b>left it aside</b> and took it again
+    weeks/month/years later without understandig what you did? 
+</li>
+<li>Ever managed a <b>big</b> project on your one, the kind that involves a
+    hundred pages of LaTeX and/or thousands of lines of code?
+</li>
+<li>Ever wondered <b>where</b> the hell that awesome info you found on the
+    net was?
+</li>
+</ul>
+
+
+<p>
+  These are problems I have faced. I now do keep a track of the links
+  I found using emacs'org-mode but the files where I put these where
+  basically a mess. Furthermore, I didn't have the courage, when
+  writing some file, to go to the org-one, write what I had to do, put
+  a link to the file I was working on, go back to the file I was
+  working on. It's not a big deal but it is the kind of tiny thing
+  which gets in the way and gets annoying.
+</p>
+<p>
+  Meup.org is the solution I came up with. It is a sort of standard in
+  the way I "work"<sup><a class="footref" name="fnr.1" href="#fn.1">1</a></sup> and it is based on two things.
+</p>
+<ul>
+<li>A good software to manage todo lists and documentation with
+    hyperlinks and that is good to take quick notes in plain-text. I
+    use emacs'org-mode; I heard vimwiki is a nice substitute if you
+    are that kind of person.
+</li>
+<li>A simple way to document what I do and <b>what is left to do</b>
+    intended to be as little cumbersome as possible; which implies
+    having tools to automate annoying tasks.
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Solution!</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p>
+The solution to this problem has a name. Behold&hellip;
+</p>
+<p>
+<img src="./logo.png"  alt="./logo.png" />
+</p>
+<p>
+Aka meuporg.
+</p>
+
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Features</h2>
+<div class="outline-text-2" id="text-3">
+
+
+<p>
+!TODO! Write a list of features.
+</p>
+
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Should I use Meup.org?</h2>
+<div class="outline-text-2" id="text-4">
+
+
+<p>
+If you don't work with plain-text files; that is if you work with an
+office suite such that libreoffice.org, microsoft office or whatever,
+then no.
+</p>
+<p>
+If your projects are not scattered on many files and are of very small
+size, then probably not.
+</p>
+<p>
+If you work on projects that are spread throughout several
+weeks/month/years due to their sizes or the amount of time you can
+spend on them and if the said projects consist in editing text
+files<sup><a class="footref" name="fnr.2" href="#fn.2">2</a></sup>
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Components</h2>
+<div class="outline-text-2" id="text-5">
+
+
+<p>
+!TODO! Write intro of the "components" section.
+</p>
+
+</div>
+
+<div id="outline-container-5-1" class="outline-3">
+<h3 id="sec-5-1"><span class="section-number-3">5.1</span> Template</h3>
+<div class="outline-text-3" id="text-5-1">
+
+
+<p>
+!TODO! Write brief explanation with link to the corresponding file.
+</p>
+
+</div>
+
+</div>
+
+<div id="outline-container-5-2" class="outline-3">
+<h3 id="sec-5-2"><span class="section-number-3">5.2</span> Script</h3>
+<div class="outline-text-3" id="text-5-2">
+
+
+<p>
+!TODO! Write brief explanation with link to the corresponding file.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-5-3" class="outline-3">
+<h3 id="sec-5-3"><span class="section-number-3">5.3</span> Emacs minor-mode</h3>
+<div class="outline-text-3" id="text-5-3">
+
+
+<p>
+!TODO! Write brief explanation with link to the corresponding file.
+</p>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+<p class="footnote"><sup><a class="footnum" name="fn.1" href="#fnr.1">1</a></sup> "Work" refering to both my actual work and the code/documents I
+write for fun on my spare time; such as Meup.org for instance.
+</p>
+
+
+<p class="footnote"><sup><a class="footnum" name="fn.2" href="#fnr.2">2</a></sup> For instance, it is the case, if you do any sort of programming
+without a big IDE like eclipse (no, emacs doesn't count as such).
+</p>
+
+
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2013-01-21</p>
+<p class="author">Author: Léo Perrin &lt;leoperrin@picarresursix.fr&gt;</p>
+<p class="creator">Org version 7.8.11 with Emacs version 24</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>
