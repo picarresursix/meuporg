@@ -1,7 +1,7 @@
 #+TITLE: Meuporg-mode
 #+DESCRIPTION: The litterate code of the meuporg-mode.
 #+AUTHOR: Léo Perrin <leoperrin@picarresursix.fr>
-#+DATE: Time-stamp: <2013-01-23 15:28:46 leo>
+#+DATE: Time-stamp: <2013-01-25 15:25:45 leo>
 #+STARTUP: hidestars indent
 
 
@@ -106,6 +106,12 @@ This function is very straightforward: we run the shell command
         (insert "!TODO! ")
         )
 
+      (defun meuporg-insert-continue()
+        "Inserts a TOCHECK meuporg item."
+        (interactive)
+        (insert "!CONTINUE! ")
+        )
+
       (defun meuporg-insert-tocheck()
         "Inserts a TOCHECK meuporg item."
         (interactive)
@@ -197,28 +203,57 @@ come back to the occur buffer.
     )
   
 #+end_src
-** meuporg-list-items-in-file
-This functions call occur with the correct pattern to look for items
-in the current file, rename it "!List!" (after killing any other
-buffer having this name), turn on the meuporg-list minor-mode and
-moves the cursor to the list. It also highlights the lines containing
-the items in the file.
+** meuporg-list-items-in-buffer
+We first write a function listing all lines matching any pattern in a
+new buffer.  This function calls occur with the correct pattern to
+look for lines matching the pattern in the current file, rename it
+"!List!" (after killing any other buffer having this name), turn on
+the meuporg-list minor-mode and moves the cursor to the list. It also
+highlights the lines containing the items in the file.
 #+begin_src lisp :tangle meuporg.el
-  (defun meuporg-list-items-in-file()
+  (defun meuporg-list-patterns-in-buffer(pattern)
+    "Lists all the strings matching a given pattern and display them in
+  a new buffer."
     (setq meuporg-listed-buffer (current-buffer))
-    (interactive)
     (meuporg-kill-item-list)
     (delete-other-windows)
-    (occur "![A-Za-z0-9_]+!")
+    (occur pattern)
     (switch-to-buffer "*Occur*")
     (rename-buffer "!List!")
+    (beginning-of-buffer)
+    (setq inhibit-read-only t)
+    (kill-line)
+    (insert "[up] move to previous occurrence; [down] move to next one\n")
+    (setq inhibit-read-only nil)
+    (setq read-only t)
     (meuporg-list-mode)
     (occur-next)
     (switch-to-buffer meuporg-listed-buffer)
-    (highlight-lines-matching-regexp "![A-Za-z0-9_]+!")
+    (highlight-lines-matching-regexp pattern)
     (other-window 1)
     (next-line)
     )
+#+end_src
+
+We then add some functions using the previous to search for items or
+for any pattern.
+#+begin_src lisp :tangle meuporg.el
+  (defun meuporg-list-items-in-buffer()
+    "Lists the items in the current buffer and displays them in a new
+  buffer."
+    (interactive)
+    (meuporg-list-patterns-in-buffer "![A-Za-z0-9_]+!")
+    )
+  
+  (defun meuporg-list-specific-items-in-buffer()
+    "Prompts for a string and lists all the items in the file whose name
+  contains the said string"
+    (interactive)
+    (setq pattern
+          (read-from-minibuffer "Search for items whose names contain: "))
+    (meuporg-list-patterns-in-buffer (concat "![A-zA-Z0-9]*" pattern "[A-zA-Z0-9]*!"))
+    )
+  
 #+end_src
 ** meuporg-kill-item-list
 This functions removes the highlighting of the items and kills the
@@ -292,7 +327,8 @@ generated with occur.
           (,(kbd "C-! m")   . meuporg-open-main)
           (,(kbd "C-! n")   . meuporg-go-to-next-item)
           (,(kbd "C-! p")   . meuporg-go-to-previous-item)
-          (,(kbd "C-! l")   . meuporg-list-items-in-file)
+          (,(kbd "C-! l")   . meuporg-list-items-in-buffer)
+          (,(kbd "C-! s")   . meuporg-list-specific-items-in-buffer)
           (,(kbd "C-! q")   . meuporg-kill-item-list)
           (,(kbd "C-! i i") . meuporg-insert-idea)
           (,(kbd "C-! i t") . meuporg-insert-todo)
