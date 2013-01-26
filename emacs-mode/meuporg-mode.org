@@ -1,7 +1,7 @@
 #+TITLE: Meuporg-mode
 #+DESCRIPTION: The litterate code of the meuporg-mode.
 #+AUTHOR: Léo Perrin <leoperrin@picarresursix.fr>
-#+DATE: Time-stamp: <2013-01-25 15:25:45 leo>
+#+DATE: Time-stamp: <2013-01-26 15:40:58 leo>
 #+STARTUP: hidestars indent
 
 
@@ -35,10 +35,13 @@ This function is very straightforward: we run the shell command
 "meuporg -u" after saving the current buffer.
 #+begin_src lisp :tangle meuporg.el
   (defun meuporg-reload()
-    "Reload the current meuporg."
+    "Reload the current meuporg main file after saving all buffers."
     (interactive)
-    (save-buffer)
+    (save-some-buffers t)
     (shell-command (concat meuporg-command " -u"))
+    (if (get-buffer "meup.*org.*")
+        (revert-buffer "meup.*org.*")
+        )
     )
 #+end_src
 * Opening the main file

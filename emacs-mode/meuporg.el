@@ -2,10 +2,13 @@
 (setq meuporg-command "python2.7 ~/.meuporg ")
 
 (defun meuporg-reload()
-  "Reload the current meuporg."
+  "Reload the current meuporg main file after saving all buffers."
   (interactive)
-  (save-buffer)
+  (save-some-buffers t)
   (shell-command (concat meuporg-command " -u"))
+  (if (get-buffer "meup.*org.*")
+      (revert-buffer "meup.*org.*")
+      )
   )
 
 (defun meuporg-find-main()

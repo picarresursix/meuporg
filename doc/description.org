@@ -1,7 +1,7 @@
 #+TITLE: !Meup.org!
 #+DESCRIPTION: description
 #+AUTHOR: Léo Perrin <leoperrin@picarresursix.fr>
-#+DATE: Time-stamp: <2013-01-23 23:53:03 leo>
+#+DATE: Time-stamp: <2013-01-23 23:58:20 leo>
 #+STARTUP: align indent hidestars
 
 
@@ -43,9 +43,9 @@
 
 * Behold ... !Meup.org!
 ** Overview of meuporg
-It is a set of automatic tools to manage extract items
-from the content of any text files you want and which will sort and
-insert them in your todo list regardless of the format you use[fn:2].
+It is a set of automatic tools to extract items from the content of
+any text files you want and which sort and insert them in your todo
+list regardless of the format you use[fn:2].
 
 It is assumed you have a unique file for each project at the root of
 its directory tree in which you will put your todo lists, knowledge,
@@ -319,7 +319,6 @@ files[],fn:8 then *yes*, you might want to give meup.org a try!
 
 ** Item structure
 !TODO! Write this part.
-
 
 * Footnotes
 

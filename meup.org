@@ -1,8 +1,9 @@
-#+TITLE: !Meuporg!
+#+TITLE: Meup.org
 #+DESCRIPTION: Python script to get things done
 #+AUTHOR: Léo "pi^2/6" Perrin <leoperrin@picarresursix.fr>
-#+DATE: Time-stamp: <2013-01-21 21:50:34 leo>
+#+DATE: Time-stamp: <2013-01-26 15:43:11 leo>
 #+STARTUP: hidestars indent align
+
 
 
 
@@ -38,45 +39,38 @@ Due to the fact that items are everywhere in this program, I use a
 specific one (REAL) to know where the modifications I have to make
 are.
 ** Items
-* [3/3] python (python)
+* General ideas (REALIDEA)
+** Add one layer of abstraction
+Do not have a fixed syntax for the tags but allow dynamic creation.
+Example: meuporg -o . -s "![A-zA-Z0-9]+!"  This would be the same as
+"meuporg -o ." but it would also allow searching for specific tags (in
+case usual ones are not allowed, or another structure was already)
+in use.
+(s: Search.)
+** Items
+* [0/1] python (python)
 The aim of this script is to list the items in a directory, to sort
 them, to present them in a nice way and to update a file using them.
 ** Useful links
 *** [[http://docs.python.org/2/howto/regex.html][Documentation]] of the re module for regexps in python
 *** [[http://docs.python.org/2/library/os.path.html][Documentation]] of the os.path module for python
 *** [[** TODO Implement statistics][Documentation]] of the argparse module
-** DONE [2/2] Refactoring
-CLOSED: [2013-01-19 sam. 20:37]
-*** DONE [3/3] Create classes for each format
-CLOSED: [2013-01-17 jeu. 09:58]
-+ [X] org
-+ [X] md
-+ [X] vimwiki
-*** DONE Re-write parser consequently
-CLOSED: [2013-01-19 sam. 12:31]
-** DONE Headings in main file
-CLOSED: [2013-01-20 dim. 14:20]
-New template for the headings: if they are simple, we use their
-content as patterns; but we should be able to manually decide it:
-"*** human readable heading [regex's]"
-** DONE Take name of the items into account when sorting.
-CLOSED: [2013-01-19 sam. 20:37]
-
-* [/] Documentation (doc)
-
-* emacs
+** TODO Add time-stamp
+Python code to print time-stamp:
+#+begin_src python
+  import datetime
+  print datetime.datetime.today().strftime("%A, %d. %B %Y %I:%M%p")
+#+end_src
+output: "Friday, 25. January 2013 09:50AM".
+* [1/1] Documentation (doc)
+** DONE [[file:doc/description.org][description.org]]
+CLOSED: [2013-01-24 jeu. 12:39]
+* [0/1] emacs
 A minor-mode providing an interface to easily use items in text files
 and to call the python script directly from emacs. It is written using
 literate programming with org-babel.
 ** [[file:emacs-mode/meuporg-mode.org][meuporg-mode.org]] (code file)
-** DONE Write function to list the items in a file
-CLOSED: [2013-01-18 ven. 20:41]
-The idea is to press "C-! l" to have a mini-buffer displaying all the
-items in a file with their descriptions and jumping to an item if we
-hit enter.
-
-To do this, write a new minor-mode "meuporg-item-list-mode" (!mL!).
-No need to get the whole item description, first line is enough.
+** Links used
 *** Have buttons? [[http://stackoverflow.com/questions/7696208/emacs-lisp-how-to-add-to-link-hyperlink-to-another-file-just-like-that-in-h-e][example]]
 *** Open buffer in new frame: [[http://ftp.gnu.org/old-gnu/Manuals/elisp-manual-21-2.8/html_node/elisp_433.html][pop-to-buffer]]
 *** Obtain the full path to the current file
@@ -87,3 +81,15 @@ The lisp code is
 I built it from the [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Buffer-File-Name.html][buffer file name documentation]] and the
 [[http://www.gnu.org/software/emacs/manual/html_node/elisp/File-Name-Expansion.html#File-Name-Expansion][file name documentation]].
 *** Concept of [[http://www.chemie.fu-berlin.de/chemnet/use/info/elisp/elisp_28.html][excursion]].
+*** Remove the read-only property of a buffer to modify it
+[[http://www.chemie.fu-berlin.de/chemnet/use/info/elisp/elisp_25.html#SEC360][source]].
+#+begin_src lisp
+  (setq inhibit-read-only t)
+#+end_src
+
+*** Save all the buffers
+[[http://www.chemie.fu-berlin.de/chemnet/use/info/elisp/elisp_23.html#SEC323][source]]
+** TODO [1/2] Modify the meuporg-item-list-mode
+*** TODO Add saving of all buffers when updating main file.
+*** DONE Add function to list only a particular item.
+CLOSED: [2013-01-26 sam. 13:39]
