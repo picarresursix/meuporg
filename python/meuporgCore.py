@@ -1,15 +1,113 @@
 #!/usr/bin/env python
-# Time-stamp: <2013-01-20 14:54:00 leo>
+# Time-stamp: <2013-02-16 23:05:10 leo>
 
+from collections import defaultdict
 import os
 import re
 
-from item import MeuporgItem
-from parse import parse_file, parse_directory
-from view import output, flatten_to_list, sort_by_name, pop_item_by_patterns 
-import file_format
+import itemUtils
+import fileFormat
 
 
+# !SECTION! Dealing with a list of items
+
+def sort_by_name(item_list):
+    """Returns a dictionnary where the keys are the item names and
+    the entries are list of the items having this name.
+
+    """
+    result = defaultdict(list)
+    for item in flatten_to_list(item_list):
+        result[item.name] += [item]
+    return result
+
+
+def flatten_to_list(items):
+    """"Destroys" the sorting of some items by taking all the items in
+    a dictionnary and putting them in a "flat" list. If the list
+    contains a list, the content of this list is added to the main
+    one.
+
+    If given a list of items, does not modify it.
+
+    """
+    if isinstance(items, list):
+        result = []
+        for elmt in items:
+            if isinstance(elmt, list) or isinstance(elmt, dict):
+                result += flatten_to_list(elmt)
+            else:
+                result.append(elmt)
+        return result
+    elif isinstance(items, dict):
+        result = []
+        for key in items.keys():
+            result += flatten_to_list(items[key])
+        return result
+        
+    
+
+def pop_item_by_patterns(items,  pattern_list):
+    """Goes through the items in the list and builds a new list
+    containing all items matching (in the sense of the Criteria class)
+    all the patterns. These items are removed from the list passed in
+    parameter.
+
+    """
+    if isinstance(items, dict):
+        result = {}
+        for key in items.keys():
+            result[key] = pop_item_by_patterns(items[key],  pattern_list)
+    elif isinstance(items, list):
+        result = []
+        for i in reversed(range(0, len(items))):
+            keep_it = True
+            item = items[i]
+            for pattern in pattern_list:
+                if not Criteria(item).match(pattern):
+                    keep_it = False
+            if keep_it:
+                result.append(item)
+                items.pop(i)
+    return result
+        
+    
+
+def output(items, depth, output_format):
+    """Outputs a representation of the items given in the format
+    wanted, which must be in fileFormat.Factory.valid_types.
+
+    Uses keys of a dictionnary as headings and output lists as
+    lists. The indentation of the list and the level of the head node
+    is given by the depth argument.
+
+    """
+    style = fileFormat.Factory.get_format(output_format)
+    result = ""
+    if isinstance(items, dict):
+        for key in sorted(items.keys()):
+            partial_output = output(items[key], depth+1, output_format)
+            if (partial_output != ""):
+                heading = style.header_to_string(depth, key)
+                result += "{}\n{}".format(
+                    heading,
+                    partial_output
+                )
+    elif isinstance(items, list):
+        if (len(items) == 0):
+            result = ""
+        else:
+            indent = ""
+            for i in range(0, depth):
+                indent += " "
+            result += style.list_to_string(reversed(items), indent)
+    return result
+
+
+
+# !SECTION! Interacting with the main file
+
+#   !SUBSECTION! Find the main file
 
 def main_file():
     """Goes up the directory tree until finding a folder containing a
@@ -25,7 +123,7 @@ def main_file():
     """
     while (len(os.getcwd().split(os.path.sep)) > 2):
         folder_content = os.listdir(os.path.curdir)
-        for style in file_format.Factory.get_format_list():
+        for style in fileFormat.Factory.get_format_list():
             if style.get_main_file_name() in folder_content:
                 return os.path.join(
                     os.getcwd(),
@@ -34,6 +132,8 @@ def main_file():
         os.chdir(os.path.pardir)
     return ""
 
+
+#   !SUBSECTION! Extract data from the main file
 
 def heading_to_patterns(heading):
     """Extract patterns from a heading.
@@ -89,7 +189,8 @@ def get_configuration(file_name):
                 include_hidden_files = (content == "YES")
     return include, exclude, include_backup_files, include_hidden_files
 
-    
+
+#   !SUBSECTION! Updating the main file    
 
 def update_main_file(include=[],
                      exclude=[],
@@ -122,7 +223,7 @@ def update_main_file(include=[],
     os.chdir(dir_old_file)
     
     # find the file format from the file name
-    for potential_style in file_format.Factory.get_format_list():
+    for potential_style in fileFormat.Factory.get_format_list():
         if (potential_style.get_main_file_name() == file_name):
             style = potential_style
 
@@ -130,11 +231,12 @@ def update_main_file(include=[],
     include, exclude, include_backup_files, include_hidden_files = get_configuration(file_name)
     
     # getting items
-    items = parse_directory(path=".",
-                            include=include,
-                            exclude=exclude,
-                            include_backup_files=include_backup_files,
-                            include_hidden_files=include_hidden_files)
+    items = itemUtils.parse_directory(path=".",
+                                      include=include,
+                                      exclude=exclude,
+                                      include_backup_files=include_backup_files,
+                                      include_hidden_files=include_hidden_files)
+
 
     # setting up variables
     with open(file_name, 'r') as f_old:
@@ -195,7 +297,44 @@ def update_main_file(include=[],
     print "[DONE]"
 
 
+
+# !SECTION! Test suite
+
 if __name__ == "__main__":
+
+    # !SUBSECTION! Testing the interaction with item lists
+
+    item_list = {
+        "bla": [
+            MeuporgItem("    // * !TODO! :! * blabla! And bla too!", "./here.txt", 1),
+            MeuporgItem("blabla bla !FIXREF! blabla! blabla", "./here/wait/no/actually/there.bla", 123456)
+        ],
+        "blo": {
+            "blu" :
+            [
+                MeuporgItem("    // * !IDEA! :! * blabla! And bla too!", "./here.txt", 1),
+                MeuporgItem("blabla bla !IDEA! blabla! blabla", "./here/wait/no/actually/there.bla", 123456)
+            ],
+            "bly" :
+            [
+                MeuporgItem("    // * !TODO! :! * blabla! And bla too!", "./here.txt", 1),
+                MeuporgItem("blabla bla !FIXREF! blabla! blabla", "./here/wait/no/actually/there.bla", 123456)
+            ]
+        }
+    }
+    print(output(item_list, 1, "org"))
+    print(output(item_list, 1, "md"))
+    print(output(item_list, 1, "vimwiki"))
+    fixref = pop_item_by_patterns(item_list, ["FIXREF"])
+    print("FIXREF:\n{}".format(output(fixref, 1, "org")))
+    todo = pop_item_by_patterns(item_list, ["TODO"])
+    print("TODO:\n{}".format(output(todo, 1, "org")))
+    remainer = sort_by_name(item_list)
+    print("REMAINER:\n{}".format(output(remainer, 1, "org")))
+
+
+    # !SUBSECTION! Testing the interaction with the main file
+
     print heading_to_patterns("blabla abla")
     print heading_to_patterns("blabla (bla,bla,bli)")
     print heading_to_patterns("blabla abla (bcka,.*nckj,vn[/n],nckn+)")

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Time-stamp: <2013-01-22 11:37:19 leo>
+# Time-stamp: <2013-02-16 23:02:03 leo>
 
 """Contains the main program of meuporg, i.e. parses the cli arguments
 and calls the correct functions.
@@ -11,11 +11,12 @@ import os
 import argparse
 
 
-import file_format 
-from parse import parse_file, parse_directory
-from view import output, sort_by_name
-from update import update_main_file, main_file
+import fileFormat 
+import meuporgCore
+import itemUtils
 
+
+# !SECTION! Constants and trivial routines
 
 TEMPLATE_DIR = os.path.join(os.path.expanduser("~"), ".meuporg/templates")
 
@@ -25,14 +26,15 @@ def get_template(format_name):
     current directory.
 
     """
-    if format_name not in file_format.Factory.valid_formats:
+    if format_name not in fileFormat.Factory.valid_formats:
         raise Exception("Unkown file format")
-    style = file_format.Factory.get_format(format_name)
-    shutil.copy(
-        os.path.join(TEMPLATE_DIR, style.get_main_file_name()),
-        os.path.join(os.path.curdir, style.get_main_file_name())
-    )
-    print("{} file created.".format(style.get_main_file_name()))
+    else:
+        style = fileFormat.Factory.get_format(format_name)
+        shutil.copy(
+            os.path.join(TEMPLATE_DIR, style.get_main_file_name()),
+            os.path.join(os.path.curdir, style.get_main_file_name())
+        )
+        print("{} file created.".format(style.get_main_file_name()))
 
 
 def parse_and_print(path=".",
@@ -47,35 +49,41 @@ def parse_and_print(path=".",
 
     """
     if (os.path.isdir(path)):
-        tags = parse_directory(include=include,
-                               exclude=exclude,
-                               include_backup_files=include_backup_files,
-                               include_hidden_files=include_hidden_files,
-                               path=path)
+        tags = itemUtils.parse_directory(include=include,
+                                         exclude=exclude,
+                                         include_backup_files=include_backup_files,
+                                         include_hidden_files=include_hidden_files,
+                                         path=path)
     else:
-        tags = parse_file(path)
-    print(output(sort_by_name(tags), 2, style_name))
+        tags = itemUtils.parse_file(path)
+        print(meuporgCore.output(meuporgCore.sort_by_name(tags), 2, style_name))
 
+
+
+# !SECTION! Main function
 
 if (__name__ == "__main__"):
+
+    # !SUBSECTION! Declaring the CLI arguments
+
     ARGUMENT_PARSER = argparse.ArgumentParser(
         version = "0.9",
         description = (
-        "Parse files/directories to find items and either print them"
-        " or use them to update a file where information is"
-        " centralised."
+            "Parse files/directories to find items and either print them"
+            " or use them to update a file where information is"
+            " centralised."
         ),
         epilog =
         "Meuporg is intended to help you manage your projects. If you"
         " have any suggestions or find a bug, send a mail at leoperrin"
         " at picarresursix dot fr. I'll see what I can do."
-        )
+    )
 
     ARGUMENT_PARSER.add_argument(
         "-b",
         help = (
-        "(Backup file): include backup files (file~ and #file#);"
-        " default behaviour is not to. "
+            "(Backup file): include backup files (file~ and #file#);"
+            " default behaviour is not to. "
         ),
         action = 'store_true', dest='include_backup_files',
         default = False
@@ -84,8 +92,8 @@ if (__name__ == "__main__"):
     ARGUMENT_PARSER.add_argument(
         "-d",
         help = (
-        "(Dot file): include hidden files and folders (starting with"
-        " '.'), default behaviour is not to."
+            "(Dot file): include hidden files and folders (starting with"
+            " '.'), default behaviour is not to."
         ),
         action = 'store_true', dest='include_hidden_files',
         default = False
@@ -94,8 +102,8 @@ if (__name__ == "__main__"):
     ARGUMENT_PARSER.add_argument(
         "-f",
         help = (
-        "(main File): Returns the path to the main file of the"
-        " directory (if any)."
+            "(main File): Returns the path to the main file of the"
+            " directory (if any)."
         ),
         action = 'store_true', dest='show_main_file',
         default = False
@@ -104,10 +112,10 @@ if (__name__ == "__main__"):
     ARGUMENT_PARSER.add_argument(
         "-e",
         help = (
-        "(Exclude): Decides which file pattern(s) to exclude from the"
-        " search. Repeat to specify several regex to exclude. Default"
-        " behaviour is to exclude no file (but the backup and hidden"
-        " ones)."
+            "(Exclude): Decides which file pattern(s) to exclude from the"
+            " search. Repeat to specify several regex to exclude. Default"
+            " behaviour is to exclude no file (but the backup and hidden"
+            " ones)."
         ),
         action = 'append', dest='to_exclude',
         default = []
@@ -116,10 +124,10 @@ if (__name__ == "__main__"):
     ARGUMENT_PARSER.add_argument(
         "-i",
         help = (
-        "(Include): Decides which file pattern(s) to include in the"
-        " search. Repeat to specify several regex to include. Default"
-        " behaviour is to include every file (but the backup and hidden"
-        " ones)."
+            "(Include): Decides which file pattern(s) to include in the"
+            " search. Repeat to specify several regex to include. Default"
+            " behaviour is to include every file (but the backup and hidden"
+            " ones)."
         ),
         action = 'append', dest='to_include',
         default = []
@@ -128,9 +136,9 @@ if (__name__ == "__main__"):
     ARGUMENT_PARSER.add_argument(
         "-t",
         help = (
-        "(Template) <format>: <format> has to be either 'md',"
-        " 'vimwiki' or 'org'. Creates a new meuporg main file in the"
-        " said format."
+            "(Template) <format>: <format> has to be either 'md',"
+            " 'vimwiki' or 'org'. Creates a new meuporg main file in the"
+            " said format."
         ),
         action = 'store', dest='template_style',
         default = ""
@@ -139,8 +147,8 @@ if (__name__ == "__main__"):
     ARGUMENT_PARSER.add_argument(
         "-o",
         help = (
-        "(Org): outputs the list of items in the given path or"
-        " folder in org-mode format."
+            "(Org): outputs the list of items in the given path or"
+            " folder in org-mode format."
         ),
         action = 'store', dest='parse_and_show_org',
         default = ""
@@ -149,8 +157,8 @@ if (__name__ == "__main__"):
     ARGUMENT_PARSER.add_argument(
         "-m",
         help = (
-        "(Md): outputs the list of items in the given path or"
-        " folder in markdown."
+            "(Md): outputs the list of items in the given path or"
+            " folder in markdown."
         ),
         action = 'store', dest='parse_and_show_md',
         default = ""
@@ -158,8 +166,8 @@ if (__name__ == "__main__"):
     ARGUMENT_PARSER.add_argument(
         "-w",
         help = (
-        "(vimWiki): outputs the list of items in the given path or"
-        " folder in vimwiki format."
+            "(vimWiki): outputs the list of items in the given path or"
+            " folder in vimwiki format."
         ),
         action = 'store', dest='parse_and_show_vimwiki',
         default = ""
@@ -167,17 +175,19 @@ if (__name__ == "__main__"):
     ARGUMENT_PARSER.add_argument(
         "-u",
         help = (
-        "(Update): Updates the main file ruling this directory (it"
-        " might be in the parent directories)."
+            "(Update): Updates the main file ruling this directory (it"
+            " might be in the parent directories)."
         ),
         action = 'store_true', dest='update',
         default = False
     )
     
     
+    # !SUBSECTION! Acting depending on the CLI arguments
+    
     ARGS = ARGUMENT_PARSER.parse_args()
     if ARGS.show_main_file:
-        print main_file()
+        print meuporgCore.main_file()
     elif ARGS.template_style != "":
         get_template(ARGS.template_style)
     elif ARGS.parse_and_show_org != "":
@@ -208,10 +218,12 @@ if (__name__ == "__main__"):
             style_name="vimwiki")
 
     elif ARGS.update:
-        update_main_file(include=ARGS.to_include,
-                         exclude=ARGS.to_exclude,
-                         include_backup_files=ARGS.include_backup_files,
-                         include_hidden_files=ARGS.include_hidden_files)
+        meuporgCore.update_main_file(include=ARGS.to_include,
+                                     exclude=ARGS.to_exclude,
+                                     include_backup_files=ARGS.include_backup_files,
+                                     include_hidden_files=ARGS.include_hidden_files)
 
     else:
         ARGUMENT_PARSER.print_help()
+        # itemUtils.parse_directory(".")
+        # print output(item.MeuporgItem.project_structure,2,"org")
