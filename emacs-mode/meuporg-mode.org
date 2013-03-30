@@ -1,7 +1,7 @@
 #+TITLE: Meuporg-mode
 #+DESCRIPTION: The litterate code of the meuporg-mode.
 #+AUTHOR: Léo Perrin <leoperrin@picarresursix.fr>
-#+DATE: Time-stamp: <2013-01-26 15:40:58 leo>
+#+DATE: Time-stamp: <2013-03-31 00:08:22 leo>
 #+STARTUP: hidestars indent
 
 
@@ -24,6 +24,54 @@ emacs. To edit a snippet of code, use /C-c '/ to open a new frame in
 the correct mode and /C-c '/ again to close it. To create the source
 file (an operation called "tangling"), use /C-c C-v f/.
 
+** Licence
+Meuporg is released under a GPL licence.
+#+BEGIN_SRC lisp :tangle meuporg.el
+;;; meuporg.el --- Provides shortcuts for easier use of meup!org.
+
+;; Copyright (C) 2012 Leo Perrin
+;;
+;; Author: Leo "picarresursix" Perrin <leoperrin@picarresursix.fr>
+;; Created: 2012-12-20
+;; Version: 0.9
+;; Keywords: project management, data centralisation
+;; URL: https://github.com/picarresursix/meuporg
+;; Compatibility:  GNU Emacs 24.x
+;;
+;; This file is NOT part of GNU Emacs.
+;;
+;; This program is free software; you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License
+;; as published by the Free Software Foundation; either version 2
+;; of the License, or (at your option) any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;;
+#+END_SRC
+
+** Usage
+#+BEGIN_SRC lisp :tangle meuporg.el
+;;; Commentary:
+;;
+;; Move this file somewhere in your emacs load-path. Then, add the following
+;; to your .emacs file:
+;; 
+;; (load-file meuporg.el)
+;; 
+;;; Issues:
+;;
+;;; TODO:
+;; 
+;;; Change Log:
+;;
+;;; Code:
+#+END_SRC
 * The meuporg command
 Meuporg is not a "real" executable somewhere in the $PATH so we must
 tell emacs the command to run to use it.
@@ -40,9 +88,7 @@ This function is very straightforward: we run the shell command
     (save-some-buffers t)
     (shell-command (concat meuporg-command " -u"))
     (if (get-buffer "meup.*org.*")
-        (revert-buffer "meup.*org.*")
-        )
-    )
+        (revert-buffer "meup.*org.*")))
 #+end_src
 * Opening the main file
 ** meuporg-find-main
@@ -64,11 +110,9 @@ This function is very straightforward: we run the shell command
         (shell-command (concat meuporg-command " -f"))
         (switch-to-buffer "*Shell Command Output*")
         (setq path-to-main-meuporg
-              (buffer-substring-no-properties (point-min) (- (point-max) 1))
-              )
+              (buffer-substring-no-properties (point-min) (- (point-max) 1)))
         (switch-to-buffer old-buffer)
-        path-to-main-meuporg
-        )
+        path-to-main-meuporg)
     #+end_src
 ** meuporg-open-main
     Opens the main file of which the current file depends using the
@@ -82,11 +126,8 @@ This function is very straightforward: we run the shell command
         (if (< 2 (length path-to-main-meuporg))
             (progn
               (find-file path-to-main-meuporg)
-              (message (concat "Opening " path-to-main-meuporg))
-              )
-            (message "No meuporg found.")
-            )
-        )
+              (message (concat "Opening " path-to-main-meuporg)))
+            (message "No meuporg found.")))
     #+end_src
 * Interacting with items in a file
    Items live in "regular" file, i.e. those I actually work with: .c,
@@ -100,38 +141,32 @@ This function is very straightforward: we run the shell command
       (defun meuporg-insert-idea()
         "Inserts an IDEA meuporg item."
         (interactive)
-        (insert "!IDEA! ")
-        )
+        (insert "!IDEA! "))
 
       (defun meuporg-insert-todo()
         "Inserts a TODO meuporg item."
         (interactive)
-        (insert "!TODO! ")
-        )
+        (insert "!TODO! "))
 
       (defun meuporg-insert-continue()
         "Inserts a TOCHECK meuporg item."
         (interactive)
-        (insert "!CONTINUE! ")
-        )
+        (insert "!CONTINUE! "))
 
       (defun meuporg-insert-tocheck()
         "Inserts a TOCHECK meuporg item."
         (interactive)
-        (insert "!TOCHECK! ")
-        )
+        (insert "!TOCHECK! "))
 
       (defun meuporg-insert-polish()
         "Inserts a TOCHECK meuporg item."
         (interactive)
-        (insert "!POLISH! ")
-        )
+        (insert "!POLISH! "))
 
       (defun meuporg-insert-fixref()
         "Inserts a FIXREF meuporg item."
         (interactive)
-        (insert "!FIXREF! ")
-        )
+        (insert "!FIXREF! "))
     #+end_src
 ** meuporg-go-to-next-item
     If there is another item further in the file, moves the cursor to
@@ -142,10 +177,7 @@ This function is very straightforward: we run the shell command
         (condition-case ex
             (search-forward-regexp "\![a-zA-Z0-9_]*\!")
           ('error
-           (message "No items after cursor.")
-           )
-          )
-        )
+           (message "No items after cursor."))))
     #+end_src
 ** meuporg-go-to-previous-item
     The same as before, but for what is before in the file.
@@ -155,135 +187,59 @@ This function is very straightforward: we run the shell command
         (condition-case ex
             (search-backward-regexp "\![a-zA-Z0-9_]*\!")
           ('error
-           (message "No items before cursor.")
-           )
-          )
-        )
+           (message "No items before cursor."))))
     #+end_src
 ** meuporg-toggle-item-highlighting
 Use [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Highlight-Interactively.html][hi-lock-mode]].
 * List and jump to items in a file
 The search of items in a file and the navigation among them relies on
-the `occur` elisp function. The idea is to use occur to find all lines
-cotaining an item and to tweak the occur buffer a bit to make it more
-convenient in this context.
+the `loccur` elisp function. The idea is to use it to locate all items
+or only those corresponding to the structure.
 
-Modifications to the regular occur buffer are the following.
-+ addition of local keymap: up moves up (respectively down) an item in
-  the list.
-+ when an item is selected, moving the cursor up or down the list
-  makes the buffer containing the file move as well so as to have
-  current item at the center of the window.
-** move from items to items in item list
-When go up (or down) an item in the list, we want the other file to go
-to it (which is achieved using occur-mode-goto-occurrence) and then
-come back to the occur buffer.
-#+begin_src lisp :tangle meuporg.el
-  (defun meuporg-list-next-item()
-    "Move to the next item in the meuporg list"
-    (interactive)
-    (if (string= (buffer-name) "!List!")
-        (progn
-          (occur-next)
-          (occur-mode-goto-occurrence)
-          (recenter)
-          (other-window 1)
-        )
-      )
-    )
-  
-  (defun meuporg-list-previous-item()
-    "Move to the previous item in the meuporg list"
-    (interactive)
-    (if (string= (buffer-name) "!List!")
-        (progn
-          (occur-prev)
-          (occur-mode-goto-occurrence)
-          (recenter)
-          (other-window 1)
-        )
-      )
-    )
-  
-#+end_src
+All this requires loccur and the loccur-no-highlight function, so I
+recommend of course my [[https://github.com/picarresursix/loccur/][fork]] of it.
+
 ** meuporg-list-items-in-buffer
-We first write a function listing all lines matching any pattern in a
-new buffer.  This function calls occur with the correct pattern to
-look for lines matching the pattern in the current file, rename it
-"!List!" (after killing any other buffer having this name), turn on
-the meuporg-list minor-mode and moves the cursor to the list. It also
-highlights the lines containing the items in the file.
-#+begin_src lisp :tangle meuporg.el
-  (defun meuporg-list-patterns-in-buffer(pattern)
-    "Lists all the strings matching a given pattern and display them in
-  a new buffer."
-    (setq meuporg-listed-buffer (current-buffer))
-    (meuporg-kill-item-list)
-    (delete-other-windows)
-    (occur pattern)
-    (switch-to-buffer "*Occur*")
-    (rename-buffer "!List!")
-    (beginning-of-buffer)
-    (setq inhibit-read-only t)
-    (kill-line)
-    (insert "[up] move to previous occurrence; [down] move to next one\n")
-    (setq inhibit-read-only nil)
-    (setq read-only t)
-    (meuporg-list-mode)
-    (occur-next)
-    (switch-to-buffer meuporg-listed-buffer)
-    (highlight-lines-matching-regexp pattern)
-    (other-window 1)
-    (next-line)
-    )
-#+end_src
-
-We then add some functions using the previous to search for items or
-for any pattern.
+We add some functions using the loccur to search for (possibly
+particular) items.
 #+begin_src lisp :tangle meuporg.el
   (defun meuporg-list-items-in-buffer()
-    "Lists the items in the current buffer and displays them in a new
-  buffer."
+    "Lists the items in the current buffer and displays only them."
     (interactive)
-    (meuporg-list-patterns-in-buffer "![A-Za-z0-9_]+!")
+    (loccur-no-highlight "![A-Za-z0-9_]+!")
     )
   
   (defun meuporg-list-specific-items-in-buffer()
     "Prompts for a string and lists all the items in the file whose name
-  contains the said string"
+  contains the said string."
     (interactive)
     (setq pattern
           (read-from-minibuffer "Search for items whose names contain: "))
-    (meuporg-list-patterns-in-buffer (concat "![A-zA-Z0-9]*" pattern "[A-zA-Z0-9]*!"))
+    (loccur-no-highlight (concat "![A-zA-Z0-9]*" pattern "[A-zA-Z0-9]*!"))
+    )
+  
+  (defun meuporg-list-structure-of-buffer()
+    "Searches for items with \"SECTION\" in their name and displays
+  them."
+    (interactive)
+    (loccur-no-highlight "![A-Za-z0-9_]*SECTION!")
     )
   
 #+end_src
-** meuporg-kill-item-list
-This functions removes the highlighting of the items and kills the
-buffer containing the item list.
-#+begin_src lisp :tangle meuporg.el
-  (defun meuporg-kill-item-list()
-    "Kills the buffer containing the item list and turns off line
-  highlighting."
-    (interactive)
-    (switch-to-buffer meuporg-listed-buffer)
-    (hi-lock-mode -1)
-    (if (get-buffer "!List!")
-        (progn
-          (switch-to-buffer "!List!")
-          (quit-window t)
-          )
-      )
-    (delete-other-windows)
-    )
-#+end_src
+* meuporg-mode
+** minor-mode declaration
+We want to define a minor-mode granting access to the keybindings
+and the fontifying of known items. To do so, we apply what is
+suggested [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Defining-Minor-Modes.html#Defining-Minor-Modes][here]]. The keymap had to employ a backquote and commas,
+take a look at [[http://stackoverflow.com/questions/3115104/how-to-create-keybindings-for-a-custom-minor-mode-in-emacs][stackoverflow]] to see why.
 
-** meuporg-list-mode
-This minor-mode provides convenient key-bindings for the list of items
-generated with occur.
+In order to be able to use the key "C-!" as the prefix, we first
+had to undefine this key.
 #+begin_src lisp :tangle meuporg.el
-  (define-minor-mode meuporg-list-mode
-      "Toggle meuporg-list mode.
+  (global-unset-key (kbd "C-!"))
+  
+  (define-minor-mode meuporg-mode
+      "Toggle meuporg mode.
   
     Interactively with no argument, this command toggles the mode.
     A positive prefix argument enables the mode, any other prefix
@@ -292,79 +248,48 @@ generated with occur.
      ;; The initial value.
      :init-value nil
      ;; The indicator for the mode line.
-     :lighter " !L!"
+     :lighter " !M!"
      :keymap
      `(
-       (,(kbd "<down>")   . meuporg-list-next-item)
-       (,(kbd "<up>")     . meuporg-list-previous-item)
-       )
-     )
-   #+end_src
-
-* meuporg-mode
-** minor-mode declaration
-   We want to define a minor-mode granting access to the keybindings
-   and the fontifying of known items. To do so, we apply what is
-   suggested [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Defining-Minor-Modes.html#Defining-Minor-Modes][here]]. The keymap had to employ a backquote and commas,
-   take a look at [[http://stackoverflow.com/questions/3115104/how-to-create-keybindings-for-a-custom-minor-mode-in-emacs][stackoverflow]] to see why.
-
-   In order to be able to use the key "C-!" as the prefix, we first
-   had to undefine this key.
-   #+begin_src lisp :tangle meuporg.el
-     (global-unset-key (kbd "C-!"))
-     
-     (define-minor-mode meuporg-mode
-         "Toggle meuporg mode.
-     
-       Interactively with no argument, this command toggles the mode.
-       A positive prefix argument enables the mode, any other prefix
-       argument disables it.  From Lisp, argument omitted or nil enables
-       the mode, `toggle' toggles the state. "
-        ;; The initial value.
-        :init-value nil
-        ;; The indicator for the mode line.
-        :lighter " !M!"
-        :keymap
-        `(
-          (,(kbd "C-! u")   . meuporg-reload)
-          (,(kbd "C-! m")   . meuporg-open-main)
-          (,(kbd "C-! n")   . meuporg-go-to-next-item)
-          (,(kbd "C-! p")   . meuporg-go-to-previous-item)
-          (,(kbd "C-! l")   . meuporg-list-items-in-buffer)
-          (,(kbd "C-! s")   . meuporg-list-specific-items-in-buffer)
-          (,(kbd "C-! q")   . meuporg-kill-item-list)
-          (,(kbd "C-! i i") . meuporg-insert-idea)
-          (,(kbd "C-! i t") . meuporg-insert-todo)
-          (,(kbd "C-! i c") . meuporg-insert-continue)
-          (,(kbd "C-! i h") . meuporg-insert-tocheck)
-          (,(kbd "C-! i p") . meuporg-insert-polish)
-          (,(kbd "C-! i f") . meuporg-insert-fixref)
-          )
-        )
-   #+end_src
+       (,(kbd "C-! u")   . meuporg-reload)
+       (,(kbd "C-! m")   . meuporg-open-main)
+       (,(kbd "C-! n")   . meuporg-go-to-next-item)
+       (,(kbd "C-! p")   . meuporg-go-to-previous-item)
+       (,(kbd "C-! l")   . meuporg-list-items-in-buffer)
+       (,(kbd "C-! s")   . meuporg-list-specific-items-in-buffer)
+       (,(kbd "C-! t")   . meuporg-list-structure-of-buffer)
+       (,(kbd "C-! q")   . meuporg-kill-item-list)
+       (,(kbd "C-! i i") . meuporg-insert-idea)
+       (,(kbd "C-! i t") . meuporg-insert-todo)
+       (,(kbd "C-! i c") . meuporg-insert-continue)
+       (,(kbd "C-! i h") . meuporg-insert-tocheck)
+       (,(kbd "C-! i p") . meuporg-insert-polish)
+       (,(kbd "C-! i f") . meuporg-insert-fixref)))
+#+end_src
 
 ** Fontifying
-   Now that we have a minor-mode, we add fontifying for the
-   items. Items are strings containing non-space character enclosed
-   between exclamation marks, so we look for this pattern.
-   #+begin_src lisp :tangle meuporg.el
-     (add-hook 'meuporg-mode-hook
-              (lambda ()
-                (font-lock-add-keywords nil '(("!\\([a-zA-Z0-9_]*\\)!" 1 font-lock-warning-face t)))
-                )
-              )
-   #+end_src
+Now that we have a minor-mode, we add fontifying for the
+items. Items are strings containing non-space character enclosed
+between exclamation marks, so we look for this pattern.
+#+begin_src lisp :tangle meuporg.el
+  (add-hook 'meuporg-mode-hook
+            (lambda ()
+              (font-lock-add-keywords
+               nil
+               '(("!\\([a-zA-Z0-9_]*\\)!" 1 font-lock-warning-face t)))))
+#+end_src
 
 ** Adding a hook to turn on the mode
-    We want the meuporg minor-mode to be switched on whenever a file
-    is on the directory tree below a meuporg. To do so, we check that
-    the output of meuporg-find-main has a greater than 1 length.
-    #+begin_src lisp :tangle meuporg.el
-      (add-hook 'find-file-hook
-                (lambda()
-                  (if (< 1 (length (meuporg-find-main)))
-                      (meuporg-mode)
-                    )
-                  )
-                )
-    #+end_src
+We want the meuporg minor-mode to be switched on whenever a file
+is on the directory tree below a meuporg. To do so, we check that
+the output of meuporg-find-main has a greater than 1 length.
+#+begin_src lisp :tangle meuporg.el
+  (add-hook 'find-file-hook
+            (lambda()
+              (if (< 1 (length (meuporg-find-main)))
+                  (meuporg-mode))))
+#+end_src
+* Wrapping up
+#+BEGIN_SRC lisp :tangle meuporg.el
+;;; meuporg.el ends here
+#+END_SRC
