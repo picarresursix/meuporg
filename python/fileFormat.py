@@ -13,6 +13,7 @@ their string representation.
 """
 
 import re
+import meupUtils
 
 
 # !SECTION! The classes supporting the different file formats.
@@ -25,6 +26,8 @@ class OrgFile:
     to a file using the org format.
 
     """
+
+
     def get_name(self):
         """Returns the name of the format."""
         return "org"
@@ -60,15 +63,31 @@ class OrgFile:
         return "*"*depth + " " + title
         
 
-    def item_to_string(self, item):
+    def item_to_string(self, item, print_path=True, print_name=True):
         """Returns the string containing the data in the item
         corresponding to this format.
 
         """
-        return "[[file:{0.location}::{0.line_index}][{0.description}]] ({0.location}::{0.line_index})".format(item)
+        name = item.name
+        desc_with_link = ("[[file:{0.file_name}::{0.line_index}]" +
+                          "[{0.description}]]").format(item)
+        location = "({0.file_name}::{0.line_index})".format(item)
+        if print_name and print_path:
+            return name + ": " + desc_with_link + " " + location
+        elif print_name:
+            return name + ": " + desc_with_link
+        elif print_path:
+            return desc_with_link + " " + location
+        else:
+            return desc_with_link
+            
         
 
-    def list_to_string(self, item_list, indentation):
+    def list_to_string(self,
+                       item_list,
+                       indentation="",
+                       print_path=True,
+                       print_name=True):
         """Returns a string containing the data in each of the item in
         the item list indented at the correct level.
 
@@ -81,7 +100,9 @@ class OrgFile:
         for item in item_list:
             result += "{}. {}\n".format(
                 index,
-                self.item_to_string(item)
+                self.item_to_string(item,
+                                    print_path=print_path,
+                                    print_name=print_name)
                 )
             index += 1
         return result
@@ -96,6 +117,8 @@ class VimwikiFile:
     to a file using the vimwiki format.
 
     """
+
+
     def get_name(self):
         """Returns the name of the format."""
         return "vimwiki"
@@ -130,15 +153,30 @@ class VimwikiFile:
         return "="*depth + " " + title + " " + "="*depth
         
 
-    def item_to_string(self, item):
+    def item_to_string(self, item, print_path=True, print_name=True):
         """Returns the string containing the data in the item
         corresponding to this format.
 
         """
-        return "[file://{0.location}:{0.line_index}|{0.description}] ({0.location}:{0.line_index})".format(item)
+        name = item.name
+        desc_with_link = ("[file://{0.file_name}:{0.line_index}|"
+                          + "{0.description}]").format(item)
+        location = "({0.file_name}::{0.line_index})".format(item)
+        if print_name and print_path:
+            return name + ": " + desc_with_link + " " + location
+        elif print_name:
+            return name + ": " + desc_with_link
+        elif print_path:
+            return desc_with_link + " " + location
+        else:
+            return desc_with_link
         
 
-    def list_to_string(self, item_list, indentation):
+    def list_to_string(self,
+                       item_list,
+                       indentation="",
+                       print_name=False,
+                       print_path=False):
         """Returns a string containing the data in each of the item in
         the item list indented at the correct level.
 
@@ -147,7 +185,9 @@ class VimwikiFile:
         for item in item_list:
             result += "{}# {}\n".format(
                 indentation,
-                self.item_to_string(item)
+                self.item_to_string(item,
+                                    print_path=print_path,
+                                    print_name=print_name)
                 )
         return result
         
@@ -161,9 +201,11 @@ class MdFile:
     to a file using the markdown format.
 
     """
+
     def get_name(self):
         """Returns the name of the format."""
         return "md"
+
 
     def get_main_file_name(self):
         """Returns the name of the main file associated with this
@@ -200,15 +242,32 @@ class MdFile:
         return "#"*depth + " " + title + " " + "#"*depth
         
 
-    def item_to_string(self, item):
+    def item_to_string(self, item, print_name=True, print_path=True):
         """Returns the string containing the data in the item
         corresponding to this format.
 
         """
-        return "[{0.description}]({0.location}:{0.line_index})".format(item)
+        name = item.name
+        desc_with_link = ("[{0.description}]({0.file_name}:"
+                          + "{0.line_index})").format(item)
+        location = ""
+        if print_name and print_path:
+            return name + ": " + desc_with_link + " " + location
+        elif print_name:
+            return name + ": " + desc_with_link
+        elif print_path:
+            return desc_with_link + " " + location
+        else:
+            return desc_with_link
+        
+        return "".format(item)
         
 
-    def list_to_string(self, item_list, indentation):
+    def list_to_string(self,
+                       item_list,
+                       indentation="",
+                       print_name=False,
+                       print_path=False):
         """Returns a string containing the data in each of the item in
         the item list indented at the correct level.
 
@@ -219,7 +278,9 @@ class MdFile:
             result += "{}{}. {}\n".format(
                 indentation,
                 index,
-                self.item_to_string(item)
+                self.item_to_string(item, 
+                                    print_path=print_path,
+                                    print_name=print_name)
                 )
             index += 1
         return result
@@ -259,6 +320,7 @@ class Factory:
         else:
             raise Exception("Unkown file format \"" + name + "\"")
 
+
     @staticmethod
     def get_format_list():
         """Returns a list of all the file_format objects available."""
@@ -286,3 +348,14 @@ if __name__ == "__main__":
             header_string = file_format.header_to_string(depth, "depth "+str(depth))
             print(header_string)
             print(file_format.line_to_header(header_string))
+
+    item_list = [
+        meupUtils.MeuporgItem("!TODO! blibla", "/path/to/file1", 300, [], False),
+        meupUtils.MeuporgItem("!IDEA! blublo", "/path/to/file1", 310, [], False)
+    ]
+    for file_format in file_format_list:
+        print(file_format.list_to_string(
+            item_list,
+            indentation="  ",
+            print_name=True,
+            print_path=False))
