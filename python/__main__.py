@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Time-stamp: <2013-02-16 23:02:03 leo>
+# Time-stamp: <2013-05-07 15:18:09 leo>
 
 """Contains the main program of meuporg, i.e. parses the cli arguments
 and calls the correct functions.
@@ -12,7 +12,8 @@ import argparse
 
 
 import fileFormat 
-import meuporgCore
+import fileUpdate
+import itemDb
 import itemUtils
 
 
@@ -56,7 +57,7 @@ def parse_and_print(path=".",
                                          path=path)
     else:
         tags = itemUtils.parse_file(path)
-        print(meuporgCore.output(meuporgCore.sort_by_name(tags), 2, style_name))
+        print(FileFormat.output(meuporgCore.sort_by_name(tags), 2, style_name))
 
 
 
@@ -186,8 +187,9 @@ if (__name__ == "__main__"):
     # !SUBSECTION! Acting depending on the CLI arguments
     
     ARGS = ARGUMENT_PARSER.parse_args()
+    meuporg = fileUpdate.MainFile()
     if ARGS.show_main_file:
-        print meuporgCore.main_file()
+        print meuporg.main_file()
     elif ARGS.template_style != "":
         get_template(ARGS.template_style)
     elif ARGS.parse_and_show_org != "":
@@ -218,10 +220,10 @@ if (__name__ == "__main__"):
             style_name="vimwiki")
 
     elif ARGS.update:
-        meuporgCore.update_main_file(include=ARGS.to_include,
-                                     exclude=ARGS.to_exclude,
-                                     include_backup_files=ARGS.include_backup_files,
-                                     include_hidden_files=ARGS.include_hidden_files)
+        meuporg.update(include=ARGS.to_include,
+                 exclude=ARGS.to_exclude,
+                 include_backup_files=ARGS.include_backup_files,
+                 include_hidden_files=ARGS.include_hidden_files)
 
     else:
         ARGUMENT_PARSER.print_help()

@@ -16,10 +16,13 @@ import re
 import meupUtils
 
 
-# !SECTION! The classes supporting the different file formats.
+# !SECTION! The classes supporting the different file formats
+# ===========================================================
 
 
-# !SUBSECTION! Org-mode files
+#   !SUBSECTION! Org-mode files
+#   ---------------------------
+
 
 class OrgFile:
     """Provides function to read headers and print headers and lists
@@ -61,7 +64,15 @@ class OrgFile:
 
         """
         return "*"*depth + " " + title
-        
+
+
+    def get_link(self, description, location):
+        """Returns an org-mode link with the given description poiting to the
+        given location.
+
+        """
+        return "[[{}][{}]]".format(location, description)
+
 
     def item_to_string(self, item, print_path=True, print_name=True):
         """Returns the string containing the data in the item
@@ -69,8 +80,9 @@ class OrgFile:
 
         """
         name = item.name
-        desc_with_link = ("[[file:{0.file_name}::{0.line_index}]" +
-                          "[{0.description}]]").format(item)
+        desc_with_link = self.get_link(
+            item.description,
+            "file:{0.file_name}::{0.line_index}".format(item))
         location = "({0.file_name}::{0.line_index})".format(item)
         if print_name and print_path:
             return name + ": " + desc_with_link + " " + location
@@ -109,7 +121,8 @@ class OrgFile:
         
 
 
-# !SUBSECTION! Vimwiki files
+#   !SUBSECTION! Vimwiki files
+#   --------------------------
 
 
 class VimwikiFile:
@@ -153,15 +166,24 @@ class VimwikiFile:
         return "="*depth + " " + title + " " + "="*depth
         
 
+    def get_link(self, description, location):
+        """Returns vimwiki link with the given description poiting to the
+        given location.
+
+        """
+        return "[file://{}|{}]".format(location, description)
+
+
     def item_to_string(self, item, print_path=True, print_name=True):
         """Returns the string containing the data in the item
         corresponding to this format.
 
         """
         name = item.name
-        desc_with_link = ("[file://{0.file_name}:{0.line_index}|"
-                          + "{0.description}]").format(item)
-        location = "({0.file_name}::{0.line_index})".format(item)
+        desc_with_link = self.get_link(
+            item.description,
+            "{0.file_name}::{0.line_index}".format(item))
+        location = "({0.file_name}:{0.line_index})".format(item)
         if print_name and print_path:
             return name + ": " + desc_with_link + " " + location
         elif print_name:
@@ -193,8 +215,9 @@ class VimwikiFile:
         
 
 
-# !SUBSECTION! Markdown format
 
+#   !SUBSECTION! Markdown format
+#   ----------------------------
 
 class MdFile:
     """Provides function to read headers and print headers and lists
@@ -240,7 +263,15 @@ class MdFile:
 
         """
         return "#"*depth + " " + title + " " + "#"*depth
-        
+
+
+    def get_link(self, description, location):
+        """Returns a markdown link with the given description poiting to the
+        given location.
+
+        """
+        return "[{}]({})".format(description, location)
+
 
     def item_to_string(self, item, print_name=True, print_path=True):
         """Returns the string containing the data in the item
@@ -248,9 +279,10 @@ class MdFile:
 
         """
         name = item.name
-        desc_with_link = ("[{0.description}]({0.file_name}:"
-                          + "{0.line_index})").format(item)
-        location = ""
+        desc_with_link = self.get_link(
+            item.description,
+            "{0.file_name}:{0.line_index}".format(item)) 
+        location = "({0.file_name}:{0.line_index})".format(item)
         if print_name and print_path:
             return name + ": " + desc_with_link + " " + location
         elif print_name:
@@ -287,7 +319,12 @@ class MdFile:
         
 
 
-# !SUBSECTION! Factory building file formats
+
+# !SECTION! Functions using this formats
+# ======================================
+
+#   !SUBSECTION! Factory building file formats
+#   ------------------------------------------
 
 
 class Factory:
@@ -327,8 +364,54 @@ class Factory:
         return [Factory.get_format(name) for name in Factory.valid_formats]
 
 
+#   !SUBSECTION! output function
+#   ----------------------------
+
+
+def output(items, depth, output_format, print_name=True, path=""):
+    """Outputs a representation of the items given in the format
+    wanted, which must be in fileFormat.Factory.valid_types.
+
+    Uses keys of a dictionnary as headings and output lists as
+    lists. The indentation of the list and the level of the head node
+    is given by the depth argument.
+
+    """
+    style = Factory.get_format(output_format)
+    result = ""
+    if isinstance(items, list):
+        if (len(items) == 0):
+            result = ""
+        else:
+            result += style.list_to_string(items,
+                                           " " * depth,
+                                           print_name=print_name,
+                                           print_path=(path == ""))
+    else:
+        for key in sorted(items.keys()):
+            if (path == ""):
+                heading = style.header_to_string(depth, key)
+                partial_output = output(items[key],
+                                        depth+1,
+                                        output_format,
+                                        print_name=print_name,
+                                        path="")
+            else:
+                heading = style.header_to_string(
+                    depth,
+                    key + " " + style.get_link("=>", path+"/"+key) + " ")
+                partial_output = output(items[key],
+                                        depth+1,
+                                        output_format,
+                                        print_name=print_name,
+                                        path=path + "/" + key)
+            result += "{}\n{}".format(heading, partial_output)
+    return result
+
+
 
 # !SECTION! Test suite
+# ====================
 
 
 if __name__ == "__main__":
@@ -359,3 +442,32 @@ if __name__ == "__main__":
             indentation="  ",
             print_name=True,
             print_path=False))
+
+
+    item_dict = {
+        "path": {
+            "to": {
+                "file1": [
+                    meupUtils.MeuporgItem("!TODO! blibla", "/path/to/file1", 300, [], False),
+                    meupUtils.MeuporgItem("!IDEA! blublo", "/path/to/file1", 310, [], False)
+                ],
+                "file2": [
+                    meupUtils.MeuporgItem("!TODO! blibla", "/path/to/file2", 300, [], False),
+                    meupUtils.MeuporgItem("!IDEA! blublo", "/path/to/file2", 310, [], False)
+                ]},
+            "and":  {
+                "file1": [
+                    meupUtils.MeuporgItem("!TODO! blibla", "/path/to/file1", 300, [], False),
+                    meupUtils.MeuporgItem("!IDEA! blublo", "/path/to/file1", 310, [], False)
+                ],
+                "file2": [
+                    meupUtils.MeuporgItem("!TODO! blibla", "/path/to/file2", 300, [], False),
+                    meupUtils.MeuporgItem("!IDEA! blublo", "/path/to/file2", 310, [], False)
+                ]}
+        }
+    }
+    for file_format in file_format_list:
+        style = file_format.get_name()
+        print("\n--- {} ---\n{}".format(
+            style,
+            output(item_dict, 1, style, print_name=True, path="")))

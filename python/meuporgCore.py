@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Time-stamp: <2013-02-16 23:05:10 leo>
+# Time-stamp: <2013-05-03 15:03:20 leo>
 
 from collections import defaultdict
 import os
@@ -108,6 +108,7 @@ def output(items, depth, output_format):
 # !SECTION! Interacting with the main file
 
 #   !SUBSECTION! Find the main file
+
 
 def main_file():
     """Goes up the directory tree until finding a folder containing a

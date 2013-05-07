@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # AUTHOR: Leo Perrin <leoperrin@picarresursix.fr>
-# Time-stamp: <2013-05-05 15:23:43 leo>
+# Time-stamp: <2013-05-07 15:07:33 leo>
 
 """Provides utilities to easily select some items and build complex
 conditions an item must validate in order to trigger some action.
@@ -9,6 +9,7 @@ conditions an item must validate in order to trigger some action.
 
 import re
 import meupUtils
+from collections import defaultdict
 
 
 # !SECTION! Boolean management
@@ -34,7 +35,7 @@ class Attribute:
             self.attribute = attribute
         else:
             raise ValueError("Unkown attribute \"" + self.attribute + "\"")
-        if type(possible_matches) == str:
+        if isinstance(possible_matches, str):
             self.possible_matches = [possible_matches]
         else:
             self.possible_matches = possible_matches
@@ -92,8 +93,41 @@ class Not:
         return not self.criteria.match(it)
 
 
+#  !SUBSECTION! AlwaysTrue class
+#  ----------------------------
+
+
+class AlwaysTrue:
+    """Always returns True."""
+
+    def __str__(self):
+        return "True"
+
+    def match(self, it):
+        return True
+
+
+
+#  !SUBSECTION! AlwaysFalse class
+#  ----------------------------
+
+
+class AlwaysFalse:
+    """Always returns False."""
+        
+    def __str__(self):
+        return "False"
+
+    def match(self, it):
+        return False
+
+
+#  !SUBSECTION! And class
+#  ----------------------------
+
+
 class And:
-    """Allows to check if the conjunction of two criteria holds for an
+    """Allows to check if the conjunction of several criteria holds for an
     item.
 
     """
@@ -113,12 +147,18 @@ class And:
                 return False
         return True
 
+    def append(self, criteria):
+        self.criterias.append(criteria)
+
+    def pop(self):
+        return self.criterias.pop()
+
 
 #  !SUBSECTION! Or class
 #  ---------------------
 
 class Or:
-    """Allows to check if the disjunction of two criteria holds for an
+    """Allows to check if the disjunction of several criteria holds for an
     item.
 
     """
@@ -137,6 +177,12 @@ class Or:
             if crit.match(it):
                 return True
         return False
+
+    def append(self, criteria):
+        self.criterias.append(criteria)
+
+    def pop(self):
+        return self.criterias.pop()
 
 
 #  !SUBSECTION! Criteria class
@@ -207,8 +253,12 @@ class Criteria:
 
 
 
-#  !SECTION! A poor man's database for the items
-#  ---------------------------------------------
+# !SECTION! A poor man's database for the items
+# =============================================
+
+def tree():
+    return defaultdict(tree)
+
 
 class MeuporgItemDB:
     """Stores items and provides method to obtain items depending on a
@@ -222,12 +272,64 @@ class MeuporgItemDB:
         """Initializes a new databade from a list of items. """
         self.item_list = item_list
 
-    def select_and_erase(self,
-                         criteria=None,
-                         name=[],
-                         file_name=[],
-                         sections=[],
-                         description=[]):
+
+    # !SUBSECTION! Sorting methods
+    # ----------------------------
+
+    def sort_by_name(self,item_list):
+        """Returns a dictionnary whose keys are the names of the items in the
+        list and its values the lists of the items having the
+        corresponding name.
+        
+        """
+        result = defaultdict(list)
+        for it in item_list:
+            result[it.name].append(it)
+        return result
+
+
+    def sort_by_directories(self,item_list):
+        """Returns a dictionnary whose keys are the folders and the files used
+        in the file_name attribute of the items in the list given as a
+        parameter. The nodes corresponding to files contain a list of
+        all the items in the file.
+
+        The tree has a depth as low as possible: if your working
+        directory is /path/to/dir but all the items in item_list are
+        in /path/to/dir/module/submodule, returns a tree starting at
+        submodule.
+
+        """
+
+        result = tree()
+        for it in item_list:
+            pointer = result
+            splitted_path = it.file_name.split('/')
+            for i in range(0, len(splitted_path) - 1):
+                if splitted_path[i] not in pointer.keys():
+                    pointer[splitted_path[i]] = tree()
+                pointer = pointer[splitted_path[i]]
+            file_name = splitted_path[len(splitted_path) - 1]
+            if file_name not in pointer.keys():
+                pointer[file_name] = [it]
+            else:
+                pointer[file_name].append(it)
+        while (len(result.keys()) == 1
+               and not isinstance(result[result.keys()[0]], list)):
+            result = result[result.keys()[0]]
+        return result
+        
+
+
+    # !SUBSECTION! Obtaining items from the db
+    # ----------------------------------------
+
+    def select(self,
+               criteria=None,
+               name=[],
+               file_name=[],
+               sections=[],
+               description=[]):
         """Returns a list containing all the items which match the criteria
         (if provided) or those whose attributes match at least one
         regex in all of the list provided.
@@ -261,15 +363,40 @@ class MeuporgItemDB:
         new_item_list = []
         result = []
         for it in self.item_list:
-            if match(it):
+            if not it.is_heading and match(it):
                 result.append(it)
             else:
                 new_item_list.append(it)
         self.item_list = new_item_list
-
         return result
-        
-        
+
+
+    def select_and_sort_by_name(self,
+               criteria=None,
+               name=[],
+               file_name=[],
+               sections=[],
+               description=[]):
+        item_list = self.select(criteria=criteria,
+                                name=name,
+                                file_name=file_name,
+                                sections=sections,
+                                description=description)
+        return self.sort_by_name(item_list)
+
+
+    def select_and_sort_by_directories(self,
+               criteria=None,
+               name=[],
+               file_name=[],
+               sections=[],
+               description=[]):
+        item_list = self.select(criteria=criteria,
+                                name=name,
+                                file_name=file_name,
+                                sections=sections,
+                                description=description)
+        return self.sort_by_directories(item_list)
 
 
 
@@ -280,11 +407,11 @@ class MeuporgItemDB:
 if __name__ == "__main__":
     meupUtils.parse_directory(
         path = "..",
-        include = ["org", "el", "md"],
+        include = ["org$", "el$", "md$", "py$"],
         exclude = ["readme"],
         include_backup_files = False,
         include_hidden_files = False)
-    crit = Criteria("(and (file_name el py) (or (name TODO) (name IDEA)))")
+    crit = Criteria("(and (file_name el$ py$ md$))")
     print crit
     print Or([
         And([
@@ -298,24 +425,33 @@ if __name__ == "__main__":
         ])
 
     db = MeuporgItemDB(meupUtils.MeuporgItem.__item_list__)
-    index = 1
-    for it in db.select_and_erase(crit):
-        print("{item_number}. !{0.name}!  {0.description} "
-              "(line {0.line_index} in "
-              "{0.file_name}".format(it, item_number = index))
-        index += 1
+    item_dict = db.select_and_sort_by_name()
+    for key in item_dict.keys():
+        print "-- " + key
+        for it in item_dict[key]:
+            print "  {} | {}:{}".format(it.name,
+                                        it.file_name,
+                                        it.line_index)
+    
+    # index = 1
+    # for it in db.select_and_erase(crit):
+    #     print("{item_number}. !{0.name}!  {0.description} "
+    #           "(line {0.line_index} in "
+    #           "{0.file_name}".format(it, item_number = index))
+    #     index += 1
 
-    for it in db.select_and_erase(name=["IDEA"]):
-        print("{item_number}. !{0.name}!  {0.description} "
-              "(line {0.line_index} in "
-              "{0.file_name}".format(it, item_number="@"))
+    # for it in db.select_and_erase(name=["IDEA"]):
+    #     print("{item_number}. !{0.name}!  {0.description} "
+    #           "(line {0.line_index} in "
+    #           "{0.file_name}".format(it, item_number="@"))
 
-    for it in db.select_and_erase(file_name=["org$"]):
-        print("{item_number}. !{0.name}!  {0.description} "
-              "(line {0.line_index} in "
-              "{0.file_name}".format(it, item_number="$"))
+    # for it in db.select_and_erase(file_name=["org$"]):
+    #     print("{item_number}. !{0.name}!  {0.description} "
+    #           "(line {0.line_index} in "
+    #           "{0.file_name}".format(it, item_number="$"))
 
-    for it in db.select_and_erase():
-        print("{item_number}. !{0.name}!  {0.description} "
-              "(line {0.line_index} in "
-              "{0.file_name}".format(it, item_number="_"))
+    # for it in db.select_and_erase():
+    #     print("{item_number}. !{0.name}!  {0.description} "
+    #           "(line {0.line_index} in "
+    #           "{0.file_name}".format(it, item_number="_"))
+

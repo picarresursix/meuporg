@@ -34,7 +34,7 @@ class Context:
         """
         self.current_file    = path
         self.sections_stack  = []
-        self.line_index      = 1
+        self.line_index      = 0
         self.new_item        = False
         self.continuing_item = False
         self.finished_item   = False
@@ -185,6 +185,29 @@ class MeuporgItem:
         else:
             self.description = self.__class__.__no_desc__
 
+    def add_to_description(self, partial_desc):
+        """Appends a partial description to the description
+        attribute if the current description is not __no_desc__.
+
+        We add a space to prevent two words from being concatenated.
+
+        """
+        if self.description != self.__class__.__no_desc__:
+            self.description += " " + partial_desc
+
+    def is_section_heading(self):
+        """Returns True if this item corresponds to a section heading, False
+        otherwise.
+
+        """
+        return self.is_heading
+
+
+    def push_to_list(self):
+        """Appends this item to the static list of items."""
+        self.__class__.__item_list__.append(self)
+
+
     @staticmethod
     def get_item(context):
         """Returns an item using the information from a Context
@@ -201,29 +224,6 @@ class MeuporgItem:
             context.sections_stack[:],
             context.is_heading)
 
-
-    def add_to_description(self, partial_desc):
-        """Appends a partial description to the description
-        attribute if the current description is not __no_desc__.
-
-        We add a space to prevent two words from being concatenated.
-
-        """
-        if self.description != self.__class__.__no_desc__:
-            self.description += " " + partial_desc
-
-
-    def push_to_list(self):
-        """Appends this item to the static list of items."""
-        self.__class__.__item_list__.append(self)
-
-
-    def is_section_heading(self):
-        """Returns True if this item corresponds to a section heading, False
-        otherwise.
-
-        """
-        return self.is_heading
 
 
 # !SECTION! Parse files and directories
