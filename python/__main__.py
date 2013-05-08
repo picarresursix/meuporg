@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Time-stamp: <2013-05-07 15:18:09 leo>
+# Time-stamp: <2013-05-08 10:48:02 leo>
 
 """Contains the main program of meuporg, i.e. parses the cli arguments
 and calls the correct functions.
@@ -189,7 +189,7 @@ if (__name__ == "__main__"):
     ARGS = ARGUMENT_PARSER.parse_args()
     meuporg = fileUpdate.MainFile()
     if ARGS.show_main_file:
-        print meuporg.main_file()
+        print meuporg.path
     elif ARGS.template_style != "":
         get_template(ARGS.template_style)
     elif ARGS.parse_and_show_org != "":

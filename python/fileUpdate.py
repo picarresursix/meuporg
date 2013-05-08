@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # AUTHOR: Leo Perrin <leoperrin@picarresursix.fr>
-# Time-stamp: <2013-05-07 15:28:59 leo>
+# Time-stamp: <2013-05-08 11:47:14 leo>
 
 import os
 import re
@@ -77,8 +77,6 @@ class MainFile():
                     content = "".join(line.split("!")[2:]).strip()
                     self.include_hidden_files = (content == "YES")
 
-        print self.include
-        print self.exclude
 
 # !SECTION! Update the main file
 # ==============================
@@ -112,8 +110,7 @@ class MainFile():
                                      or include_backup_files)
         self.include_hidden_files = (self.include_hidden_files
                                      or include_hidden_files)
-        print self.include
-        print self.exclude
+
         
         # !SUBSECTION! Getting items
         meupUtils.parse_directory(
@@ -128,7 +125,7 @@ class MainFile():
         with open(file_name, 'r') as f_old:
             new_content = ""
             depth = 0
-            recording = True
+            recording = 0
             local_criteria = []
         
             # !SUBSECTION! Updating the content
@@ -142,11 +139,13 @@ class MainFile():
                     old_depth = depth
                     depth, heading = style.line_to_header(line)
                     if (old_depth > depth):
-                        recording = True
                         for j in range(0, old_depth-depth+1):
                             local_criteria.pop()
                     elif (old_depth == depth):
                         local_criteria.pop()
+
+                    if depth <= recording:
+                        recording = 0
 
                     # !SUBSSUBSECTION! Dealing with possible items insertion
                     content = re.findall("[A-Za-z_0-9\-]+", heading)
@@ -157,10 +156,17 @@ class MainFile():
                             print_items = content[1]
 
                     # !SUBSSUBSECTION! Dealing with Criteria
-                    if (i+1 < len(line_list)
-                        and re.search("!Criteria!", line_list[i+1])) != None:
+                    if (i+2 < len(line_list)
+                        and re.search("!Criteria!", line_list[i+1]) != None):
                         clause_repr = re.findall("\(.*\)", line_list[i+1])[0]
                         local_criteria.append(itemDb.Criteria(clause_repr))
+                    elif (re.search(":.+:", line) != None):
+                        title_criteria = []
+                        for tag in re.findall(":.+:", line):
+                            title_criteria.append(itemDb.Attribute(
+                                "file_name",
+                                tag[1:len(tag)-1]))
+                        local_criteria.append(itemDb.And(title_criteria))
                     else:
                         local_criteria.append(itemDb.AlwaysTrue())
 
@@ -169,9 +175,12 @@ class MainFile():
                     print_items = re.findall("[^! ][a-z]+[^! ]", line)[1]
 
                 # !SUBSECTION! Putting what we just read back in the file
-                new_content += line + "\n"
+                if recording == 0:
+                    new_content += line + "\n"
 
                 # !SUBSECTION! Dealing with the possible printing of items
+                if print_items != "":
+                    recording = depth
                 if print_items == "name":
                     new_content += fileFormat.output(
                         item_db.select_and_sort_by_name(itemDb.And(local_criteria)),
@@ -195,10 +204,8 @@ class MainFile():
                         path="")
                 print_items = ""
 
-                # !CONTINUE! 
-
-        #  writing the new file
-        print new_content
+        # !SUBSECTION! Writing the new file
+        # print new_content
         with open(self.path, 'w') as f_new:
             f_new.write(new_content)
             print "[DONE]"
