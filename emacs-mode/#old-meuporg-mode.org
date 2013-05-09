@@ -1,7 +1,7 @@
 #+TITLE: Meuporg-mode
 #+DESCRIPTION: The litterate code of the meuporg-mode.
 #+AUTHOR: Léo Perrin <leoperrin@picarresursix.fr>
-#+DATE: Time-stamp: <2013-03-31 00:08:22 leo>
+#+DATE: Time-stamp: <2013-04-27 22:16:42 leo>
 #+STARTUP: hidestars indent
 
 
@@ -112,6 +112,7 @@ This function is very straightforward: we run the shell command
         (setq path-to-main-meuporg
               (buffer-substring-no-properties (point-min) (- (point-max) 1)))
         (switch-to-buffer old-buffer)
+        (kill-buffer "*Shell Command Output*")
         path-to-main-meuporg)
     #+end_src
 ** meuporg-open-main

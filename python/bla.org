@@ -1,0 +1,66 @@
+updating /media/leo/aa341e43-5375-473d-8ef7-21ba586c74a4/projets/Code/meuporg/python/meup.org
+#+TITLE: Test
+#+DESCRIPTION: short description
+#+AUTHOR: Me
+#+DATE: Time-stamp: <2013-05-07 15:05:41 leo>
+#+STARTUP: hidestars indent align
+
+
+
+
+* Project description
+
+INCLUDE: el$ py$ md$ org$
+EXCLUDE:
+
+* python
+!Criteria! (and (file_name py$))
+** old
+!Criteria! (file_name meuporg)
+!Items! name
+*** FIXREF
+1. [[file:./meuporgCore.py::311][link]] (./meuporgCore.py::311)
+2. [[file:./meuporgCore.py::322][link]] (./meuporgCore.py::322)
+*** IDEA
+1. [[file:./meuporgCore.py::316][link]] (./meuporgCore.py::316)
+2. [[file:./meuporgCore.py::317][link]] (./meuporgCore.py::317)
+*** TODO
+1. [[file:./meuporgCore.py::310][link]] (./meuporgCore.py::310)
+2. [[file:./meuporgCore.py::321][link]] (./meuporgCore.py::321)
+** Items directories
+*** fileFormat.py [[./fileFormat.py][=>]] 
+1. REALTODO: [[file:./fileFormat.py::246][There is a problem with md: the headings have the trailing "#" are extracted as part of the title.]]
+2. TODO: [[file:./fileFormat.py::436][link]]
+3. IDEA: [[file:./fileFormat.py::437][link]]
+4. TODO: [[file:./fileFormat.py::451][link]]
+5. IDEA: [[file:./fileFormat.py::452][link]]
+6. TODO: [[file:./fileFormat.py::455][link]]
+7. IDEA: [[file:./fileFormat.py::456][link]]
+8. TODO: [[file:./fileFormat.py::460][link]]
+9. IDEA: [[file:./fileFormat.py::461][link]]
+10. TODO: [[file:./fileFormat.py::464][link]]
+11. IDEA: [[file:./fileFormat.py::465][link]]
+*** fileUpdate.py [[./fileUpdate.py][=>]] 
+1. INCLUDE: [[file:./fileUpdate.py::64][link]]
+2. EXCLUDE: [[file:./fileUpdate.py::68][link]]
+3. INCLUDE_BACKUP_FILES: [[file:./fileUpdate.py::72][link]]
+4. INCLUDE_HIDDEN_FILES: [[file:./fileUpdate.py::76][link]]
+5. CONTINUE: [[file:./fileUpdate.py::194][]]
+*** itemUtils.py [[./itemUtils.py][=>]] 
+1. TODO: [[file:./itemUtils.py::90][link]]
+2. TODO: [[file:./itemUtils.py::104][link]]
+3. TODO: [[file:./itemUtils.py::219][blabla! And bla too!",]]
+4. FIXREF: [[file:./itemUtils.py::224][link]]
+5. TODO: [[file:./itemUtils.py::234][link]]
+6. IDEA: [[file:./itemUtils.py::235][link]]
+7. TODO: [[file:./itemUtils.py::236][link]]
+*** meupUtils.py [[./meupUtils.py][=>]] 
+1. TODO: [[file:./meupUtils.py::307][blabla! And bla too!",]]
+2. FIXREF: [[file:./meupUtils.py::314][link]]
+* emacs minor mode
+!Criteria! (and (file_name el$))
+!Items! linear
+* Documentation
+!Criteria! (file_name md$ doc)
+!Items! name
+

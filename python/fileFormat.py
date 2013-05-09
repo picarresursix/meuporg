@@ -244,7 +244,7 @@ class MdFile:
 
         """
         # !REALTODO! There is a problem with md: the headings have the
-        # !trailing "#" are extracted as part of the title.
+        # !trailing "#" extracted as part of the title.
         if (re.match("^#+ .+", line) == None):
             return False
         else:

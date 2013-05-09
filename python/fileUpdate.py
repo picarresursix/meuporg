@@ -1,6 +1,7 @@
+
 #!/usr/bin/env python
 # AUTHOR: Leo Perrin <leoperrin@picarresursix.fr>
-# Time-stamp: <2013-05-08 11:47:14 leo>
+# Time-stamp: <2013-05-09 19:04:46 leo>
 
 import os
 import re
@@ -10,6 +11,12 @@ import fileFormat
 import meupUtils
 
 
+# !IMPROVE!  bla bla bli
+# !TODO!     bla bla bli
+# !FIXME!    bla bla bli
+# !CONTINUE! bla bla bli
+# !CHECK!    bla bla bli
+# !FIXREF!   bla bla bli
 
 class MainFile():
     """An interface to read an write to the main meuporg file."""
@@ -147,7 +154,7 @@ class MainFile():
                     if depth <= recording:
                         recording = 0
 
-                    # !SUBSSUBSECTION! Dealing with possible items insertion
+                    # !SUBSUBSECTION! Dealing with possible items insertion
                     content = re.findall("[A-Za-z_0-9\-]+", heading)
                     if content[0] == "Items":
                         if len(content) == 1:
@@ -155,7 +162,7 @@ class MainFile():
                         else:
                             print_items = content[1]
 
-                    # !SUBSSUBSECTION! Dealing with Criteria
+                    # !SUBSUBSECTION! Dealing with Criteria
                     if (i+2 < len(line_list)
                         and re.search("!Criteria!", line_list[i+1]) != None):
                         clause_repr = re.findall("\(.*\)", line_list[i+1])[0]
@@ -208,10 +215,11 @@ class MainFile():
         # print new_content
         with open(self.path, 'w') as f_new:
             f_new.write(new_content)
-            print "[DONE]"
+            print("[DONE]")
 
 
 
 if __name__ == "__main__":
     m = MainFile()
     m.update()
+
