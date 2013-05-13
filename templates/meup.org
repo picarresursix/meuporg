@@ -15,14 +15,14 @@ The directories containing the following regexp's will be the *only
 ones* included. See the [[http://docs.python.org/2/howto/regex.html#matching-characters][Python re documentation]] to know how regex's
 are read. Use spaces to separate them.
 
-INCLUDE:
+!INCLUDE!
 
 ** Files to exclude
 The directories whose name contains the following regex will not be
 taken into account when updating this main file. Separate them with
 space; See the [[http://docs.python.org/2/howto/regex.html#matching-characters][Python re documentation]] to know more about regex's.
 
-EXCLUDE: 
+!EXCLUDE! 
 
-* Items
+* Items directories
 

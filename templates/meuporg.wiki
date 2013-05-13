@@ -15,7 +15,7 @@ The following fields are used to configure meuporg. Use space
 separated python regexp, see [http://docs.python.org/2/howto/regex.html#matching-characters|the Python documentation]
 for more info.
 
-  * INCLUDE:
-  * EXCLUDE: 
+  * !INCLUDE! 
+  * !EXCLUDE! 
 
-= Items =
+= Items directories =
