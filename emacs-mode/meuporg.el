@@ -220,13 +220,13 @@ moving to the location of the item."
 (setq meuporg/command "python2.7 ~/.meuporg ")
 
 
-(defun meuporg/reload()
+(defun meuporg/update()
   "Reload the current meuporg main file after saving all buffers."
   (interactive)
   (save-some-buffers t)
   (shell-command (concat meuporg/command " -u"))
   (if (get-buffer "meup.*org.*")
-      (revert-buffer "meup.*org.*")))
+      (revert-buffer "meup.*org.*" nil t)))
 
 (defun meuporg/find-main()
   "Returns the path to meuporg of which the current file depends or an
@@ -254,50 +254,59 @@ empty string if there is no such meuporg."
 ; !SUBSECTION! Inserting items
 ; ----------------------------
 
-(defun meuporg/insert-continue()
-  "Inserts a TOCHECK meuporg item."
-  (interactive)
-  (insert "!CONTINUE! "))
+(defun meuporg/insert-item(name)
+  "Inserts an item with the given name in a new comment on a new
+  indented line"
+  (newline-and-indent)
+  (insert (concat comment-start "!" name "! ")))
 
 (defun meuporg/insert-todo()
   "Inserts a TODO meuporg item."
   (interactive)
-  (insert "!TODO! "))
+  (meuporg/insert-item "TODO"))
+
+(defun meuporg/insert-continue()
+  "Inserts a TOCHECK meuporg item."
+  (interactive)
+  (meuporg/insert-item "CONTINUE"))
 
 (defun meuporg/insert-improve()
   "Inserts an IMPROVE meuporg item."
   (interactive)
-  (insert "!IMPROVE! "))
+  (meuporg/insert-item "IMPROVE"))
 
 (defun meuporg/insert-check()
   "Inserts a CHECK meuporg item."
   (interactive)
-  (insert "!CHECK! "))
+  (meuporg/insert-item "CHECK"))
 
 (defun meuporg/insert-fixme()
   "Inserts a FIXME meuporg item."
   (interactive)
-  (insert "!FIXME! "))
-
-(defun meuporg/insert-fixref()
-  "Inserts a FIXREF meuporg item."
-  (interactive)
-  (insert "!FIXREF! "))
+  (meuporg/insert-item "FIXME"))
 
 (defun meuporg/insert-section()
   "Inserts a SECTION meuporg item."
   (interactive)
-  (insert "!SECTION! "))
+  (meuporg/insert-item "SECTION"))
 
 (defun meuporg/insert-subsection()
   "Inserts a SUBSECTION meuporg item."
   (interactive)
-  (insert "!SUBSECTION! "))
+  (meuporg/insert-item "SUBSECTION"))
 
 (defun meuporg/insert-subsubsection()
   "Inserts a SUBSUBSECTION meuporg item."
   (interactive)
-  (insert "!SUBSUBSECTION! "))
+  (meuporg/insert-item "SUBSUBSECTION"))
+
+(defun meuporg/insert-fixref()
+  "Inserts a FIXREF meuporg item.
+
+Since this item is supposed to be inserted within a paragraph, no
+new comment is created."
+  (interactive)
+  (insert "!FIXREF! "))
 
 
 ; !SUBSECTION! Navigating to items
@@ -335,11 +344,14 @@ empty string if there is no such meuporg."
    :lighter " !M!"
    :keymap
    `(
-     (,(kbd "C-! r")   . meuporg/reload)
+     (,(kbd "C-! u")   . meuporg/update)
      (,(kbd "C-! o")   . meuporg/open-main)
      (,(kbd "C-! n")   . meuporg/go-to-next-item)
      (,(kbd "C-! p")   . meuporg/go-to-previous-item)
      (,(kbd "C-! l")   . meuporg/show-items)
+     (,(kbd "C-! i s 1") . meuporg/insert-section)
+     (,(kbd "C-! i s 2") . meuporg/insert-subsection)
+     (,(kbd "C-! i s 3") . meuporg/insert-subsubsection)
      (,(kbd "C-! i i") . meuporg/insert-improve)
      (,(kbd "C-! i t") . meuporg/insert-todo)
      (,(kbd "C-! i c") . meuporg/insert-continue)

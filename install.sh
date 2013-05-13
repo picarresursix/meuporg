@@ -1,5 +1,5 @@
 #!/bin/bash
-#; Time-stamp: <2013-01-26 13:55:06 leo>
+#; Time-stamp: <2013-05-13 12:21:06 leo>
 
 # Run this (simple) script to install meuporg.
 
@@ -22,7 +22,8 @@ then
     mkdir $BASE_DIR
     echo $BASE_DIR" directory created."
 else
-    echo $BASE_DIR" already exists."
+    rm -rf $BASE_DIR/*
+    echo $BASE_DIR" already existed: content removed."
 fi
 
 # Copying useful data in it.

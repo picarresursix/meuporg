@@ -1,0 +1,49 @@
+#+TITLE: Meuporg: Emacs Integration
+#+DESCRIPTION: Documentation of the emacs minor-mode meuporg-mode.
+#+AUTHOR: Léo Perrin <leoperrin@picarresursix.fr>
+#+DATE: Time-stamp: <2013-05-13 12:12:16 leo>
+#+STARTUP: align indent hidestars
+
+
+This file is part of the documentation of [[file:description.org][meuporg]].
+
+* Emacs minor-mode
+
+If you are wise enough to have made the decision to use emacs, then
+your decision is even wiser now! If you did add the /meuporg.el/ to
+your loaded files then emacs will automatically turn on the meuporg
+minor-mode (which is signaled by "!M!" in the mode-line) when a file
+is in a directory with a *meup.org* file in one of its parents. This
+mode provides elisp functions used to interact with meuporg and items,
+shortcuts to easily access these and fontifying of standard items.
+
+* Elisp Functions
+
+** Keyboard Shortcuts
+The default prefix for all meuporg-mode commands is "C-!".
+
+|-----------+-------------------------------------------------------------------------------------------+------------------------------|
+| Shortcut  | Description                                                                               | elisp function               |
+|-----------+-------------------------------------------------------------------------------------------+------------------------------|
+| C-! u     | Save, and Update the main file (even when called from another file).                      | meuporg/update               |
+| C-! o     | Open the main File.                                                                       | meuporg/open-main            |
+| C-! n     | Go to the Next item in the file.                                                          | meuporg/go-to-next-item      |
+| C-! p     | Go to the Previous item.                                                                  | meuporg/go-to-previous-item  |
+| C-! l     | Highligths the items in the current-file and Lists them in another window (see [[Item List]]) | meuporg/show-items           |
+|-----------+-------------------------------------------------------------------------------------------+------------------------------|
+| C-! i t   | Insert a "TODO" item.                                                                     | meuporg/insert-todo          |
+| C-! i c   | Insert a "CONTINUE" item.                                                                 | meuporg/insert-continue      |
+| C-! i i   | Insert a "IMPROVE" item.                                                                  | meuporg/insert-improve       |
+| C-! i k   | Insert a "CHECK" item.                                                                    | meuporg/insert-check         |
+| C-! i f   | Insert a "FIXME" item.                                                                    | meuporg/insert-fixme         |
+| C-! i r   | Insert a "FIXREF" item.                                                                   | meuporg/insert-fixref        |
+| C-! i s 1 | Insert a "SECTION" item.                                                                  | meuporg/insert-section       |
+| C-! i s 2 | Insert a "SUBSECTION" item.                                                               | meuporg/insert-subsection    |
+| C-! i s 3 | Insert a "SUBSUBSECTION" item.                                                            | meuporg/insert-subsubsection |
+|-----------+-------------------------------------------------------------------------------------------+------------------------------|
+
+** Item List
+
+* Syntax highlighting
+As soon as a word is enclosed between exclamation marks, its font is
+changed.

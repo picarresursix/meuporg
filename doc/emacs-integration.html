@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<link rel="stylesheet" type="text/css" href="style.css" />
+<head>
+<title>Meuporg: Emacs Integration</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="Meuporg: Emacs Integration"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2013-05-13"/>
+<meta name="author" content="Léo Perrin &lt;leoperrin@picarresursix.fr&gt;"/>
+<meta name="description" content="Documentation of the emacs minor-mode meuporg-mode."/>
+<meta name="keywords" content=""/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">Meuporg: Emacs Integration</h1>
+
+
+<p>
+This file is part of the documentation of <a href="description.html">meuporg</a>.
+</p>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Emacs minor-mode</a></li>
+<li><a href="#sec-2">2 Elisp Functions</a>
+<ul>
+<li><a href="#sec-2-1">2.1 Keyboard Shortcuts</a></li>
+<li><a href="#sec-2-2">2.2 Item List</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 Syntax highlighting</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Emacs minor-mode</h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p>
+If you are wise enough to have made the decision to use emacs, then
+your decision is even wiser now! If you did add the <i>meuporg.el</i> to
+your loaded files then emacs will automatically turn on the meuporg
+minor-mode (which is signaled by "!M!" in the mode-line) when a file
+is in a directory with a <b>meup.org</b> file in one of its parents. This
+mode provides elisp functions used to interact with meuporg and items,
+shortcuts to easily access these and fontifying of standard items.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Elisp Functions</h2>
+<div class="outline-text-2" id="text-2">
+
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Keyboard Shortcuts</h3>
+<div class="outline-text-3" id="text-2-1">
+
+<p>The default prefix for all meuporg-mode commands is "C-!".
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<colgroup><col class="left" /><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">Shortcut</th><th scope="col" class="left">Description</th><th scope="col" class="left">elisp function</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">C-! u</td><td class="left">Save, and Update the main file (even when called from another file).</td><td class="left">meuporg/reload</td></tr>
+<tr><td class="left">C-! o</td><td class="left">Open the main File.</td><td class="left">meuporg/open-main</td></tr>
+<tr><td class="left">C-! n</td><td class="left">Go to the Next item in the file.</td><td class="left">meuporg/go-to-next-item</td></tr>
+<tr><td class="left">C-! p</td><td class="left">Go to the Previous item.</td><td class="left">meuporg/go-to-previous-item</td></tr>
+<tr><td class="left">C-! l</td><td class="left">Highligths the items in the current-file and Lists them in another window (see <a href="#sec-2-2">Item List</a>)</td><td class="left">meuporg/show-items</td></tr>
+</tbody>
+<tbody>
+<tr><td class="left">C-! i t</td><td class="left">Insert a "TODO" item.</td><td class="left">meuporg/insert-todo</td></tr>
+<tr><td class="left">C-! i c</td><td class="left">Insert a "CONTINUE" item.</td><td class="left">meuporg/insert-continue</td></tr>
+<tr><td class="left">C-! i i</td><td class="left">Insert a "IMPROVE" item.</td><td class="left">meuporg/insert-improve</td></tr>
+<tr><td class="left">C-! i k</td><td class="left">Insert a "CHECK" item.</td><td class="left">meuporg/insert-check</td></tr>
+<tr><td class="left">C-! i f</td><td class="left">Insert a "FIXME" item.</td><td class="left">meuporg/insert-fixme</td></tr>
+<tr><td class="left">C-! i r</td><td class="left">Insert a "FIXREF" item.</td><td class="left">meuporg/insert-fixref</td></tr>
+<tr><td class="left">C-! i s 1</td><td class="left">Insert a "SECTION" item.</td><td class="left">meuporg/insert-section</td></tr>
+<tr><td class="left">C-! i s 2</td><td class="left">Insert a "SUBSECTION" item.</td><td class="left">meuporg/insert-subsection</td></tr>
+<tr><td class="left">C-! i s 3</td><td class="left">Insert a "SUBSUBSECTION" item.</td><td class="left">meuporg/insert-subsubsection</td></tr>
+</tbody>
+</table>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Item List</h3>
+<div class="outline-text-3" id="text-2-2">
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Syntax highlighting</h2>
+<div class="outline-text-2" id="text-3">
+
+<p>As soon as a word is enclosed between exclamation marks, its font is
+changed.
+</p></div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2013-05-13</p>
+<p class="author">Author: Léo Perrin &lt;leoperrin@picarresursix.fr&gt;</p>
+<p class="creator"><a href="http://orgmode.org">Org</a> version 7.9.3f with <a href="http://www.gnu.org/software/emacs/">Emacs</a> version 24</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

@@ -1,7 +1,7 @@
 
 #!/usr/bin/env python
 # AUTHOR: Leo Perrin <leoperrin@picarresursix.fr>
-# Time-stamp: <2013-05-09 19:04:46 leo>
+# Time-stamp: <2013-05-13 12:27:02 leo>
 
 import os
 import re
@@ -11,12 +11,6 @@ import fileFormat
 import meupUtils
 
 
-# !IMPROVE!  bla bla bli
-# !TODO!     bla bla bli
-# !FIXME!    bla bla bli
-# !CONTINUE! bla bla bli
-# !CHECK!    bla bla bli
-# !FIXREF!   bla bla bli
 
 class MainFile():
     """An interface to read an write to the main meuporg file."""
@@ -41,6 +35,7 @@ class MainFile():
 
         """
         self.path = ""
+        begin_dir = os.getcwd()
         found = False
         while (len(os.getcwd().split(os.path.sep)) > 2) and not found:
             folder_content = os.listdir(os.path.curdir)
@@ -52,6 +47,7 @@ class MainFile():
                     )
                     found = True
             os.chdir(os.path.pardir)
+        os.chdir(begin_dir)
         if self.path != "":
             self.init_configuration()
 

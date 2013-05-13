@@ -1,0 +1,263 @@
+#+TITLE: Meuporg: Main File Update
+#+DESCRIPTION: Documentation of the update of the meuporg main file of a directory.
+#+AUTHOR: Léo Perrin <leoperrin@picarresursix.fr>
+#+DATE: Time-stamp: <2013-05-13 11:52:46 leo>
+#+STARTUP: align indent hidestars
+
+
+This file is part of the documentation of [[file:description.org][meuporg]].
+
+* Update the main file
+If you run *meuporg -u*, it will "update the main file". This means
+that meuporg will read the main file, deduce the files it should
+parse, parse them to get all the items it finds and then insert these
+in the main file.
+
+** Configuration
+The main file[fn:1] must contain a basic configuration for meuporg: it
+has to have a line with "!INCLUDE!" followed by a space separated list
+of pattern and another with "!EXCLUDE!" followed by a (possibly empty)
+list of patterns.
+
+ * The files whose name contains a string matching at least one of the
+   patterns in the list following "INCLUDE" will be parsed. If you
+   left items in other files, they will be ignored.
+
+ * The files whose name contains a string matching at least one of the
+   patterns in the list following "EXCLUDE" will *not* be parsed. If you
+   left items in these files, they will be ignored.
+
+Exclusion has the priority: if you include files containing "cpp" but
+exclude those containing "bla" then /bla.cpp/ will be ignored. The
+regex's you use must follow the [[http://docs.python.org/2/howto/regex.html][python re package]] syntax.
+
+** Templates
+You don't need to start your main file from scratch as meuporg
+provides templates for all its supported formats: org, markdown and
+vimwiki. To create a main file in the current directory, simply run
+#+BEGIN_SRC sh
+  meuporg -t <file_format>
+#+END_SRC
+where *file\_format* is either "org", "md" or "vimwiki".
+
+** Listing items
+To tell meuporg where it must insert the list of the items it found,
+just add a heading with name "Items" anywhere in your file. Keep in
+mind that the text in this heading will be discarded when the file is
+updated. The rest however is untouched. If you don't want to add a
+specific heading for them, you can add "!Items!" on a new line. The
+items will be inserted after it.
+* Sort items
+Meuporg does not simply list the items you left in a directory, it can
+also sort them when inserting them in your main file. Suppose you have
+two directories for your project: /doc/ and /src/. You might want
+meuporg to put items found in the /doc/ folder into one part of your
+main file and those found in /src/ in another. Or perhaps you want all
+and only the items whose name match "Some[0-9]+[\^regex]" or
+"Some\W*Other[Re]gex" contained in files whose names contains "src"
+but doesn't match "src[0-9]+" and with a description that does not
+contain the string "ni". I have no idea why you want that, but meuporg
+can do it for you.
+
+** Guiding principle
+Items can be sorted into disjoint *groups of items*. A group is
+defined by a *criteria* which can be arbitrarily complex. Note that an
+item can only belong to *one* group, namely the first it fits in.
+
+A criteria is either the conjunction or the disjunction of a list of
+criteria, or a pair (attribute, regex) an item must match. They are
+represented using a simple LISP-like syntax. For instance, a criteria
+can be *(file\_name el$ py$)*, in which case all items in file whose
+name ends with *py* or *el* are matched. It could also be
+#+begin_src lisp
+(and (name Some[0-9]+[^regex] Some\W*Other[Re]gex) (and (file_name src) (not (file_name src[0-9]+))) (not (description ni)))
+#+end_src
+in which case the items in this group are all those matching the crazy
+condition defined before.
+
+A criteria set for a section of your file (i.e. what is below a given
+heading) holds for all the subheadings.  You can think of your main
+file as a [[http://en.wikipedia.org/wiki/Sieve][sieve]]: an item must match *all* the criterias of its parent
+headings to appear somewhere in the file.
+
+
+** Simple sort
+If you simply want to sort items depending on the name of the file,
+the syntax is simple. Meuporg builds a criteria from the headings of
+the different parts of the main file. It is hopefully easy to
+understand with an example.
+
+Suppose you have this directory tree:
+#+begin_src sh 
+.
+|-- meup.org
+|-- doc
+|    |-- updateDoc.sh
+|    |-- html
+|
+|-- src
+     |-- foo
+          |-- bar.cpp
+          |-- bar.hpp
+          |-- stuff
+               |-- some_class.cpp
+     |-- external_lib
+          |-- external_lib.hpp
+
+#+end_src
+with the following content in your main file, meup.org:
+
+#+begin_src org
+  ,* Project description
+    This project is made of C++ source code and of its
+    documentation. However, the library external_lib comes from [[github]],
+    so its not part of this project. Compiled files are of course to be
+    ignored.
+  
+    !INCLUDE! hpp$ cpp$ md$
+    !EXCLUDE! external_lib \.o$
+  
+  ,* The documentation of my awesome project                   :doc:
+    Insert information related
+    to the awesome documentation here.
+  
+  ,** Useful links
+  I use some software for my documentation, here is a list of links:
+   + [[http://example.com][bla]]
+   + [[http://example.com][bli]]  
+  
+  ,** Items name
+  
+  ,* src                                                       :src:
+  ,** Source code                                              :cpp:
+     !Items! directories
+  ,** Headers                                                  :hpp:
+     !Items! directories
+#+end_src
+which, if you are not familiar with org-mode, looks like [[file:org-before.png][this]].
+
+
+Suppose alsot that you have some items in some files in your /doc/ and
+/src/ directory. If you update this file, you will obtain this:
+#+begin_src org
+  ,* Project description
+    This project is made of C++ source code and of its
+    documentation. However, the library external_lib comes from [[github]],
+    so its not part of this project. Compiled files are of course to be
+    ignored.
+  
+    !INCLUDE! hpp$ cpp$ md$
+    !EXCLUDE! external_lib \.o$
+  
+  ,* The documentation of my awesome project                   :doc:
+     Insert information related
+     to the awesome documentation here.
+  ,** Useful links
+     use some software for my documentation, here is a list of links:
+    + [[http://example.com][bla]]
+    + [[http://example.com][bli]]  
+  
+  ,** Items name
+  ,*** TODO
+     1. [[file:./doc/updateDoc.sh:20][Problem with the arguments of the script]] (./doc/updateDoc.sh::20)
+  ,*** IMPROVE
+     1. [[file:./doc/updateDoc.sh:111][Rewrite this part and use a separate function.]] (./doc/updateDoc.sh::111)
+     2. [[file:./doc/updateDoc.sh:130][Use getopt to parse the arguments.]] (./doc/updateDoc.sh:130)
+  ,* src                                                       :src:
+  ,** Source code                                              :cpp:
+      !Items! directories
+  ,*** bar.cpp [[file:./src/foo/bar.cpp][=>]]
+       1. TODO: [[file:./src/foo.cpp:23][Implement method foo.init()]]
+       2. TODO: [[file:./src/foo.cpp:56][Implement method foo.doSomeThing()]]
+  ,*** stuff [[file:./src/foo/stuff][=>]]
+  ,**** some_class.cpp [[file:./src/foo/stuff/some_class.cpp][=>]]
+       1. IMPROVE: [[file:./src/foo/stuff/some_class.cpp::12][The loop should be unraveled]]
+  ,** Headers                                                  :hpp:
+      !Items! name
+  ,*** TODO
+       1. [[file:./src/foo/bar.hpp:30][Write documentation of foo.init()]] (./src/foo/bar.hpp::30)
+       2. [[file:./src/foo/bar.hpp:60][Write documentation of foo.doSomeThing()]] (./src/foo/bar.hpp::60)
+#+end_src
+which,  if you are still not familiar with org-mode (what's wrong with
+you?), looks like [[file:org-after.png][that]].
+
+What happened when we updated the file?
+
+1. meuporg parsed it and looked for the !INCLUDE! and !EXCLUDE!
+   items. It deduced that files with name ending with cpp, hpp or md
+   are to be parsed but that, however, those ending with .o or
+   containing the string external_lib are to be ignored.[fn:2]
+
+2. Then, meuporg parsed all the interesting files and created a small
+   database of all the items.
+
+3. After that, it started again to parse the main file, looking at
+   each line.
+   + If the line is a heading, it checks if it has a criteria (either as
+     ":file_name_parts:" or as a !Criteria! item followed by LISP-like
+     description in the next line). The current criteria is updated.
+
+   + If the line is a heading with first word "Items" or if it
+     contains a !Items! item, items matching the current criteria are
+     to be inserted right after this line. To know how to display the
+     items, it looks at the word following "Items" or "!Items!"  which
+     should have one of these values:
+     - *name*: Items are to be sorted by name.
+     - *directories*: a directory tree containing all the files with
+       items matching the criteria is displayed. Links to the
+       different folders and files are added with "=>" as their
+       descriptions. The depth of tree is minimized: if the items are
+       in files \/path\/to\/file1 and \/path\/to\/file2, the output is
+       not
+       #+BEGIN_SRC org
+         ,* path
+         ,** to
+         ,*** file1
+             <items>
+         ,*** file2
+             <items>
+       #+END_SRC
+       but rather
+       #+BEGIN_SRC org
+         ,* ./path/to/file1
+           <items>
+         ,* ./path/to/file2
+           <items>
+       #+END_SRC
+     - *linear*: Items are printed in the order in which they were
+       found.
+
+     If no word is specified, the default behaviour is to sort items
+     by their names. Everything until the next heading is discarded;
+     this is to remove old items but be sure to not leave important
+     info there.
+
+Thus, when meuporg encountered the line "!Items! directories", it took
+all the remaining items in files whose name contain *both* "src" and
+"cpp" and printed the directory tree of these files.
+
+** Possible usage
+The fact that items appear only once can be used to sort the items
+depending on the task they correspond to. For instance, if you want to
+separate the code corresponding to your tests from the rest in your
+main file, you can create the following heading:
+#+BEGIN_SRC org
+  ,* Tests
+    !Criteria! (or (file_name test) (name TEST))
+    !Items! directories
+#+END_SRC
+In this case, all the items in files containing the name "test" in
+their path will be printed as well those with name TEST (nothing
+prevents you from having !TEST! items indeed). These items will be
+printed in a way showing in which part of the directory tree they are.
+
+* Footnotes
+[fn:1] Some may argue that such a configuration belongs in another
+file. They have a point but I consider that describing the files that
+are part of the project and those that are not is useful not just for
+the program but also for anyone working on the project. I thus decided
+to include this info *in* the main file.
+
+[fn:2] Backup files, i.e. those ending with either "~" or "#" are
+ignored by default. So are hidden files, i.e. those with names
+starting with ".".

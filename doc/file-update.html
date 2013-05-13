@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<link rel="stylesheet" type="text/css" href="style.css" />
+<head>
+<title>Meuporg: Main File Update</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="Meuporg: Main File Update"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2013-05-13"/>
+<meta name="author" content="Léo Perrin &lt;leoperrin@picarresursix.fr&gt;"/>
+<meta name="description" content="Documentation of the update of the meuporg main file of a directory."/>
+<meta name="keywords" content=""/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">Meuporg: Main File Update</h1>
+
+
+<p>
+This file is part of the documentation of <a href="description.html">meuporg</a>.
+</p>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Update the main file</a>
+<ul>
+<li><a href="#sec-1-1">1.1 Configuration</a></li>
+<li><a href="#sec-1-2">1.2 Templates</a></li>
+<li><a href="#sec-1-3">1.3 Listing items</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 Sort items</a>
+<ul>
+<li><a href="#sec-2-1">2.1 Guiding principle</a></li>
+<li><a href="#sec-2-2">2.2 Simple sort</a></li>
+<li><a href="#sec-2-3">2.3 Possible usage</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Update the main file</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>If you run <b>meuporg -u</b>, it will "update the main file". This means
+that meuporg will read the main file, deduce the files it should
+parse, parse them to get all the items it finds and then insert these
+in the main file.
+</p>
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Configuration</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>The main file<sup><a class="footref" name="fnr-.1" href="#fn-.1">1</a></sup> must contain a basic configuration for meuporg: it
+has to have a line with "!INCLUDE!" followed by a space separated list
+of pattern and another with "!EXCLUDE!" followed by a (possibly empty)
+list of patterns.
+</p>
+<ul>
+<li>The files whose name contains a string matching at least one of the
+   patterns in the list following "INCLUDE" will be parsed. If you
+   left items in other files, they will be ignored.
+
+</li>
+<li>The files whose name contains a string matching at least one of the
+   patterns in the list following "EXCLUDE" will <b>not</b> be parsed. If you
+   left items in these files, they will be ignored.
+</li>
+</ul>
+
+
+<p>
+Exclusion has the priority: if you include files containing "cpp" but
+exclude those containing "bla" then <i>bla.cpp</i> will be ignored. The
+regex's you use must follow the <a href="http://docs.python.org/2/howto/regex.html">python re package</a> syntax.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> Templates</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>You don't need to start your main file from scratch as meuporg
+provides templates for all its supported formats: org, markdown and
+vimwiki. To create a main file in the current directory, simply run
+</p>
+
+
+<pre class="example">meuporg -t &lt;file_format&gt;
+</pre>
+
+<p>
+where <b>file_format</b> is either "org", "md" or "vimwiki".
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Listing items</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>To tell meuporg where it must insert the list of the items it found,
+just add a heading with name "Items" anywhere in your file. Keep in
+mind that the text in this heading will be discarded when the file is
+updated. The rest however is untouched. If you don't want to add a
+specific heading for them, you can add "!Items!" on a new line. The
+items will be inserted after it.
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Sort items</h2>
+<div class="outline-text-2" id="text-2">
+
+<p>Meuporg does not simply list the items you left in a directory, it can
+also sort them when inserting them in your main file. Suppose you have
+two directories for your project: <i>doc</i> and <i>src</i>. You might want
+meuporg to put items found in the <i>doc</i> folder into one part of your
+main file and those found in <i>src</i> in another. Or perhaps you want all
+and only the items whose name match "Some[0-9]+[^regex]" or
+"Some\W*Other[Re]gex" contained in files whose names contains "src"
+but doesn't match "src[0-9]+" and with a description that does not
+contain the string "ni". I have no idea why you want that, but meuporg
+can do it for you.
+</p>
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Guiding principle</h3>
+<div class="outline-text-3" id="text-2-1">
+
+<p>Items can be sorted into disjoint <b>groups of items</b>. A group is
+defined by a <b>criteria</b> which can be arbitrarily complex. Note that an
+item can only belong to <b>one</b> group, namely the first it fits in.
+</p>
+<p>
+A criteria is either the conjunction or the disjunction of a list of
+criteria, or a pair (attribute, regex) an item must match. They are
+represented using a simple LISP-like syntax. For instance, a criteria
+can be <b>(file_name el$ py$)</b>, in which case all items in file whose
+name ends with <b>py</b> or <b>el</b> are matched. It could also be
+</p>
+
+
+<pre class="example">(and (name Some[0-9]+[^regex] Some\W*Other[Re]gex) (and (file_name src) (not (file_name src[0-9]+))) (not (description ni)))
+</pre>
+
+<p>
+in which case the items in this group are all those matching the crazy
+condition defined before.
+</p>
+<p>
+A criteria set for a section of your file (i.e. what is below a given
+heading) holds for all the subheadings.  You can think of your main
+file as a <a href="http://en.wikipedia.org/wiki/Sieve">sieve</a>: an item must match <b>all</b> the criterias of its parent
+headings to appear somewhere in the file.
+</p>
+
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Simple sort</h3>
+<div class="outline-text-3" id="text-2-2">
+
+<p>If you simply want to sort items depending on the name of the file,
+the syntax is simple. Meuporg builds a criteria from the headings of
+the different parts of the main file. It is hopefully easy to
+understand with an example.
+</p>
+<p>
+Suppose you have this directory tree:
+</p>
+
+
+<pre class="example">.
+|-- meup.org
+|-- doc
+|    |-- updateDoc.sh
+|    |-- html
+|
+|-- src
+     |-- foo
+          |-- bar.cpp
+          |-- bar.hpp
+          |-- stuff
+               |-- some_class.cpp
+     |-- external_lib
+          |-- external_lib.hpp
+
+</pre>
+
+<p>
+with the following content in your main file, meup.org:
+</p>
+
+
+
+<pre class="example">* Project description
+  This project is made of C++ source code and of its
+  documentation. However, the library external_lib comes from [[github]],
+  so its not part of this project. Compiled files are of course to be
+  ignored.
+
+  !INCLUDE! hpp$ cpp$ md$
+  !EXCLUDE! external_lib \.o$
+
+* The documentation of my awesome project                   :doc:
+  Insert information related
+  to the awesome documentation here.
+
+** Useful links
+I use some software for my documentation, here is a list of links:
+ + [[http://example.com][bla]]
+ + [[http://example.com][bli]]  
+
+** Items name
+
+* src                                                       :src:
+** Source code                                              :cpp:
+   !Items! directories
+** Headers                                                  :hpp:
+   !Items! directories
+</pre>
+
+<p>
+which, if you are not familiar with org-mode, looks like <a href="org-before.png">this</a>.
+</p>
+
+<p>
+Suppose alsot that you have some items in some files in your <i>doc</i> and
+<i>src</i> directory. If you update this file, you will obtain this:
+</p>
+
+
+<pre class="example">* Project description
+  This project is made of C++ source code and of its
+  documentation. However, the library external_lib comes from [[github]],
+  so its not part of this project. Compiled files are of course to be
+  ignored.
+
+  !INCLUDE! hpp$ cpp$ md$
+  !EXCLUDE! external_lib \.o$
+
+* The documentation of my awesome project                   :doc:
+   Insert information related
+   to the awesome documentation here.
+** Useful links
+   use some software for my documentation, here is a list of links:
+  + [[http://example.com][bla]]
+  + [[http://example.com][bli]]  
+
+** Items name
+*** TODO
+   1. [[file:./doc/updateDoc.sh:20][Problem with the arguments of the script]] (./doc/updateDoc.sh::20)
+*** IMPROVE
+   1. [[file:./doc/updateDoc.sh:111][Rewrite this part and use a separate function.]] (./doc/updateDoc.sh::111)
+   2. [[file:./doc/updateDoc.sh:130][Use getopt to parse the arguments.]] (./doc/updateDoc.sh:130)
+* src                                                       :src:
+** Source code                                              :cpp:
+    !Items! directories
+*** bar.cpp [[file:./src/foo/bar.cpp][=&gt;]]
+     1. TODO: [[file:./src/foo.cpp:23][Implement method foo.init()]]
+     2. TODO: [[file:./src/foo.cpp:56][Implement method foo.doSomeThing()]]
+*** stuff [[file:./src/foo/stuff][=&gt;]]
+**** some_class.cpp [[file:./src/foo/stuff/some_class.cpp][=&gt;]]
+     1. IMPROVE: [[file:./src/foo/stuff/some_class.cpp::12][The loop should be unraveled]]
+** Headers                                                  :hpp:
+    !Items! name
+*** TODO
+     1. [[file:./src/foo/bar.hpp:30][Write documentation of foo.init()]] (./src/foo/bar.hpp::30)
+     2. [[file:./src/foo/bar.hpp:60][Write documentation of foo.doSomeThing()]] (./src/foo/bar.hpp::60)
+</pre>
+
+<p>
+which,  if you are still not familiar with org-mode (what's wrong with
+you?), looks like <a href="org-after.png">that</a>.
+</p>
+<p>
+What happened when we updated the file?
+</p>
+<ol>
+<li>meuporg parsed it and looked for the !INCLUDE! and !EXCLUDE!
+   items. It deduced that files with name ending with cpp, hpp or md
+   are to be parsed but that, however, those ending with .o or
+   containing the string external<sub>lib</sub> are to be ignored.<sup><a class="footref" name="fnr-.2" href="#fn-.2">2</a></sup>
+
+</li>
+<li>Then, meuporg parsed all the interesting files and created a small
+   database of all the items.
+
+</li>
+<li>After that, it started again to parse the main file, looking at
+   each line.
+<ul>
+<li>If the line is a heading, it checks if it has a criteria (either as
+     ":file<sub>name</sub><sub>parts</sub>:" or as a !Criteria! item followed by LISP-like
+     description in the next line). The current criteria is updated.
+
+</li>
+<li>If the line is a heading with first word "Items" or if it
+     contains a !Items! item, items matching the current criteria are
+     to be inserted right after this line. To know how to display the
+     items, it looks at the word following "Items" or "!Items!"  which
+     should have one of these values:
+<ul>
+<li><b>name</b>: Items are to be sorted by name.
+</li>
+<li><b>directories</b>: a directory tree containing all the files with
+       items matching the criteria is displayed. Links to the
+       different folders and files are added with "=&gt;" as their
+       descriptions. The depth of tree is minimized: if the items are
+       in files \/path\/to\/file1 and \/path\/to\/file2, the output is
+       not
+
+
+
+<pre class="example">* path
+** to
+*** file1
+    &lt;items&gt;
+*** file2
+    &lt;items&gt;
+</pre>
+
+<p>
+       but rather
+</p>
+
+
+<pre class="example">* ./path/to/file1
+  &lt;items&gt;
+* ./path/to/file2
+  &lt;items&gt;
+</pre>
+
+</li>
+<li><b>linear</b>: Items are printed in the order in which they were
+       found.
+
+</li>
+</ul>
+
+<p>     If no word is specified, the default behaviour is to sort items
+     by their names. Everything until the next heading is discarded;
+     this is to remove old items but be sure to not leave important
+     info there.
+</p></li>
+</ul>
+
+</li>
+</ol>
+
+
+<p>
+Thus, when meuporg encountered the line "!Items! directories", it took
+all the remaining items in files whose name contain <b>both</b> "src" and
+"cpp" and printed the directory tree of these files.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> Possible usage</h3>
+<div class="outline-text-3" id="text-2-3">
+
+<p>The fact that items appear only once can be used to sort the items
+depending on the task they correspond to. For instance, if you want to
+separate the code corresponding to your tests from the rest in your
+main file, you can create the following heading:
+</p>
+
+
+<pre class="example">* Tests
+  !Criteria! (or (file_name test) (name TEST))
+  !Items! directories
+</pre>
+
+<p>
+In this case, all the items in files containing the name "test" in
+their path will be printed as well those with name TEST (nothing
+prevents you from having !TEST! items indeed). These items will be
+printed in a way showing in which part of the directory tree they are.
+</p>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+<p class="footnote"><sup><a class="footnum" name="fn-.1" href="#fnr-.1">1</a></sup> Some may argue that such a configuration belongs in another
+file. They have a point but I consider that describing the files that
+are part of the project and those that are not is useful not just for
+the program but also for anyone working on the project. I thus decided
+to include this info <b>in</b> the main file.
+</p>
+
+
+<p class="footnote"><sup><a class="footnum" name="fn-.2" href="#fnr-.2">2</a></sup> Backup files, i.e. those ending with either "~" or "#" are
+ignored by default. So are hidden files, i.e. those with names
+starting with ".".
+</p>
+
+
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2013-05-13</p>
+<p class="author">Author: Léo Perrin &lt;leoperrin@picarresursix.fr&gt;</p>
+<p class="creator"><a href="http://orgmode.org">Org</a> version 7.9.3f with <a href="http://www.gnu.org/software/emacs/">Emacs</a> version 24</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

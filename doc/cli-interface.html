@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<link rel="stylesheet" type="text/css" href="style.css" />
+<head>
+<title>Meuporg: CLI Interface</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="Meuporg: CLI Interface"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2013-05-13"/>
+<meta name="author" content="Léo Perrin &lt;leoperrin@picarresursix.fr&gt;"/>
+<meta name="description" content="Documentation of the CLI interface of meuporg."/>
+<meta name="keywords" content=""/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">Meuporg: CLI Interface</h1>
+
+
+<p>
+This file is part of the documentation of <a href="description.html">meuporg</a>.
+</p>
+
+<p>
+The magical spell to retrieve all the items in a file or in the files
+in a directory is the <b>meuporg</b> command. Run it without any arguments
+to see the help. The main options you can give it are the following.
+</p>
+<ul>
+<li><b>-t TEMPLATE_STYLE</b>: (Template) TEMPLATE_STYLE has to be either
+   'md', 'vimwiki' or 'org'. Creates a new meuporg main file in the
+   said format in the current directory (see <a href="#Templates">Templates</a>).
+
+</li>
+<li><b>-f</b>: (main File) Returns the path to the main file of the
+   directory (if any).
+
+</li>
+<li><b>-u</b>: (Update) Updates the main file ruling this directory (it
+   might be in the parent directories).
+
+</li>
+<li><b>-e TO<sub>EXCLUDE</sub></b>: (Exclude) Decides which file pattern(s) to
+   exclude from the search. Repeat to specify several regex to
+   exclude. Default behaviour is to exclude no file (but the backup
+   and hidden ones).
+
+</li>
+<li><b>-i TO<sub>INCLUDE</sub></b>: (Include) Decides which file pattern(s) to
+    include in the search. Repeat to specify several regex to
+    include. Default behaviour is to include every file (but the
+    backup and hidden ones).
+
+</li>
+<li><b>-o PATH</b>: (Org) Outputs the list of items in the given path or
+   folder in org-mode format.
+
+</li>
+<li><b>-m PATH</b>: (Md) Outputs the list of items in the given path or
+   folder in markdown.
+
+</li>
+<li><b>-w PATH</b>: (vimWiki) Outputs the list of items in the given path or
+   folder in vimwiki format.
+</li>
+</ul>
+
+
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2013-05-13</p>
+<p class="author">Author: Léo Perrin &lt;leoperrin@picarresursix.fr&gt;</p>
+<p class="creator"><a href="http://orgmode.org">Org</a> version 7.9.3f with <a href="http://www.gnu.org/software/emacs/">Emacs</a> version 24</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

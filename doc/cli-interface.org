@@ -1,0 +1,43 @@
+#+TITLE: Meuporg: CLI Interface
+#+DESCRIPTION: Documentation of the CLI interface of meuporg.
+#+AUTHOR: Léo Perrin <leoperrin@picarresursix.fr>
+#+DATE: Time-stamp: <2013-05-13 11:59:55 leo>
+#+STARTUP: align indent hidestars
+
+
+This file is part of the documentation of [[file:description.org][meuporg]].
+
+
+The magical spell to retrieve all the items in a file or in the files
+in a directory is the *meuporg* command. Run it without any arguments
+to see the help. The main options you can give it are the following.
+
+ + *-t TEMPLATE\_STYLE*: (Template) TEMPLATE\_STYLE has to be either
+   'md', 'vimwiki' or 'org'. Creates a new meuporg main file in the
+   said format in the current directory (see [[Templates]]).
+
+ + *-f*: (main File) Returns the path to the main file of the
+   directory (if any).
+
+ + *-u*: (Update) Updates the main file ruling this directory (it
+   might be in the parent directories).
+
+ + *-e TO_EXCLUDE*: (Exclude) Decides which file pattern(s) to
+   exclude from the search. Repeat to specify several regex to
+   exclude. Default behaviour is to exclude no file (but the backup
+   and hidden ones).
+
+ +  *-i TO_INCLUDE*: (Include) Decides which file pattern(s) to
+    include in the search. Repeat to specify several regex to
+    include. Default behaviour is to include every file (but the
+    backup and hidden ones).
+
+ + *-o PATH*: (Org) Outputs the list of items in the given path or
+   folder in org-mode format.
+
+ + *-m PATH*: (Md) Outputs the list of items in the given path or
+   folder in markdown.
+
+ + *-w PATH*: (vimWiki) Outputs the list of items in the given path or
+   folder in vimwiki format.
+

@@ -1,20 +1,26 @@
 #+TITLE: !Meup.org!
-#+DESCRIPTION: description
+#+DESCRIPTION: The main page of the documentation of meuporg.
 #+AUTHOR: Léo Perrin <leoperrin@picarresursix.fr>
-#+DATE: Time-stamp: <2013-01-23 23:58:20 leo>
+#+DATE: Time-stamp: <2013-05-13 12:03:10 leo>
 #+STARTUP: align indent hidestars
+# <link rel="stylesheet" type="text/css" href="style.css" />
+
+# *Contribute
+# **github
+# **code Overview → /own file/
+# *Acknowledgment/Licence
+# *Footnotes.
 
 
-
-* Purpose
-
+* Introduction
+** Purpose
   If you never encountered these, you may throw the first stone.
   
-  * Ever started a project, *left it aside* and took it again
+  + Ever started a project, *left it aside* and took it again
     weeks/month/years later without understandig what you did? 
-  * Ever managed a *big* project on your one, the kind that involves a
+  + Ever managed a *big* project on your one, the kind that involves a
     hundred pages of LaTeX and/or thousands of lines of code?
-  * Ever wondered *where* the hell that awesome info you found on the
+  + Ever wondered *where* the hell that awesome info you found on the
     net was?
 
   These are problems I have faced. I now do keep a track of the links
@@ -31,39 +37,58 @@
   Meup.org is the solution I came up with. It is a sort of standard in
   the way I "work"[fn:1] and it is based on three things.
 
-  * A good software to manage todo lists and documentation with
-    hyperlinks and that is good to take quick notes in plain-text. I
-    use emacs'org-mode; I heard vimwiki is a nice substitute if you
-    are that kind of person.
-  * A simple way to document what I do and *what is left to do*
+  + A simple way to document what I do and *what is left to do*
     intended to be as little cumbersome as possible; which implies
     having tools to automate annoying tasks.
-  * Having a schedule/subdivision of my tasks as flexible as possible;
+  + Having a schedule/subdivision of my tasks as flexible as possible;
     which also implies having tools to automate the update.
+  + A good software to manage todo lists and documentation with
+    hyperlinks and that is good to take quick notes in plain-text. I
+    use emacs'org-mode; I heard vimwiki is a nice substitute if you
+    are that kind of person. I threw markdown in the mix because,
+    well, why not?
 
-* Behold ... !Meup.org!
+** Behold... !Meup.org!
+To solve these problems, I came up with meuporg, aka !Meup.org!, aka
+!M!. While the choice of software to manage todo lists is left to you,
+meuporg is the software to find what's left and display it nicely.
+
 ** Overview of meuporg
 It is a set of automatic tools to extract items from the content of
-any text files you want and which sort and insert them in your todo
+any text files you want and which sorts and inserts them in your todo
 list regardless of the format you use[fn:2].
 
 It is assumed you have a unique file for each project at the root of
-its directory tree in which you will put your todo lists, knowledge,
+its directory tree in which you will put your todo lists, knowledge
 base, etc. This file is called the *main file*. Personnaly, I now go
 back to the main file of my projects at least every 10-15min when I am
 working: it helps me know where I am going and I update it very
-regularly.[fn:3] Meuporg updates this file automatically by inserting
-links to the very lines I have to modify/where I have to write
-functions/whatever and putting these links in the relevant part of the
-main file.
+regularly because of that[fn:3]. Meuporg updates this file
+automatically by inserting links to the very lines I have to
+modify/where I have to write functions/whatever and putting these
+links in the relevant part of the main file.
+
+A file like [[file:org-after.png][this]], where everything in underlined blue is a clickable
+link to a task you need to do can be generated in no-time.
 
 How can this be? you ask. Very simply, I shall answer. Right below,
-you will find instructions explaining you how to install
-meuporg. Then, you will have more explanations about how it works and
-how it is intended to be used.
+you will find instructions explaining how to install meuporg. Then,
+you will have more explanations about how it works and how it is
+intended to be used.
+
+** Should I use meuporg?
+
+If you don't work with plain-text files; that is if you work with an
+office suite such that libreoffice.org, microsoft office or whatever,
+then no. If your projects are not scattered on many files and are of
+very small size, then probably not.
+
+If you work on projects that are spread throughout several
+weeks/month/years due to their sizes or the amount of time you can
+spend on them and/or if the said projects consist in editing text
+files[],fn:8 then *yes*, you might want to give meup.org a try!
 
 ** Install
-
 Just go [[http://picarresursix.github.com/meuporg/][here]], download the archive, uncompress it and run the
 *./install.sh* script (tested on ubuntu and mac OS). Advices are
 given: you might want to add this alias to your .bashrc
@@ -99,10 +124,9 @@ the loop in this hypothetic file *src/myfunction.c*.
 #+begin_src c
   int foo(unsigned int bar)
   {
-          // some code
-          while (fuzzy_condition)
-                  // !TOCHECK! The loop condition in foo may not work if
-                  // ! some bar == 0.
+          while (fuzzy_condition(bar))
+                  // !CHECK! The loop condition in foo may not work if
+                  // ! bar < 10.
           {
                   process_bar();
           }
@@ -111,215 +135,67 @@ the loop in this hypothetic file *src/myfunction.c*.
 #+end_src
 
 An item always has the following structure.
- * An item always starts with a word enclosed in exclamation marks, it
-   is the *name* of the item. No space or other non-alphanumeric
-   characters are allowed.[fn:4]
- * An item can be "in-code", in which case it contains no other
+ + It always starts with a word enclosed in exclamation marks; this
+   word is the *name* of the item. Only numbers and letters are
+   allowed, so no space, no underscores, etc.
+ + An item can be "in-code", in which case it contains no other
    information than its name because the data surrounding it is
-   sufficient.[fn:5] It is the case if there is at least one alpha-numeric
+   sufficient.[fn:4] It is the case if there is at least one alpha-numeric
    character on the same line before it.
- * ... Or it can have a description. The description of an item is
+ + ... Or it can have a description. The description of an item is
    what follows it on the same line. If you need more than one line,
    just start the next one with an exclamation mark.
- * An item is also defined by its *location*, i.e. the file it is in
+ + An item is also defined by its *location*, i.e. the file it is in
    an its line number. However, this is taken care of automatically.
 
-More info is given in [[Item structure]].
-
-In the example, the item has these properties:
- * name: TOCHECK
- * description: The loop condition in foo may not work if ! some
-   bar == 0.
+In the example above, the item has these properties:
+ * name: CHECK
+ * description: "The loop condition in foo may not work if some bar
+   == 0".
  * location: ./src/myfunction.c, line 5.
 
-The magical spell to retrieve all the items in a file or in the files
-in a directory is the *meuporg* command. Run without any arguments to
-see the help. The main options you can give it are the following.
- * *-t TEMPLATE\_STYLE*: (Template) TEMPLATE\_STYLE has to be either
-   'md', 'vimwiki' or 'org'. Creates a new meuporg main file in the
-   said format in the current directory (see [[Templates]]).
- * *-f*: (main File) Returns the path to the main file of the
-   directory (if any).
- * *-u*: (Update) Updates the main file ruling this directory (it
-   might be in the parent directories).
+** Types of items
+The names of the items you can use are limitless: what defines and
+item is that its name is enclosed between exclamation marks, nothing
+else. Thus, if you want to have items called
+"ImThinkingOfDoingThatButPerhapsItsNotSuchABrightIdea1644934", meuporg
+can deal with it.
 
-** Update the main file
-If you run *meuporg -u*, it will "update the main file". This means
-that meuporg will read the main file, deduce the files it should
-parse, parse them to get all the items it finds and then insert these
-in the main file.
+However, I suggest you use the following items:
++ *todo*: When you need to start a new task: function to write, LaTeX
+  table to insert, etc.
++ *continue*: When you already started something but need to continue
+  it.
++ *improve*: When something is finished but could be improved.
++ *check*: When something should work as is but could use a
+  verification.
++ *fixme*: When something does not work or is wrong.
 
-*** Configuration
-The main file[fn:6] contains a basic configuration for meuporg: it must
-contain a line with "INCLUDE: " followed by a space separated list of
-pattern and another with "EXCLUDE: " followed by a list of patterns.
+I also use a specific item when I write LaTeX code called "FIXREF". I
+leave inside the text --- i.e. it is not in a comment --- as its
+context is all the information I need. This allows me to separate them
+from the other items in the main file (see [[file:file-update.org][file update]]).
 
- * The files whose name contains a string matching at least one of the
-   patterns in the list following "INCLUDE" will be parsed. If you
-   left items in other files, they will be ignored.
+** File update
+One of the main features of meuporg is its ability to insert the items
+it found in a file: not only will they all be in the same place, you
+can also organize them easily in an arbitrarily complex way! See
+[[file:file-update.org][this page]] for (a lot) more details.
 
- * The files whose name contains a string matching at least one of the
-   patterns in the list following "EXCLUDE" will *not* be parsed. If you
-   left items in these files, they will be ignored.
-
-Exclusion has the priority: if you include files containing "cpp" but
-exclude those containing "bla" then /bla.cpp/ will be ignored.
-
-*** Listing items
-To tell meuporg where it must insert the list of the items it found,
-just add a heading with name "Items" anywhere in your file. Keep in
-mind that the text in this heading will be discarded when the file is
-updated. The rest however is untouched.
-** Sort items
-Meuporg does not simply list the items you left in a directory, it can
-also sort them. Suppose you have two directories for your project:
-/doc/ and /src/. You might want meuporg to put items found in the
-/doc/ folder into one part of your main file and those found in /src/
-in another. It couldn't be simpler: meuporg reads the names of the
-headings in your main file and keeps them in mind. Thus, if you have
-the following in your main file:
-#+begin_src org
-  ,* doc
-  ,The documentation of my awesome project.
-  ,** Items
-  
-  ,** Useful links
-  ,I use some software for my documentation, here is a list of links:
-  , * [[http://example.com][bla]]
-  , * [[http://example.com][bli]]  
-  , 
-  ,* src
-  ,** Items
-#+end_src
-You also have some items in some files in your /doc/ and /src/
-directory. If you update this file, you will obtain this.
-#+begin_src org
-  ,* doc
-  ,The documentation of my awesome project.
-  ,** Items
-  ,*** TODO
-  ,  1. [[file:./doc/updateDoc.sh:20][Problem with the arguments of the script]]
-  ,*** IDEA
-  ,  1. [[file:./doc/updateDoc.sh:111][Rewrite this part and use a separate function.]]
-  ,  2. [[file:./doc/updateDoc.sh:130][Use getopt to parse the arguments.]]
-  
-  ,** Useful links
-  ,I use some software for my documentation, here is a list of links:
-  , * [[http://example.com][bla]]
-  , * [[http://example.com][bli]]
-  
-  ,* src
-  ,** Items
-  ,*** TODO
-  , 1. [[file:./src/foo.cpp:23][Implement method foo.init()]]
-  , 2. [[file:./src/foo.cpp:56][Implement method foo.doSomeThing()]]
-  , 3. [[file:./src/foo.hpp:30][Write documentation of foo.init()]]
-  , 4. [[file:./src/foo.hpp:60][Write documentation of foo.doSomeThing()]]
-#+end_src
-
-You can pile up such criteria: if a "Items" heading is in a subsection
-called "cpp" of a section called "src", only the items in files whose
-path contain *both* "cpp" and "src" will end up under the "Items" heading.
-
-Furthermore, items appear only ones in the files. You should think of
-your main file as a [[http://en.wikipedia.org/wiki/Sieve][sieve]]: if an item matches all the titles of a
-chain of nested heading, then it will end up under the "Items" buried
-inside these headings (if any).
-
-Since it might be cumbersome to name your sections in the main file
-after patterns (you can use python-style regex's by the way), there is
-another to achieve this. If there is a parenthesis in a heading, its
-content it used as a "filter" instead of the header. You can also put
-several patterns separated by comma inside the parenthesis: items'
-path will have to match all of them. Example.
-#+begin_src org
-  ,* Source code (src)
-  ,** headers and code (hpp,cpp)
-  ,*** Items
-  ,** other ()
-  ,*** Items
-#+end_src
-The "Items" below "headers and code" will receive all items from files
-in the /src/ folder whose name contain /hpp/ or /cpp/. The parenthesis
-after "other" are empty so no pattern is added here: files need simply
-to be in the /src/ folder to end up in this section.
-
-The idea is to make very easy to reorganize the items. Indeed, if you
-suddenly want to have all your items in your files concerning tests
-that are scattered in many parts of your directory tree, just add
-heading with "test" in your file and a heading "Items" below it. All
-items in files whose path contain "test", either as their name or as
-the name of a parent folder, will be in it.
-
-** Things go *fast*
-
-The syntax for adding items is dead simple and updating a file
-requires only one command. Things can go even faster if you use emacs:
-I have written a minor-mode to automate even more tasks.[fn:7] If the
-system you use is org-mode, then that is *fast*. Seriously. I highly
-recommend.
-
-* Components
-Tools provided to automate boring tasks fall into these categories.
-** Template
-Meuporg comes with templates for the different format is
-supports. Just run *meuporg -t <format>* to create a main file in the
-format you want. Supported formats are 'md', 'vimwiki' and 'org'.
-
-** Script
-The component which parses your files and gather the items is a python
-script. It is also the one in charge of actually updating the main
-file.
-
+** CLI interface
+Meuporg can also be used from the command line. A description of its
+use is easily obtained by running it without any argument (or with
+"-h"), but more details are given on [[file:cli-interface.org][this page]].
 ** Emacs minor-mode
-
-If you are wise enough to have made the decision to use emacs, then
-your decision is even wiser now! If you did add the /meuporg.el/ to
-your loaded files then emacs will automatically turn on the meuporg
-minor-mode (which is signaled by "!M!" in the mode-line). This mode
-provides the following.
-
-*** Shortcuts
-The default prefix for all meuporg-mode commands is "C-!".
-|----------+---------------------------------------------------------------------------------------------------------------------+-----------------------------|
-| Shortcut | Description                                                                                                         | elisp function              |
-|----------+---------------------------------------------------------------------------------------------------------------------+-----------------------------|
-| C-! u    | Save and Update the main file (even when called from another file).                                                 | meuporg-reload              |
-| C-! m    | Open the main File.                                                                                                 | meuporg-open-main           |
-| C-! n    | Go to the Next item in the file.                                                                                    | meuporg-go-to-next-item     |
-| C-! p    | Go to the Previous item.                                                                                            | meuporg-go-to-previous-item |
-| C-! l    | Highligths the items in the current-file and Lists them in another window. Use up and down to navigate the items.   | meuporg-list-items-in-file  |
-| C-! q    | Turn off highlighting of the items and Quits the buffer containing the list of items.                               | meuporg-kill-item-list      |
-|----------+---------------------------------------------------------------------------------------------------------------------+-----------------------------|
-| C-! i i  | Insert a "IDEA" item.                                                                                               | meuporg-insert-idea         |
-| C-! i t  | Insert a "TODO" item.                                                                                               | meuporg-insert-todo         |
-| C-! i c  | Insert a "CONTINUE" item.                                                                                           | meuporg-insert-continue     |
-| C-! i h  | Insert a "TOCHECK" item.                                                                                            | meuporg-insert-tocheck      |
-| C-! i p  | Insert a "POLISH" item.                                                                                             | meuporg-insert-polish       |
-| C-! i f  | Insert a "FIXREF" item.                                                                                             | meuporg-insert-fixref       |
-|----------+---------------------------------------------------------------------------------------------------------------------+-----------------------------|
-
-*** Syntax highlighting
-As soon as a word is enclosed between exclamation marks, its font is
-changed.
-
-* Should I use Meup.org?
-
-If you don't work with plain-text files; that is if you work with an
-office suite such that libreoffice.org, microsoft office or whatever,
-then no. If your projects are not scattered on many files and are of
-very small size, then probably not.
-
-If you work on projects that are spread throughout several
-weeks/month/years due to their sizes or the amount of time you can
-spend on them and/or if the said projects consist in editing text
-files[],fn:8 then *yes*, you might want to give meup.org a try!
-
-* Details
-
-** Item structure
+For those of you who use emacs[fn:5], and in particular org-mode, a
+minor-mode packed with functionnalities to easily insert items,
+fontify them, list them, interact with the main file and what not is
+included. More info [[file:emacs-integration.org][here]].
+* Contribute
 !TODO! Write this part.
-
+* Acknowledgement/Licence
+Meuporg is released under a BSD/MIT licence: as long as you give me
+credit for writing it, you can do whatever you want with it.
 * Footnotes
 
 [fn:1] "Work" refering to both my actual work and the code/documents I
@@ -335,24 +211,14 @@ since I spend a lot of time in the main file, I feel a lot more the
 urge to keep it updated, in particular when it comes to maintaining
 the knowledge base I put in all my main files.
 
-[fn:4] Right now, underscores are allowed as well but it seems to
-cause problems with LaTeX (compiling fails) so I encourage you not to
-use it. Consider this feature deprecated.
-
-[fn:5] I use a lot of such items named FIXREF when writing papers. I
+[fn:4] I use a lot of such items named FIXREF when writing papers. I
 don't need to put them on their own lines with explanations as for the
 reference I need to insert: the context is sufficient.
 
-[fn:6] Some may argue that such a configuration belongs in another
-file. They have a point but I consider that describing the files that
-are part of the project and those that are not is useful not just for
-the program but also for anyone working on the project. I thus decided
-to include this info *in* the main file.
-
-[fn:7] By the way, if you write a plugin to integrate meuporg with
+[fn:5] By the way, if you write a plugin to integrate meuporg with
 your editor of choice (vim?) or IDE or what not, let me know and I
 will be happy to provide a link to it or to integrate it to meup.org.
 
-[fn:8] For instance, it is the case, if you do any sort of programming
+[fn:6] For instance, it is the case, if you do any sort of programming
 without a big IDE like eclipse (no, emacs doesn't count as such).
 

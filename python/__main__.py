@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Time-stamp: <2013-05-08 10:48:02 leo>
+# Time-stamp: <2013-05-13 12:24:25 leo>
 
 """Contains the main program of meuporg, i.e. parses the cli arguments
 and calls the correct functions.
