@@ -79,8 +79,6 @@
 ; !SUBSECTION! Creating the item list
 ; -----------------------------------
 
-(search-forward-regexp "\\(bli\\)\\|\\(blu\\)") "abkje bli bla "
-(message (match-string-no-properties 2))
 
 (defun meuporg/list-items ()
   "Returns a list containing all items in the current buffer.
