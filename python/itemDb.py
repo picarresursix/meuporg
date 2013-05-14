@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # AUTHOR: Leo Perrin <leoperrin@picarresursix.fr>
-# Time-stamp: <2013-05-08 10:31:55 leo>
+# Time-stamp: <2013-05-14 11:48:41 leo>
 
 """Provides utilities to easily select some items and build complex
 conditions an item must validate in order to trigger some action.
@@ -314,7 +314,6 @@ class MeuporgItemDB:
                 pointer[file_name] = [it]
             else:
                 pointer[file_name].append(it)
-        # !REAL! Modify this: doesn't work
         while (len(result.keys()) == 1
                and not isinstance(result[result.keys()[0]], list)):
             previous_key = result.keys()[0]

@@ -55,20 +55,20 @@
       '(
         ; structural items
         ("line-index" . '(:slant italic :height 0.8))
-        ("lev1" . '(:height 1.1 :slant italic  :foreground "#5C5C5C"))
-        ("section" . '(:height 1.1 :slant italic  :foreground "#5C5C5C"))
-        ("subsection" . '(:slant italic  :foreground "#9C9C9C"))
-        ("lev2" . '(:slant italic  :foreground "#9C9C9C"))
-        ("subsubsection" . '(:height 0.9 :slant italic  :foreground "#9C9C9C"))
-        ("lev3" . '(:height 0.9 :slant italic  :foreground "#9C9C9C"))
+        ("LEV1" . '(:height 1.1 :slant italic  :foreground "#5C5C5C"))
+        ("SECTION" . '(:height 1.1 :slant italic  :foreground "#5C5C5C"))
+        ("SUBSECTION" . '(:slant italic  :foreground "#9C9C9C"))
+        ("LEV2" . '(:slant italic  :foreground "#9C9C9C"))
+        ("SUBSUBSECTION" . '(:height 0.9 :slant italic  :foreground "#9C9C9C"))
+        ("LEV3" . '(:height 0.9 :slant italic  :foreground "#9C9C9C"))
         ; action items
-        ("continue" . (:weight bold :foreground "#880066"))
-        ("todo" . '(:foreground "#C00000"))
-        ("fixme" . '(:foreground "#E08040"))
-        ("improve" . '(:foreground "#119922"))
-        ("check" . '(:foreground "#004488"))
+        ("CONTINUE" . (:weight bold :foreground "#880066"))
+        ("TODO" . '(:foreground "#C00000"))
+        ("FIXME" . '(:foreground "#E08040"))
+        ("IMPROVE" . '(:foreground "#119922"))
+        ("CHECK" . '(:foreground "#004488"))
         ; mode specific items
-        ("fixref" . '(:foreground "#AA9900"))))
+        ("FIXREF" . '(:foreground "#AA9900"))))
 
 (defvar meuporg/indentation
   "Used by meuporg-list-mode to indent the items according to the
@@ -79,13 +79,30 @@
 ; !SUBSECTION! Creating the item list
 ; -----------------------------------
 
+(search-forward-regexp "\\(bli\\)\\|\\(blu\\)") "abkje bli bla "
+(message (match-string-no-properties 2))
+
 (defun meuporg/list-items ()
-  "Returns a list containing all items in the current buffer"
+  "Returns a list containing all items in the current buffer.
+
+Note that LaTeX style section (e.g. \section{bla bla}) are
+considered like items with name '(SUB)*SECTION' and with the
+content of {} as their description."
   (interactive)
   (save-excursion
     (setq result (list))
     (goto-char 1)
-    (while (search-forward-regexp "!\\([A-Za-z0-9]+\\)!\\(.*\\)$" nil t)
+    (setq std-f-item-regex "\\(![A-Za-z0-9]+!\\)")
+    (setq latex-f-item-regex "\\(^\\\\.*section{.*}$\\)")
+    (setq std-p-item-regex "!\\([A-Za-z0-9]+\\)!\\(.*\\)$")
+    (setq latex-p-item-regex "\\\\\\(.*section\\){\\(.*\\)}$")
+    (setq item-regex (concat std-f-item-regex "\\|" latex-f-item-regex))
+    (while (search-forward-regexp item-regex nil t)
+      (if (match-string-no-properties 1)
+          (setq parsing-regex std-p-item-regex)
+        (setq parsing-regex latex-p-item-regex))
+      (beginning-of-line)
+      (search-forward-regexp parsing-regex)
       (setq result (cons (list
                           (line-number-at-pos)
                           (match-string-no-properties 1)
@@ -101,9 +118,9 @@ description using the correct faces from meuporg/font-faces"
 ; !write only a number to have a real structure: I- 1. a) i]
   (let (line-index name description face)
     (setq line-index (nth 0 item))
-    (setq name (nth 1 item))
+    (setq name (upcase (nth 1 item)))
     (setq description (nth 2 item))
-    (setq face (assoc (downcase name) meuporg/font-faces))
+    (setq face (assoc name meuporg/font-faces))
     (if (or (string= "SECTION" name) (string= "LEV1" name))
         (setq meuporg/indentation ""))
     (if (or (string= "SUBSECTION" name) (string="LEV2" name))
@@ -113,7 +130,7 @@ description using the correct faces from meuporg/font-faces"
     (insert (format "%s: %s%s %s\n"
                     (propertize (format "%4d" line-index) 'face '(:height 0.8))
                     meuporg/indentation
-                    (propertize name 'face (cdr (assoc (downcase name) meuporg/font-faces)))
+                    (propertize name 'face (cdr (assoc name meuporg/font-faces)))
                     description))
     (if (or (string= "SECTION" name) (string= "LEV1" name))
         (setq meuporg/indentation "  "))

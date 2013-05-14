@@ -1,15 +1,10 @@
 #+TITLE: !Meup.org!
 #+DESCRIPTION: The main page of the documentation of meuporg.
 #+AUTHOR: Léo Perrin <leoperrin@picarresursix.fr>
-#+DATE: Time-stamp: <2013-05-13 12:03:10 leo>
+#+DATE: Time-stamp: <2013-05-14 11:39:06 leo>
 #+STARTUP: align indent hidestars
 # <link rel="stylesheet" type="text/css" href="style.css" />
 
-# *Contribute
-# **github
-# **code Overview → /own file/
-# *Acknowledgment/Licence
-# *Footnotes.
 
 
 * Introduction
@@ -192,7 +187,10 @@ minor-mode packed with functionnalities to easily insert items,
 fontify them, list them, interact with the main file and what not is
 included. More info [[file:emacs-integration.org][here]].
 * Contribute
-!TODO! Write this part.
+The code of meuporg is hosted on [[https://github.com/picarresursix/meuporg][github]]. Pull requests are welcome! If
+you'd rather work using mails and/or only have suggestions, you can
+also drop me a mail at /leoperrin then the at sign then
+picarresursix.fr/.
 * Acknowledgement/Licence
 Meuporg is released under a BSD/MIT licence: as long as you give me
 credit for writing it, you can do whatever you want with it.
@@ -221,4 +219,5 @@ will be happy to provide a link to it or to integrate it to meup.org.
 
 [fn:6] For instance, it is the case, if you do any sort of programming
 without a big IDE like eclipse (no, emacs doesn't count as such).
+
 

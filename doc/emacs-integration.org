@@ -1,9 +1,9 @@
 #+TITLE: Meuporg: Emacs Integration
 #+DESCRIPTION: Documentation of the emacs minor-mode meuporg-mode.
 #+AUTHOR: Léo Perrin <leoperrin@picarresursix.fr>
-#+DATE: Time-stamp: <2013-05-13 12:12:16 leo>
+#+DATE: Time-stamp: <2013-05-14 12:04:43 leo>
 #+STARTUP: align indent hidestars
-
+# <link rel="stylesheet" type="text/css" href="style.css" />
 
 This file is part of the documentation of [[file:description.org][meuporg]].
 
@@ -43,6 +43,65 @@ The default prefix for all meuporg-mode commands is "C-!".
 |-----------+-------------------------------------------------------------------------------------------+------------------------------|
 
 ** Item List
+The function *meuporg/show-items* creates a new buffer containing all
+the items in the current file. These are listed in the order in which
+they appear, each on one line and a color code displays known items in
+some colour. It also uses specific items called /structural items/ to
+make sense of the file.
+
+*** Structural items
+As a good programmer, you give your code a structure. I personnaly go
+further and give a tree like structure using a system inspired by
+LaTeX section, subsections, etc. For instance, the file itemDb.py of
+meuporg contains the code used to select only the items corresponding
+to a given criteria. It it structured like this:
+#+BEGIN_SRC org
+  SECTION  Boolean management
+    SUBSECTION  Attribute class
+    SUBSECTION  Not class
+    SUBSECTION  AlwaysTrue class
+    SUBSECTION  AlwaysFalse class
+    SUBSECTION  And class
+    SUBSECTION  Or class
+    SUBSECTION  Criteria class
+  SECTION  A poor man's database for the items
+    SUBSECTION  Sorting methods
+    SUBSECTION  Obtaining items from the db
+  SECTION  Tests
+#+END_SRC
+
+Note that meuporg is very clever and uses LaTeX's "\section{}" as
+structural items. Thus, using meuporg/show-items in a TeX file will
+display something like [[file:item-list-latex.png][this]].
+
+A /structural item/ is just a regular item, except that it must have
+one of these names.
+|---------------+-------|
+| name          | depth |
+|---------------+-------|
+| SECTION       |     1 |
+| SUBSECTION    |     2 |
+| SUBSUBSECTION |     3 |
+| LEV1          |     1 |
+| LEV2          |     2 |
+| LEV3          |     3 |
+| LEV4          |     4 |
+| ...           |   ... |
+| LEVN          |     N |
+|---------------+-------|
+
+*** Use of the item list
+The list of items uses its own shortcuts: when the cursor is on it,
+you can use any of these keys.
+|---------+--------------------------------------------------------------------------------------------------------------------|
+| key     | description                                                                                                        |
+|---------+--------------------------------------------------------------------------------------------------------------------|
+| q       | Kills the buffer containing the item list and closes its window                                                    |
+| RET     | Opens the file containing the item at the line of the item under the cursor and kills the item list                |
+| <right> | Opens the file containing the item at the line of the item under the cursor and leaves the cursor in the item list |
+| p       | Moves cursor to the previous SECTION                                                                               |
+| n       | Moves cursor to the next SECTION                                                                                   |
+|---------+--------------------------------------------------------------------------------------------------------------------|
 
 * Syntax highlighting
 As soon as a word is enclosed between exclamation marks, its font is

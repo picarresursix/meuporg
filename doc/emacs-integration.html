@@ -8,10 +8,11 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="title" content="Meuporg: Emacs Integration"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2013-05-13"/>
+<meta name="generated" content="2013-05-14"/>
 <meta name="author" content="Léo Perrin &lt;leoperrin@picarresursix.fr&gt;"/>
 <meta name="description" content="Documentation of the emacs minor-mode meuporg-mode."/>
 <meta name="keywords" content=""/>
+
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -82,7 +83,11 @@ This file is part of the documentation of <a href="description.html">meuporg</a>
 <li><a href="#sec-2">2 Elisp Functions</a>
 <ul>
 <li><a href="#sec-2-1">2.1 Keyboard Shortcuts</a></li>
-<li><a href="#sec-2-2">2.2 Item List</a></li>
+<li><a href="#sec-2-2">2.2 Item List</a>
+<ul>
+<li><a href="#sec-2-2-1">2.2.1 Structural items</a></li>
+<li><a href="#sec-2-2-2">2.2.2 Use of the item list</a></li>
+</ul></li>
 </ul>
 </li>
 <li><a href="#sec-3">3 Syntax highlighting</a></li>
@@ -129,7 +134,7 @@ shortcuts to easily access these and fontifying of standard items.
 <tr><th scope="col" class="left">Shortcut</th><th scope="col" class="left">Description</th><th scope="col" class="left">elisp function</th></tr>
 </thead>
 <tbody>
-<tr><td class="left">C-! u</td><td class="left">Save, and Update the main file (even when called from another file).</td><td class="left">meuporg/reload</td></tr>
+<tr><td class="left">C-! u</td><td class="left">Save, and Update the main file (even when called from another file).</td><td class="left">meuporg/update</td></tr>
 <tr><td class="left">C-! o</td><td class="left">Open the main File.</td><td class="left">meuporg/open-main</td></tr>
 <tr><td class="left">C-! n</td><td class="left">Go to the Next item in the file.</td><td class="left">meuporg/go-to-next-item</td></tr>
 <tr><td class="left">C-! p</td><td class="left">Go to the Previous item.</td><td class="left">meuporg/go-to-previous-item</td></tr>
@@ -157,6 +162,97 @@ shortcuts to easily access these and fontifying of standard items.
 <h3 id="sec-2-2"><span class="section-number-3">2.2</span> Item List</h3>
 <div class="outline-text-3" id="text-2-2">
 
+<p>The function <b>meuporg/show-items</b> creates a new buffer containing all
+the items in the current file. These are listed in the order in which
+they appear, each on one line and a color code displays known items in
+some colour. It also uses specific items called <i>structural items</i> to
+make sense of the file.
+</p>
+
+</div>
+
+<div id="outline-container-2-2-1" class="outline-4">
+<h4 id="sec-2-2-1"><span class="section-number-4">2.2.1</span> Structural items</h4>
+<div class="outline-text-4" id="text-2-2-1">
+
+<p>As a good programmer, you give your code a structure. I personnaly go
+further and give a tree like structure using a system inspired by
+LaTeX section, subsections, etc. For instance, the file itemDb.py of
+meuporg contains the code used to select only the items corresponding
+to a given criteria. It it structured like this:
+</p>
+
+
+<pre class="example">SECTION  Boolean management
+  SUBSECTION  Attribute class
+  SUBSECTION  Not class
+  SUBSECTION  AlwaysTrue class
+  SUBSECTION  AlwaysFalse class
+  SUBSECTION  And class
+  SUBSECTION  Or class
+  SUBSECTION  Criteria class
+SECTION  A poor man's database for the items
+  SUBSECTION  Sorting methods
+  SUBSECTION  Obtaining items from the db
+SECTION  Tests
+</pre>
+
+
+<p>
+Note that meuporg is very clever and uses LaTeX's "\section{}" as
+structural items. Thus, using meuporg/show-items in a TeX file will
+display something like <a href="item-list-latex.png">this</a>.
+</p>
+<p>
+A <i>structural item</i> is just a regular item, except that it must have
+one of these names.
+</p><table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<colgroup><col class="left" /><col class="right" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">name</th><th scope="col" class="right">depth</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">SECTION</td><td class="right">1</td></tr>
+<tr><td class="left">SUBSECTION</td><td class="right">2</td></tr>
+<tr><td class="left">SUBSUBSECTION</td><td class="right">3</td></tr>
+<tr><td class="left">LEV1</td><td class="right">1</td></tr>
+<tr><td class="left">LEV2</td><td class="right">2</td></tr>
+<tr><td class="left">LEV3</td><td class="right">3</td></tr>
+<tr><td class="left">LEV4</td><td class="right">4</td></tr>
+<tr><td class="left">&hellip;</td><td class="right">&hellip;</td></tr>
+<tr><td class="left">LEVN</td><td class="right">N</td></tr>
+</tbody>
+</table>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-2-2" class="outline-4">
+<h4 id="sec-2-2-2"><span class="section-number-4">2.2.2</span> Use of the item list</h4>
+<div class="outline-text-4" id="text-2-2-2">
+
+<p>The list of items uses its own shortcuts: when the cursor is on it,
+you can use any of these keys.
+</p><table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">key</th><th scope="col" class="left">description</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">q</td><td class="left">Kills the buffer containing the item list and closes its window</td></tr>
+<tr><td class="left">RET</td><td class="left">Opens the file containing the item at the line of the item under the cursor and kills the item list</td></tr>
+<tr><td class="left">&lt;right&gt;</td><td class="left">Opens the file containing the item at the line of the item under the cursor and leaves the cursor in the item list</td></tr>
+<tr><td class="left">p</td><td class="left">Moves cursor to the previous SECTION</td></tr>
+<tr><td class="left">n</td><td class="left">Moves cursor to the next SECTION</td></tr>
+</tbody>
+</table>
+
+
+</div>
 </div>
 </div>
 
@@ -173,7 +269,7 @@ changed.
 </div>
 
 <div id="postamble">
-<p class="date">Date: 2013-05-13</p>
+<p class="date">Date: 2013-05-14</p>
 <p class="author">Author: Léo Perrin &lt;leoperrin@picarresursix.fr&gt;</p>
 <p class="creator"><a href="http://orgmode.org">Org</a> version 7.9.3f with <a href="http://www.gnu.org/software/emacs/">Emacs</a> version 24</p>
 <a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
