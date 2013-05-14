@@ -71,6 +71,8 @@ class OrgFile:
         given location.
 
         """
+        if len(description) == 0:
+            description = "link"
         return "[[{}][{}]]".format(location, description)
 
 
@@ -171,6 +173,8 @@ class VimwikiFile:
         given location.
 
         """
+        if len(description) == 0:
+            description = "link"
         return "[file://{}|{}]".format(location, description)
 
 
@@ -270,6 +274,8 @@ class MdFile:
         given location.
 
         """
+        if len(description) == 0:
+            description = "link"
         return "[{}]({})".format(description, location)
 
 
