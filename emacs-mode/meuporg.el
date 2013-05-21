@@ -273,7 +273,8 @@ empty string if there is no such meuporg."
   "Inserts an item with the given name in a new comment on a new
   indented line"
   (newline-and-indent)
-  (insert (concat comment-start "!" name "! ")))
+  (insert (concat comment-start "!" name "!  " comment-end))
+  (backward-char (+ 1 (length comment-end))))
 
 (defun meuporg/insert-todo()
   "Inserts a TODO meuporg item."
@@ -328,6 +329,7 @@ new comment is created."
 ; --------------------------------
 
 (defun meuporg/go-to-next-item()
+  "Moves cursor to the next item."
   (interactive)
   (condition-case ex
       (search-forward-regexp "\![a-zA-Z0-9_]*\!")
@@ -335,11 +337,28 @@ new comment is created."
      (message "No items after cursor."))))
 
 (defun meuporg/go-to-previous-item()
+  "Moves cursor to the previous item."
   (interactive)
   (condition-case ex
       (search-backward-regexp "\![a-zA-Z0-9_]*\!")
     ('error
      (message "No items before cursor."))))
+
+(defun meuporg/go-to-next-section()
+  "Moves cursor to the next highest level section."
+  (interactive)
+  (condition-case ex
+      (search-forward-regexp "\\(!SECTION!\\)\\|\\(^\\\\section{.*}\\)")
+    ('error
+     (message "No section after cursor."))))
+
+(defun meuporg/go-to-previous-section()
+  "Moves cursor to the next highest level section."
+  (interactive)
+  (condition-case ex
+      (search-backward-regexp "\\(!SECTION!\\)\\|\\(^\\\\section{.*}\\)")
+    ('error
+     (message "No section before cursor."))))
 
 
 
@@ -363,6 +382,8 @@ new comment is created."
      (,(kbd "C-! o")   . meuporg/open-main)
      (,(kbd "C-! n")   . meuporg/go-to-next-item)
      (,(kbd "C-! p")   . meuporg/go-to-previous-item)
+     (,(kbd "C-! C-n")   . meuporg/go-to-next-section)
+     (,(kbd "C-! C-p")   . meuporg/go-to-previous-section)
      (,(kbd "C-! l")   . meuporg/show-items)
      (,(kbd "C-! i s 1") . meuporg/insert-section)
      (,(kbd "C-! i s 2") . meuporg/insert-subsection)

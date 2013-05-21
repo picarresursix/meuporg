@@ -1,7 +1,6 @@
-
 #!/usr/bin/env python
 # AUTHOR: Leo Perrin <leoperrin@picarresursix.fr>
-# Time-stamp: <2013-05-13 12:27:02 leo>
+# Time-stamp: <2013-05-14 15:18:30 leo>
 
 import os
 import re

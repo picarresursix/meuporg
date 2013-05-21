@@ -1,7 +1,7 @@
 #+TITLE: Meup.org
 #+DESCRIPTION: Python script to get things done
 #+AUTHOR: Léo "pi^2/6" Perrin <leoperrin@picarresursix.fr>
-#+DATE: Time-stamp: <2013-05-13 12:21:38 leo>
+#+DATE: Time-stamp: <2013-05-14 12:35:40 leo>
 #+STARTUP: hidestars indent align
 
 
@@ -13,43 +13,12 @@
 !EXCLUDE! pdf pyc test el png
 
 * Items directories                                                      :md:
-** ./python/fileFormat.py [[././python/fileFormat.py][=>]]
-1. REALTODO: [[file:./python/fileFormat.py::246][There is a problem with md: the headings have the trailing "#" extracted as part of the title.]]
-2. TODO: [[file:./python/fileFormat.py::436][link]]
-3. IDEA: [[file:./python/fileFormat.py::437][link]]
-4. TODO: [[file:./python/fileFormat.py::451][link]]
-5. IDEA: [[file:./python/fileFormat.py::452][link]]
-6. TODO: [[file:./python/fileFormat.py::455][link]]
-7. IDEA: [[file:./python/fileFormat.py::456][link]]
-8. TODO: [[file:./python/fileFormat.py::460][link]]
-9. IDEA: [[file:./python/fileFormat.py::461][link]]
-10. TODO: [[file:./python/fileFormat.py::464][link]]
-11. IDEA: [[file:./python/fileFormat.py::465][link]]
-** ./python/fileUpdate.py [[././python/fileUpdate.py][=>]]
-1. INCLUDE: [[file:./python/fileUpdate.py::65][link]]
-2. EXCLUDE: [[file:./python/fileUpdate.py::69][link]]
-3. INCLUDE_BACKUP_FILES: [[file:./python/fileUpdate.py::73][link]]
-4. INCLUDE_HIDDEN_FILES: [[file:./python/fileUpdate.py::77][link]]
-** ./python/itemDb.py [[././python/itemDb.py][=>]]
-1. REAL: [[file:./python/itemDb.py::317][Modify this: doesn't work]]
-** ./python/itemUtils.py [[././python/itemUtils.py][=>]]
-1. TODO: [[file:./python/itemUtils.py::90][link]]
-2. TODO: [[file:./python/itemUtils.py::104][link]]
-3. TODO: [[file:./python/itemUtils.py::219][blabla! And bla too!",]]
-4. FIXREF: [[file:./python/itemUtils.py::224][link]]
-5. TODO: [[file:./python/itemUtils.py::234][link]]
-6. IDEA: [[file:./python/itemUtils.py::235][link]]
-7. TODO: [[file:./python/itemUtils.py::236][link]]
-** ./python/meupUtils.py [[././python/meupUtils.py][=>]]
-1. TODO: [[file:./python/meupUtils.py::307][blabla! And bla too!",]]
-2. FIXREF: [[file:./python/meupUtils.py::314][link]]
-** ./python/meuporgCore.py [[././python/meuporgCore.py][=>]]
-1. TODO: [[file:./python/meuporgCore.py::310][link]]
-2. FIXREF: [[file:./python/meuporgCore.py::311][link]]
-3. IDEA: [[file:./python/meuporgCore.py::316][link]]
-4. IDEA: [[file:./python/meuporgCore.py::317][link]]
-5. TODO: [[file:./python/meuporgCore.py::321][link]]
-6. FIXREF: [[file:./python/meuporgCore.py::322][link]]
+** ./readme.md [[././readme.md][=>]] 
+1. M: [[file:./readme.md::3][link]]
+** ./templates [[././templates][=>]] 
+*** meuporg.md [[././templates/meuporg.md][=>]] 
+1. INCLUDE: [[file:./templates/meuporg.md::18][link]]
+2. EXCLUDE: [[file:./templates/meuporg.md::19][link]]
 * [0/3] python
 The aim of this script is to list the items in a directory, to sort
 them, to present them in a nice way and to update a file using them.
