@@ -11,128 +11,227 @@ import re
 
 
 
+
+# !SECTION! The Context class
+
+
+class Context:
+    """Contains a description of the current context of the state: which
+    file are we looking at, which line and which section/subsection/etc.
+
+    """
+    
+
+    def __init__(self):
+        """Initializes a new empty context."""
+        self.updateFile("")
+
+
+    def updateFile(self, path):
+        """Modifies the current_file attribute to path and resets other
+        attributes.
+
+        """
+        self.current_file    = path
+        self.sections_stack  = []
+        self.line_index      = 0
+        self.new_item        = False
+        self.continuing_item = False
+        self.finished_item   = False
+        self.is_heading      = False
+
+
+    def update(self, line):
+        """Updates the context depending on the line."""
+
+        self.line_index += 1
+        self.line = line
+
+        if (re.search(MeuporgItem.__item_regex__, line) != None):
+            # case where we have a new item
+            if self.new_item or self.continuing_item:
+                self.finished_item = True
+            self.continuing_item = False
+            depth, heading = self.struct_item(line)
+            if depth != 0:
+                # if it corresponds to a structural indication, we update
+                self.is_heading = True
+                if depth == len(self.sections_stack):
+                    # if the new heading is at the same depth as the
+                    # previous one, we remove the previous one
+                    self.sections_stack.pop()
+                elif depth < len(self.sections_stack):
+                    # if it has a smaller depth, we remove all
+                    # headings with greater depth.
+                    for i in range(0, len(self.sections_stack) - depth + 1):
+                        self.sections_stack.pop()
+                self.sections_stack.append(heading)
+            self.new_item = True
+
+        elif self.new_item and (re.match('\W*! *', line) != None):
+            # case where we previously had a new item and the new line
+            # starts with '!'
+            self.new_item = False
+            self.continuing_item = True
+            self.finished_item = False
+            self.is_heading = False
+
+        elif self.continuing_item and not (re.match('\W*! *', line) != None):
+            # case were we had a continued item but don't have it anymore
+            self.continuing_item = False
+            self.finished_item = True
+            self.is_heading = False
+
+        elif self.new_item or self.continuing_item:
+            # case where we had an item previously, but not anymore
+            self.finished_item = True
+            self.new_item = False
+            self.continuing_item = False
+            self.is_heading = False
+
+        else:
+            # case where nothing happens
+            self.new_item = False
+            self.continuing_item = False
+            self.is_heading = False
+
+
+    # The regex corresponding to short structural items
+    __struct_regex_short__ = "!LEV[0-9]+!"
+
+    # The regex corresponding to LaTeX-style structural items
+    __struct_regex_latex__ = "!.*SECTION!"
+    
+
+    def struct_item(self, line):
+        """If this line contains a structural items, returns its depth
+        and its heading in a two entries list.
+
+        Structural items are items matching one of the regexes in:
+        + __struct_regex_latex__
+        + __struct_regex_short__
+
+        """
+        if re.search(self.__class__.__struct_regex_short__, line) != None:
+            depth = int( re.findall("[0-9]+", line)[0] )
+            content = re.split(self.__class__.__struct_regex_short__ + "\W*", line)
+            heading = content[1]
+        elif re.search(self.__class__.__struct_regex_latex__, line) != None:
+            name = re.findall(self.__class__.__struct_regex_latex__, line)[0]
+            # name should match (SUB)*SECTION, so we simply compute
+            # the number of "sub" directly from the length of it
+            depth = (len(name) - 4)/3
+            content = re.split("!\W*", line)
+            heading = "".join(content[2:])
+        else:
+            depth = 0
+            heading = "name"
+
+        return [depth, heading]
+
+
+
 # !SECTION! The MeuporgItem class
 
 class MeuporgItem:
     """Stores data corresponding to a given item:
-       * location
-       * name
-       * description
+       * title       : the type of the item (what's between the !'s).
+       * description : the text accompanying the item (if any).
+       * file_name   : the path to the file it is in.
+       * sections    : the list of the imbricated sections it is in.
     """
 
-    # This static dictionnary is indexed by the files complete paths
-    # and has lists of lists as its entries. It contains all the items
-    # whose matches .*SECTION.
-    project_structure = defaultdict(list)
+    # A list of all the items found during this execution
+    __item_list__ = []
 
     # An item is a string matching the following regex. Recall that an
     # item is made of uppercased letters, underscores and numbers (and
     # nothing else) enclosed between exclamation marks.
-    item_regex = "!([A-Z_0-9]+)!"
+    __item_regex__ = "!([A-Z_0-9]+)!"
 
     # A list containing all the types of items encountered during
-    # execution. Useful to loop through the item nowns.
-    item_names = []
+    # execution. Useful to loop through the item names.
+    __item_names__ = []
     
     # If an item is within the middle of the code, i.e. not at the
     # beginning of its own line, it is consider "in-code". In this
     # case, it has the following string as its description.
-    no_desc = "link"
+    __no_desc__ = "link"
+    
 
-
-    def __init__(self, line, location, line_index):
+    def __init__(self, line, file_name, line_index, sections, is_heading):
         """Creates a new instance and sets all of its arguments from
         the content of a line containing an item and appends the name
-        of the item to item_names (if it was not already in).
+        of the item to __item_names__ (if it was not already in).
 
-        A line containing an item must contain self.item_regex. If it
+        A line containing an item must contain self.__item_regex__. If it
         does, what is before the item is dropped and all that is after
         is used to initialise the description. However, if there is an
         alpha-numeric character before the item, the item is
         considered to be in-code so its description is set to
-        NO_DESC.
+        __no_desc__.
 
         """
-        self.location = location
+        self.file_name  = file_name
         self.line_index = line_index
-        self.name = re.findall(self.__class__.item_regex, line)[0]
-        if self.name not in self.__class__.item_names:
-            self.__class__.item_names.append(self.name)
-        content = re.split(self.__class__.item_regex + "\W*", line)
-        if re.match(("^\W*$"), content[0]) != None:
+        self.sections   = sections
+        self.is_heading = is_heading
+        self.name = re.findall(self.__class__.__item_regex__, line)[0]
+        if self.name not in self.__class__.__item_names__:
+            self.__class__.__item_names__.append(self.name)
+        content = re.split(self.__class__.__item_regex__ + "\W*", line)
+        if re.match(("^\W*$"), content[0]) != None: # "incode" case
             self.description = ''.join(content[2:])
         else:
-            self.description = self.__class__.no_desc
-
-        if re.match(".*SECTION", self.name) != None:
-            self.__class__.project_structure[self.location].append(self)
-
+            self.description = self.__class__.__no_desc__
 
     def add_to_description(self, partial_desc):
         """Appends a partial description to the description
-        attribute if the current description is not NO_DESC.
+        attribute if the current description is not __no_desc__.
 
         We add a space to prevent two words from being concatenated.
 
         """
-        if self.description != self.__class__.no_desc:
+        if self.description != self.__class__.__no_desc__:
             self.description += " " + partial_desc
 
-
-
-# !SECTION! Criteria to sort items
-
-class Criteria:
-    """Extracts useful data from an item and provides a method to see
-    if an item belongs in a given category, i.e. if it is semantically
-    connected with a given string.
-
-    Example: "!TODO! I must do that" at line 33 of file
-    ./thing/stuff/bla.class.java is connected with the strings:
-    "TODO", "thing", "stuff", "bla.class", ".java".
-
-    """
-    
-
-    def __init__(self, meuporg_item):
-        """Extract useful data from the item.
-
-        We slice the path to get all the folders' names and the file's
-        name, possibly remove the starting ".".
-
-        Example: Criteria(
-                   MeuporgItem("!TODO! bla","./thing/stuff/class.hpp")
-                 ).possible_matches = ['TODO','thing','stuff','class.hpp']
+    def is_section_heading(self):
+        """Returns True if this item corresponds to a section heading, False
+        otherwise.
 
         """
-        path, file_name = list(os.path.split(meuporg_item.location))
-        path_strings = path.split(os.path.sep)
-        if path_strings[0] == ".":
-            path_strings = path_strings[1:]
-        self.possible_matches = (
-            [meuporg_item.name]
-            + path_strings
-            + [file_name]
-            )
+        return self.is_heading
 
 
-    def match(self, criteria_value):
-        """Check if the item studied matches the Criteria_value
-        regex.
+    def push_to_list(self):
+        """Appends this item to the static list of items."""
+        self.__class__.__item_list__.append(self)
+
+
+    @staticmethod
+    def get_item(context):
+        """Returns an item using the information from a Context
+        instance.
+
+        Note that we pass a copy of the sections stack, not the list
+        itself as it is modified afterwards.
 
         """
-        for possibility in self.possible_matches:
-            if re.search(criteria_value, possibility) != None:
-                return True
-        return False
-    
+        return MeuporgItem(
+            context.line,
+            context.current_file,
+            context.line_index,
+            context.sections_stack[:],
+            context.is_heading)
+
 
 
 # !SECTION! Parse files and directories
 
 
-def parse_file(path):
-    """Returns a list containing all the items in the file at path.
+def parse_file(path, context):
+    """Updates the list containing all the items with those in the file at
+    path, where the context is given by the context parameter.
 
     The way this function reads data is simple. The lines of the file
     are read one after another. If a line contains an item, i.e. an
@@ -143,37 +242,28 @@ def parse_file(path):
 
     """
 
-    recording = False
-    line_index = 1
-    result = []
+    context.updateFile(path)
     with open(path, 'r') as f:
+        pushed = False
         for line in f.readlines():
             line = line.rstrip()
-            if not recording:
-                if (re.search(MeuporgItem.item_regex, line) != None):
-                    location = path
-                    it = MeuporgItem(line, location, line_index)
-                    recording = True
-            else:
-                if (re.search(MeuporgItem.item_regex, line) != None):
-                    result.append(it)
-                    location = path
-                    it = MeuporgItem(line, location, line_index)
-                elif (re.match('\W*! *', line) != None):
-                    it.add_to_description(re.split("\W*! *", line)[1])
-                else:
-                    result.append(it)
-                    recording = False
-            line_index += 1
-    return result
+            context.update(line)
+            if context.finished_item and not pushed:
+                it.push_to_list()
+                pushed = True
+            if context.new_item:
+                it = MeuporgItem.get_item(context)
+                pushed = False
+            if context.continuing_item:
+                it.add_to_description(re.split("\W*! *", line)[1])
 
 
-
-def parse_directory(path=".",
-                    include=[],
-                    exclude=[],
-                    include_backup_files=False,
-                    include_hidden_files=False):
+def parse_directory(path = ".",
+                    include = [],
+                    exclude = [],
+                    include_backup_files = False,
+                    include_hidden_files = False,
+                    context = Context()):
     """Parses a whole directory, looking for items in each file.
 
     Backup files, i.e. '#files#' and 'files~' as well as hidden files
@@ -182,11 +272,10 @@ def parse_directory(path=".",
 
     """
 
-    result = []
     for dirname, dirnames, filenames in os.walk(path):
         for name in filenames:
             path = os.path.join(dirname, name)
-            if (include != []):
+            if (len(include) != 0):
                 to_do = False
                 for pattern in include:
                     if re.search(pattern, path):
@@ -202,8 +291,7 @@ def parse_directory(path=".",
                         or
                         (not include_hidden_files and (re.search("/\.[^/]+", path) != None))
                 ):
-                    result += parse_file(path)
-    return result
+                    parse_file(path, context)
 
 
         
@@ -214,42 +302,42 @@ if (__name__ == "__main__"):
 
     # !SUBSECTION! Testing the MeuporgItem class
 
-    BASIC_FORMAT = "!{0.name}!  {0.description} ({0.location}:{0.line_index})"
+    BASIC_FORMAT = "!{0.name}!  {0.description} ({0.sections}, line {0.line_index} in {0.file_name})"
     print BASIC_FORMAT.format(MeuporgItem(
         "    // * !TODO! :! * blabla! And bla too!",
         "./here.txt",
-        12
+        12,
+        [],
+        False
     ))
     print BASIC_FORMAT.format(MeuporgItem(
         "blabla bla !FIXREF! blabla! blabla",
         "./here/wait/no/actually/there.bla",
-        1234
+        1234,
+        ["title1", "title2"],
+        False
     ))
-    print(MeuporgItem.item_names)
-
-
-    # !SUBSECTION! Testing the Criteria class
-
-    ITEM_LIST = [
-        MeuporgItem("!TODO! blabla", "./bla/blu.cpp", 12),
-        MeuporgItem("!IDEA! blabla", "./bla/blu/thing.java.cpp", 12),
-        MeuporgItem("!TODO! blabla", "./class.hpp", 12)
-    ]
-    for item in ITEM_LIST:
-        crit = Criteria(item)
-        print(crit.possible_matches)
-        print("matches TODO: {}".format(crit.match("TODO")))
+    print(MeuporgItem.__item_names__)
+    
 
 
     # !SUBSECTION! Testing the parsing functions
     
+    parse_directory(
+        path = "..",
+        include = ["org", "el", "md"],
+        exclude = ["readme"],
+        include_backup_files = False,
+        include_hidden_files = False)
     index = 1
-    for it in parse_directory(
-            path="..",
-            include=["org", "el", "md"],
-            exclude=["readme"],
-            include_backup_files=False,
-            include_hidden_files=False):
-        print("{item_number}. !{0.name}!  {0.description} ({0.location}:{0.line_index})".format(it, item_number=index))
+    for it in MeuporgItem.__item_list__:
+        ind = "  " * len(it.sections)
+        if it.is_section_heading():
+            ind = ind[2:]
+        print("{indent}{item_number}. !{0.name}!  {0.description} "
+              "({0.sections}, line {0.line_index} in "
+              "{0.file_name}".format(it,
+                                     item_number = index,
+                                     indent = ind))
         index += 1
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # AUTHOR: Leo Perrin <leoperrin@picarresursix.fr>
-# Time-stamp: <2013-05-14 11:48:41 leo>
+# Time-stamp: <2013-05-21 21:14:30 leo>
 
 """Provides utilities to easily select some items and build complex
 conditions an item must validate in order to trigger some action.
@@ -8,7 +8,7 @@ conditions an item must validate in order to trigger some action.
 """
 
 import re
-import meupUtils
+import itemUtils
 from collections import defaultdict
 
 
@@ -411,7 +411,7 @@ class MeuporgItemDB:
 
 
 if __name__ == "__main__":
-    meupUtils.parse_directory(
+    itemUtils.parse_directory(
         path = "..",
         include = ["org$", "el$", "md$", "py$"],
         exclude = ["readme"],
@@ -430,7 +430,7 @@ if __name__ == "__main__":
         ]))
         ])
 
-    db = MeuporgItemDB(meupUtils.MeuporgItem.__item_list__)
+    db = MeuporgItemDB(itemUtils.MeuporgItem.__item_list__)
     item_dict = db.select_and_sort_by_name()
     for key in item_dict.keys():
         print "-- " + key

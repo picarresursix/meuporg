@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Time-stamp: <2013-05-13 12:24:25 leo>
+# Time-stamp: <2013-05-21 21:43:01 leo>
 
 """Contains the main program of meuporg, i.e. parses the cli arguments
 and calls the correct functions.
@@ -50,14 +50,15 @@ def parse_and_print(path=".",
 
     """
     if (os.path.isdir(path)):
-        tags = itemUtils.parse_directory(include=include,
-                                         exclude=exclude,
-                                         include_backup_files=include_backup_files,
-                                         include_hidden_files=include_hidden_files,
-                                         path=path)
+        itemUtils.parse_directory(include=include,
+                                  exclude=exclude,
+                                  include_backup_files=include_backup_files,
+                                  include_hidden_files=include_hidden_files,
+                                  path=path)
     else:
-        tags = itemUtils.parse_file(path)
-        print(FileFormat.output(meuporgCore.sort_by_name(tags), 2, style_name))
+        itemUtils.parse_file(path)
+    db = itemDb.MeuporgItemDB(itemUtils.MeuporgItem.__item_list__)
+    print(fileFormat.output(db.select_and_sort_by_name(), 2, style_name))
 
 
 
@@ -221,9 +222,9 @@ if (__name__ == "__main__"):
 
     elif ARGS.update:
         meuporg.update(include=ARGS.to_include,
-                 exclude=ARGS.to_exclude,
-                 include_backup_files=ARGS.include_backup_files,
-                 include_hidden_files=ARGS.include_hidden_files)
+                       exclude=ARGS.to_exclude,
+                       include_backup_files=ARGS.include_backup_files,
+                       include_hidden_files=ARGS.include_hidden_files)
 
     else:
         ARGUMENT_PARSER.print_help()

@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # AUTHOR: Leo Perrin <leoperrin@picarresursix.fr>
-# Time-stamp: <2013-05-14 15:18:30 leo>
+# Time-stamp: <2013-05-21 21:44:44 leo>
 
 import os
 import re
 
 import itemDb
 import fileFormat
-import meupUtils
+import itemUtils
 
 
 
@@ -115,13 +115,13 @@ class MainFile():
 
         
         # !SUBSECTION! Getting items
-        meupUtils.parse_directory(
+        itemUtils.parse_directory(
             path=".",
             include=self.include,
             exclude=self.exclude,
             include_backup_files=self.include_backup_files,
             include_hidden_files=self.include_hidden_files)
-        item_db = itemDb.MeuporgItemDB(meupUtils.MeuporgItem.__item_list__)
+        item_db = itemDb.MeuporgItemDB(itemUtils.MeuporgItem.__item_list__)
 
         # !SUBSECTION! Setting up variables
         with open(file_name, 'r') as f_old:

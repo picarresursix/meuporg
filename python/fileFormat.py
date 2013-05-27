@@ -13,7 +13,7 @@ their string representation.
 """
 
 import re
-import meupUtils
+import itemUtils
 
 
 # !SECTION! The classes supporting the different file formats
@@ -439,8 +439,8 @@ if __name__ == "__main__":
             print(file_format.line_to_header(header_string))
 
     item_list = [
-        meupUtils.MeuporgItem("!TODO! blibla", "/path/to/file1", 300, [], False),
-        meupUtils.MeuporgItem("!IDEA! blublo", "/path/to/file1", 310, [], False)
+        itemUtils.MeuporgItem("!TODO! blibla", "/path/to/file1", 300, [], False),
+        itemUtils.MeuporgItem("!IDEA! blublo", "/path/to/file1", 310, [], False)
     ]
     for file_format in file_format_list:
         print(file_format.list_to_string(
@@ -454,21 +454,21 @@ if __name__ == "__main__":
         "path": {
             "to": {
                 "file1": [
-                    meupUtils.MeuporgItem("!TODO! blibla", "/path/to/file1", 300, [], False),
-                    meupUtils.MeuporgItem("!IDEA! blublo", "/path/to/file1", 310, [], False)
+                    itemUtils.MeuporgItem("!TODO! blibla", "/path/to/file1", 300, [], False),
+                    itemUtils.MeuporgItem("!IDEA! blublo", "/path/to/file1", 310, [], False)
                 ],
                 "file2": [
-                    meupUtils.MeuporgItem("!TODO! blibla", "/path/to/file2", 300, [], False),
-                    meupUtils.MeuporgItem("!IDEA! blublo", "/path/to/file2", 310, [], False)
+                    itemUtils.MeuporgItem("!TODO! blibla", "/path/to/file2", 300, [], False),
+                    itemUtils.MeuporgItem("!IDEA! blublo", "/path/to/file2", 310, [], False)
                 ]},
             "and":  {
                 "file1": [
-                    meupUtils.MeuporgItem("!TODO! blibla", "/path/to/file1", 300, [], False),
-                    meupUtils.MeuporgItem("!IDEA! blublo", "/path/to/file1", 310, [], False)
+                    itemUtils.MeuporgItem("!TODO! blibla", "/path/to/file1", 300, [], False),
+                    itemUtils.MeuporgItem("!IDEA! blublo", "/path/to/file1", 310, [], False)
                 ],
                 "file2": [
-                    meupUtils.MeuporgItem("!TODO! blibla", "/path/to/file2", 300, [], False),
-                    meupUtils.MeuporgItem("!IDEA! blublo", "/path/to/file2", 310, [], False)
+                    itemUtils.MeuporgItem("!TODO! blibla", "/path/to/file2", 300, [], False),
+                    itemUtils.MeuporgItem("!IDEA! blublo", "/path/to/file2", 310, [], False)
                 ]}
         }
     }
